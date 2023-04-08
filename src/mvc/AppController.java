@@ -19,11 +19,11 @@ public class AppController {
         //Init AppView
         this.appView = new AppView(this);
 
-        this.appView.setSize(854, 480);
+        this.appView.setSize(854, 480); //480p
         this.appView.setTitle("Medium Recommendation App");
-        this.appView.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.appView.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //Terminate the complete app when 'X' on the window title bar is clicked
+        this.appView.setLocationRelativeTo(null); //Let window appear in the center of the screen when started
         this.appView.setVisible(true);
-        this.appView.setLocationRelativeTo(null); //Make Window appear in the center of the screen
 
         this.appView.init();
 
