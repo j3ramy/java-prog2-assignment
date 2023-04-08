@@ -68,6 +68,7 @@ public class AppView extends JFrame {
 
     private void initActionListeners(){
         this.closeButton.addActionListener(e -> {
+            this.showDialog("Bye Bye!", "Danke, dass du die App benutzt hast! Bis bald :)", JOptionPane.INFORMATION_MESSAGE);
             this.appController.close();
         });
     }
