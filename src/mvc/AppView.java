@@ -1,5 +1,6 @@
 package mvc;
 
+import mvc.panels.SettingsPanel;
 import util.file.FilePath;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ public class AppView extends JFrame {
     private final AppController appController;
 
     private JPanel mainPanel, userFeedbackPanel, menuPanel, statusBarPanel;
+    private SettingsPanel settingsPanel;
     private JTabbedPane tabbedPanel;
     private JButton closeButton;
     private JLabel menuImage;
@@ -24,19 +26,33 @@ public class AppView extends JFrame {
         this.mainPanel.setBackground(Color.WHITE);
         this.add(this.mainPanel);
 
+        this.settingsPanel = new SettingsPanel();
+        this.settingsPanel.init();
+
         this.initLayouts();
         this.initStyles();
         this.initImages();
         this.initActionListeners();
 
+        /*
         this.showDialog("Willkommen!",
                 "Hey User! Wir haben festgestellt, dass du diese App das erste Mal nutzt.\n" +
                         "Lege deine Sprache, sowie deine Provider fest (Dies kannst du immer anpassen)", JOptionPane.INFORMATION_MESSAGE);
         this.tabbedPanel.setSelectedIndex(SETTINGS_TAB_ID);
+
+         */
+
+        this.setAllTranslations(null);
     }
 
-    public void loadTranslations(HashMap<String, String> translations){
-
+    public void setAllTranslations(HashMap<String, String> translations){
+        //this.tabbedPanel.add("Start", null);
+        //this.tabbedPanel.add("Zufällig", null);
+        //this.tabbedPanel.add("Suche", null);
+        //this.tabbedPanel.add("Top 100", null);
+        //this.tabbedPanel.add("Bewertungen", null);
+        this.tabbedPanel.add("Einstellungen", this.settingsPanel);
+        this.settingsPanel.setTranslations(translations);
     }
 
     public void showDialog(String title, String message, int dialogType){
@@ -44,7 +60,7 @@ public class AppView extends JFrame {
     }
 
     private void initLayouts(){
-
+        this.settingsPanel.setLayout(new BoxLayout(this.settingsPanel, BoxLayout.Y_AXIS));
     }
 
     private void initStyles(){

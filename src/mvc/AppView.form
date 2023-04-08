@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="mvc.AppView">
   <grid id="d9e5a" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="600" height="400"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -24,56 +24,7 @@
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
-        <children>
-          <grid id="1f9ac" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="Start"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-          <grid id="1de5b" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="1. Zufällig"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-          <grid id="2aad" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="2. Suche"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-          <grid id="d6abe" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="3. Top 100"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-          <grid id="d35fe" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="4. Bewertungen"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-          <grid id="de809" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="Einstellungen"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-        </children>
+        <children/>
       </tabbedpane>
       <grid id="c8f99" binding="menuPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="West"/>
