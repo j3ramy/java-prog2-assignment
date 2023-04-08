@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class AppView extends JFrame {
+    private static final int SETTINGS_TAB_ID = 5;
 
     private final AppController appController;
 
@@ -27,10 +28,19 @@ public class AppView extends JFrame {
         this.initStyles();
         this.initImages();
         this.initActionListeners();
+
+        this.showDialog("Willkommen!",
+                "Hey User! Wir haben festgestellt, dass du diese App das erste Mal nutzt.\n" +
+                        "Lege deine Sprache, sowie deine Provider fest (Dies kannst du immer anpassen)", JOptionPane.INFORMATION_MESSAGE);
+        this.tabbedPanel.setSelectedIndex(SETTINGS_TAB_ID);
     }
 
     public void loadTranslations(HashMap<String, String> translations){
 
+    }
+
+    public void showDialog(String title, String message, int dialogType){
+        JOptionPane.showMessageDialog(this.mainPanel, message, title, dialogType);
     }
 
     private void initLayouts(){

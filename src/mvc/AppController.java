@@ -23,6 +23,7 @@ public class AppController {
         this.appView.setTitle("Medium Recommendation App");
         this.appView.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.appView.setVisible(true);
+        this.appView.setLocationRelativeTo(null); //Make Window appear in the center of the screen
 
         this.appView.init();
 

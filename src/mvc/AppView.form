@@ -25,9 +25,17 @@
         <properties/>
         <border type="none"/>
         <children>
+          <grid id="1f9ac" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Start"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
           <grid id="1de5b" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <tabbedpane title="Zufällig"/>
+              <tabbedpane title="1. Zufällig"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -35,7 +43,7 @@
           </grid>
           <grid id="2aad" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <tabbedpane title="Suche"/>
+              <tabbedpane title="2. Suche"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -43,7 +51,7 @@
           </grid>
           <grid id="d6abe" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <tabbedpane title="Top 100"/>
+              <tabbedpane title="3. Top 100"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -51,7 +59,7 @@
           </grid>
           <grid id="d35fe" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <tabbedpane title="Bewertungen"/>
+              <tabbedpane title="4. Bewertungen"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -75,7 +83,7 @@
         <border type="none"/>
         <children>
           <component id="4d2b0" class="javax.swing.JButton" binding="closeButton">
-            <constraints border-constraint="South"/>
+            <constraints border-constraint="Last"/>
             <properties>
               <text value="Beenden"/>
             </properties>
