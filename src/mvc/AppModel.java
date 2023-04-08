@@ -41,6 +41,10 @@ public class AppModel {
         return translations;
     }
 
+    public HashMap<String, Medium> getMediums() {
+        return mediums;
+    }
+
     public AppModel(AppController appController){
         this.appController = appController;
     }

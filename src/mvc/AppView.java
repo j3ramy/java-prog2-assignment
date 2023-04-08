@@ -1,6 +1,8 @@
 package mvc;
 
+import mvc.panels.RandomMediumPanel;
 import mvc.panels.SettingsPanel;
+import mvc.panels.StartPanel;
 import util.enums.AppState;
 import util.file.FilePath;
 import util.interfaces.IViewPanel;
@@ -10,12 +12,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class AppView extends JFrame implements IViewPanel {
-    private static final int SETTINGS_TAB_ID = 0;
-
     private final AppController appController;
 
     private JPanel mainPanel, userFeedbackPanel, sidebarPanel, statusBarPanel;
+
+    private StartPanel startPanel;
+    private RandomMediumPanel randomMediumPanel;
     private SettingsPanel settingsPanel;
+
     private JTabbedPane tabbedPanel;
     private JButton closeButton;
     private JLabel menuImage;
@@ -40,10 +44,14 @@ public class AppView extends JFrame implements IViewPanel {
     public void initComponents(){
         this.add(this.mainPanel);
 
+        this.startPanel = new StartPanel(this);
+        this.startPanel.init();
+
+        this.randomMediumPanel = new RandomMediumPanel(this);
+        this.randomMediumPanel.init();
+
         this.settingsPanel = new SettingsPanel(this);
         this.settingsPanel.init();
-
-        this.tabbedPanel.add(this.settingsPanel);
     }
 
     @Override
@@ -51,13 +59,13 @@ public class AppView extends JFrame implements IViewPanel {
         this.mainPanel.setBackground(Color.WHITE);
 
         this.userFeedbackPanel.setBackground(Color.WHITE);
+        this.userFeedbackPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
 
         this.sidebarPanel.setBackground(Color.WHITE);
+        this.closeButton.setBackground(new Color(245, 245, 245));
 
         this.statusBarPanel.setBackground(Color.WHITE);
         this.statusBarPanel.setBorder(new EmptyBorder(0, 5, 0, 0));
-
-        this.closeButton.setBackground(new Color(245, 245, 245));
     }
 
     @Override
@@ -75,7 +83,6 @@ public class AppView extends JFrame implements IViewPanel {
     @Override
     public void initActionListeners(){
         this.closeButton.addActionListener(e -> {
-
             this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.close"),
                     this.getAppController().getAppModel().getTranslation("dialog.body.main.close"), JOptionPane.INFORMATION_MESSAGE);
             this.appController.close();
@@ -88,12 +95,17 @@ public class AppView extends JFrame implements IViewPanel {
 
     public void setAllTranslations(){
         this.closeButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
+
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.start"), this.startPanel);
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
+
+        this.startPanel.setTranslations();
+        this.randomMediumPanel.setTranslations();
+        this.settingsPanel.setTranslations();
 
         this.setUserFeedbackText("label.user.welcome");
         this.setStatusBarText(AppState.READY);
-
-        this.settingsPanel.setTranslations();
     }
 
     public void setStatusBarText(AppState appState){
@@ -117,7 +129,6 @@ public class AppView extends JFrame implements IViewPanel {
 
     public void showFirstAppStartDialog(){
         this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.no_settings"),
-                this.getAppController().getAppModel().getTranslation("dialog.body.main.no_settings"), JOptionPane.QUESTION_MESSAGE);
-        this.tabbedPanel.setSelectedIndex(SETTINGS_TAB_ID);
+                this.getAppController().getAppModel().getTranslation("dialog.body.main.no_settings"), JOptionPane.QUESTION_MESSAGE);;
     }
 }

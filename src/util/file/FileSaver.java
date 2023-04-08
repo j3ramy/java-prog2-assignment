@@ -25,7 +25,7 @@ public class FileSaver {
 
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
             bufferedWriter.write(this.appModel.getCustomData().getLanguage() + "," +
-                    Util.getArrayAsCsvString(this.appModel.getCustomData().getProvidersAsString()));
+                    Util.convertArrayToCsvString(this.appModel.getCustomData().getProvidersAsString()));
             bufferedWriter.close();
         }
         catch(Exception e){

@@ -12,7 +12,21 @@ public class Util {
         return Language.values();
     }
 
-    public static String getArrayAsCsvString(Object[] array){
+    public static String capitalize(String s, String splitBy){
+        if(splitBy != null){
+            String[] words = s.split(splitBy);
+
+            for(int i = 0; i < words.length; i++){
+                words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
+            }
+
+            return joinArray(new ArrayList<>(Arrays.asList(words)), " ");
+        }
+
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+    }
+
+    public static String convertArrayToCsvString(Object[] array){
         StringBuilder s = new StringBuilder("\"");
 
         for(int i = 0; i < array.length; i++){
@@ -59,7 +73,7 @@ public class Util {
                 outerList.add(rawData[i]);
             }
             //If start of array and end of array found then merge the inner list and add it to the outer list
-            else if(endIndex != -1){
+            else if(endIndex != -1 && endIndex >= startIndex){
                 innerList = new ArrayList<>(Arrays.asList(rawData).subList(startIndex, endIndex + 1));
                 outerList.add(innerList);
 
@@ -98,5 +112,22 @@ public class Util {
         }
 
         return contains;
+    }
+
+    public static String joinArray(ArrayList<String> array){
+        return joinArray(array, "");
+    }
+
+    public static String joinArray(ArrayList<String> list, String separator){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(int i = 0; i < list.size(); i++){
+            stringBuilder.append(list.get(i));
+
+            if(i != list.size() - 1)
+                stringBuilder.append(separator);
+        }
+
+        return stringBuilder.toString();
     }
 }
