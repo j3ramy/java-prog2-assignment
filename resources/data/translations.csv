@@ -1,0 +1,15 @@
+label.settings.language,Sprache:,Language:
+label.settings.providers,Deine Anbieter:,Your Providers:
+label.main.settings,Einstellungen,Settings
+label.user.welcome,Willkommen! Navigiere durch die Tabs um verschiedene Funktionen zu nutzen:,Welcome! Navigate through the tabs below to use all different features:
+label.status.ready,Bereit,Ready
+label.status.searching,Suche...,Search...
+label.status.load,Lade Datenquellen...,Load Data Source...
+button.settings.save,Speichern,Save
+button.main.close,Beenden,Close
+dialog.title.settings.save,Einstellungen gespeichert,Changes Saved
+dialog.title.main.close,Bye Bye!,Bye Bye!
+dialog.title.main.no_settings,Willkommen!,Welcome!
+dialog.body.settings.save,Deine Einstellungen wurden gespeichert,Your changes have been saved
+dialog.body.main.close,Vielen Dank für die Nutzung der App! Bis bald :),Thanks for using this app. See you soon!
+dialog.body.main.no_settings,Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Provider fest (Dies kannst du immer anpassen),Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)

@@ -1,26 +1,21 @@
 package mvc;
 
 import javax.swing.*;
-
 public class AppController {
     private AppView appView;
     private AppModel appModel;
-
-
     public AppView getAppView() {
         return appView;
     }
-
     public AppModel getAppModel() {
         return appModel;
     }
-
     public void init(){
         //Init AppView
         this.appView = new AppView(this);
 
         this.appView.setSize(854, 480); //480p
-        this.appView.setTitle("Medium Recommendation App");
+        this.appView.setTitle("Media Recommendation App (J. Seidel, WWI22SCA)");
         this.appView.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //Terminate the complete app when 'X' on the window title bar is clicked
         this.appView.setLocationRelativeTo(null); //Let window appear in the center of the screen when started
         this.appView.setVisible(true);
@@ -31,11 +26,9 @@ public class AppController {
         this.appModel = new AppModel(this);
         this.appModel.init();
     }
-
     public void run(){
 
     }
-
     public void close(){
         System.exit(0);
     }

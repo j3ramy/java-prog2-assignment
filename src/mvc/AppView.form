@@ -26,7 +26,7 @@
         <border type="none"/>
         <children/>
       </tabbedpane>
-      <grid id="c8f99" binding="menuPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="c8f99" binding="sidebarPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="West"/>
         <properties>
           <foreground color="-4506816"/>
