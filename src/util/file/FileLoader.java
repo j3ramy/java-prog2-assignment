@@ -24,7 +24,6 @@ public class FileLoader {
 
     public void loadFiles(){
         this.loadCustomData();
-        this.loadTranslations();
 
         this.appModel.getAppView().disableTabs();
 
@@ -46,8 +45,8 @@ public class FileLoader {
                     //this.showSkipStats(); TODO: Uncomment
                 }
 
-                this.appModel.getAppView().setStatusBarText(AppState.READY);
                 this.appModel.getAppView().enableTabs();
+                this.appModel.getAppView().setStatusBarText(AppState.READY);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -86,6 +85,7 @@ public class FileLoader {
 
                 //Set custom data and pass language and providers
                 this.appModel.setCustomData(new CustomData(Language.valueOf(data[0].toString()), providersList.toArray(Provider[]::new)));
+                this.loadTranslations();
             }
 
             bufferedReader.close();
