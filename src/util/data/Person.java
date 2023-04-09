@@ -7,6 +7,16 @@ public class Person {
     private final String name, character;
     private final PersonRole role;
 
+    private String movieId;
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
+
     public String getName() {
         return name;
     }
@@ -27,6 +37,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return Util.capitalize(this.role.name(), null) + ": " + this.name + " (" + this.character + ")";
+        return Util.capitalize(this.role.name(), null) + ": " + this.name + " (" + this.character + ")" + " (" + this.movieId + ")";
     }
 }

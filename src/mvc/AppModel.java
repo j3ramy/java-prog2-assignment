@@ -18,7 +18,7 @@ public class AppModel {
     private final FileSaver fileSaver = new FileSaver(this);
     private final FileLoader fileLoader = new FileLoader(this);
     private final HashMap<String, Translation> translations = new HashMap<>();
-    private final HashMap<String, Medium> mediums = new HashMap<>();
+    private final ArrayList<Medium> mediums = new ArrayList<>(); //Use ArrayList instead of HashMap because some titles are available at multiple providers and storing the movie id wouldn't be as helpful
     private final ArrayList<Review> reviews = new ArrayList<>();
     private final LinkedList<ImdbRating> imdbRatings = new LinkedList<>();
 
@@ -41,7 +41,7 @@ public class AppModel {
         return translations;
     }
 
-    public HashMap<String, Medium> getMediums() {
+    public ArrayList<Medium> getMediums() {
         return mediums;
     }
 

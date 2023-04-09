@@ -4,7 +4,7 @@ label.main.start,Start,Start
 label.main.start.content,Mit diser App kannst du dir Filme und Serien für deinen Kinoabend vorschlagen lassen. Viel Spaß!,This app recommends movies and series for your cinema night. Enjoy!
 label.main.settings,Einstellungen,Settings
 label.main.random_medium,Zufälliger Vorschlag,Random Recommendation
-label.user.welcome,Willkommen! Navigiere durch die Tabs um verschiedene Funktionen zu nutzen:,Welcome! Navigate through the tabs below to use all different features:
+label.user.welcome,Willkommen! Navigiere durch die Tabs um die verschiedenen Funktionen zu nutzen:,Welcome! Navigate through the tabs below to use all different features:
 label.status.ready,Bereit,Ready
 label.status.searching,Suche...,Search...
 label.status.load,Lade Datenquellen...,Load Data Source...
@@ -17,4 +17,4 @@ dialog.title.init.dataloading,Hinweis,Hint
 dialog.body.settings.save,Deine Einstellungen wurden gespeichert,Your changes have been saved
 dialog.body.main.close,Vielen Dank für die Nutzung der App! Bis bald :),Thanks for using this app. See you soon!
 dialog.body.main.no_settings,Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Provider fest (Dies kannst du immer anpassen),Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)
-dialog.body.init.dataloading, Filme/Serien wurden aufgrund fehlerhafter Formatierung der Einlesedaten nicht geladen, movies/series have not been loaded due to wrong data formatting
+dialog.body.init.dataloading, Filme/Serien konnten aufgrund von fehlerhaften Formatierungen innerhalb der Datenquelle nicht geladen werden, movies/series could not been loaded due to wrong data formatting

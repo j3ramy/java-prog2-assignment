@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Medium {
     private final MediumType type;
     private final Provider provider;
-    private final String title, description, ageRating, duration, releaseYear, addedAt, genres, countries;
+    private final String title, description, ageRating, duration, releaseYear, addedAt, genres, countries, seasons;
     private final Person[] cast;
 
     public MediumType getType() {
@@ -55,7 +55,12 @@ public class Medium {
         return addedAt;
     }
 
-    public Medium(MediumType type, Provider provider, String title, String description, String genres, String duration,
+    public String getSeasons() {
+        return seasons;
+    }
+
+    //TODO: Replace some parameter with better data type
+    public Medium(MediumType type, Provider provider, String title, String description, String genres, String duration, String seasons,
                   String releaseYear, Person[] cast, String countries, String ageRating, String addedAt){
         this.type = type;
         this.provider = provider;
@@ -63,6 +68,7 @@ public class Medium {
         this.description = description;
         this.genres = genres;
         this.duration = duration;
+        this.seasons = seasons;
         this.releaseYear = releaseYear;
         this.cast = cast;
         this.countries = countries;

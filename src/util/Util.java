@@ -107,7 +107,7 @@ public class Util {
         boolean contains = false;
 
         for(Object s : enumeration.getEnumConstants()){
-            if(value.equalsIgnoreCase(s.toString()))
+            if(value.toLowerCase().contains(s.toString().toLowerCase()))
                 contains = true;
         }
 
