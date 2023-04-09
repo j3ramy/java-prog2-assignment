@@ -3,20 +3,26 @@ package util.data;
 import util.enums.MediumType;
 import util.enums.Provider;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Medium {
     private final MediumType type;
-    private final Provider provider;
-    private final String title, description, ageRating, duration, releaseYear, addedAt, genres, countries, seasons;
+    private final List<Provider> providers = new ArrayList<>();
+    private final String id, title, description, ageRating, duration, releaseYear, addedAt, genres, countries, seasons;
     private final Person[] cast;
+
+    public String getId() {
+        return id;
+    }
 
     public MediumType getType() {
         return type;
     }
 
-    public Provider getProvider() {
-        return provider;
+    public List<Provider> getProviders() {
+        return providers;
     }
 
     public String getTitle() {
@@ -60,10 +66,11 @@ public class Medium {
     }
 
     //TODO: Replace some parameter with better data type
-    public Medium(MediumType type, Provider provider, String title, String description, String genres, String duration, String seasons,
+    public Medium(String id, MediumType type, Provider provider, String title, String description, String genres, String duration, String seasons,
                   String releaseYear, Person[] cast, String countries, String ageRating, String addedAt){
+        this.id = id;
         this.type = type;
-        this.provider = provider;
+        this.providers.add(provider);
         this.title = title;
         this.description = description;
         this.genres = genres;
@@ -81,7 +88,7 @@ public class Medium {
     public String toString() {
         return "Medium{" +
                 "type=" + type +
-                ", provider=" + provider +
+                ", providers=" + providers +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", ageRating='" + ageRating + '\'' +

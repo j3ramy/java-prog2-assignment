@@ -5,6 +5,7 @@ import util.enums.Language;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Util {
 
@@ -129,5 +130,14 @@ public class Util {
         }
 
         return stringBuilder.toString();
+    }
+
+    private static final Pattern PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
+    public static boolean isNumeric(String s){
+        return PATTERN.matcher(s).matches();
+    }
+
+    public static String stringToKey(String key){
+        return key.toLowerCase().replace(" ", "_");
     }
 }

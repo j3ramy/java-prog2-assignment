@@ -41,4 +41,11 @@ public class CustomData {
     public boolean isSet(){
         return this.providers != null;
     }
+
+    public boolean hasProvider(Provider provider){
+        for(Provider p : this.providers)
+            if(p == provider) return true;
+
+        return false;
+    }
 }

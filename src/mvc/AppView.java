@@ -112,7 +112,9 @@ public class AppView extends JFrame implements IViewPanel {
         JLabel statusBarLabel = (JLabel) this.statusBarPanel.getComponents()[0];
 
         switch (appState){
-            case LOAD -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.load"));
+            case LOAD_MEDIUMS -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.load_mediums"));
+            case LOAD_REVIEWS -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.load_reviews"));
+            case LOAD_IMDB_RATING -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.load_imdb_rating"));
             case SEARCH -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.search"));
             case READY -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.ready"));
         }

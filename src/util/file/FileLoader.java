@@ -2,8 +2,7 @@ package util.file;
 
 import mvc.AppModel;
 import util.Util;
-import util.data.Medium;
-import util.data.Person;
+import util.data.*;
 import util.enums.*;
 
 import javax.swing.*;
@@ -11,11 +10,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class FileLoader {
     private final AppModel appModel;
+    private final LinkedHashMap<String, Integer> loadingSkips = new LinkedHashMap<>();
 
     private Person[] applePlusCredits;
 
@@ -28,11 +27,22 @@ public class FileLoader {
         this.loadTranslations();
 
         new Thread(() -> {
-            this.appModel.getAppView().setStatusBarText(AppState.LOAD);
-            loadMediums();
-            loadReviews();
-            loadTop100();
-            this.appModel.getAppView().setStatusBarText(AppState.READY);
+            try {
+                Thread.sleep(500);
+
+                this.appModel.getAppView().setStatusBarText(AppState.LOAD_MEDIUMS);
+                this.loadMediums();
+                this.appModel.getAppView().setStatusBarText(AppState.LOAD_REVIEWS);
+                this.loadReviews();
+                this.appModel.getAppView().setStatusBarText(AppState.LOAD_IMDB_RATING);
+                this.loadImdbRatings();
+                this.appModel.getAppView().setStatusBarText(AppState.READY);
+
+                this.showSkipStats();
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }).start();
     }
 
@@ -81,7 +91,7 @@ public class FileLoader {
     }
 
     private void createDefaultCustomData(){
-        this.appModel.setCustomData(new CustomData(Language.EN, new Provider[]{}));
+        this.appModel.setCustomData(new CustomData(Language.EN, Provider.values()));
     }
 
     private void loadTranslations(){
@@ -115,12 +125,14 @@ public class FileLoader {
     //Total records data source: 20.118
     //Total records loaded: 19.640; difference because Netflix (154), DP (33), Amazon (287), Apple (4) haven't been loaded
     private void loadMediums(){
-        this.loadMediumsFromProvider(FilePath.NETFLIX_TITLES_PATH, Provider.NETFLIX);
-        this.loadMediumsFromProvider(FilePath.DISNEY_PLUS_TITLES_PATH, Provider.DISNEY_PLUS);
-        this.loadMediumsFromProvider(FilePath.AMAZON_PRIME_TITLES_PATH, Provider.AMAZON_PRIME);
+        if(this.appModel.getCustomData().hasProvider(Provider.NETFLIX)) this.loadMediumsFromProvider(FilePath.NETFLIX_TITLES_PATH, Provider.NETFLIX);
+        if(this.appModel.getCustomData().hasProvider(Provider.DISNEY_PLUS)) this.loadMediumsFromProvider(FilePath.DISNEY_PLUS_TITLES_PATH, Provider.DISNEY_PLUS);
+        if(this.appModel.getCustomData().hasProvider(Provider.AMAZON_PRIME)) this.loadMediumsFromProvider(FilePath.AMAZON_PRIME_TITLES_PATH, Provider.AMAZON_PRIME);
 
-        this.loadApplePlusCredits();
-        this.loadMediumsFromProvider(FilePath.APPLE_PLUS_TITLES_PATH, Provider.APPLE_PLUS);
+        if(this.appModel.getCustomData().hasProvider(Provider.APPLE_PLUS)){
+            this.loadApplePlusCredits();
+            this.loadMediumsFromProvider(FilePath.APPLE_PLUS_TITLES_PATH, Provider.APPLE_PLUS);
+        }
     }
 
     private void loadMediumsFromProvider(String path, Provider provider){
@@ -160,10 +172,15 @@ public class FileLoader {
                     medium = this.createApplePlusMedium(data, provider);
                 }
 
-                this.appModel.getMediums().add(medium);
+                if(this.appModel.getMediums().containsKey(medium.getTitle())){
+                    this.appModel.getMediums().get(medium.getTitle()).getProviders().add(provider);
+                }
+                else{
+                    this.appModel.getMediums().put(Util.stringToKey(medium.getTitle()), medium);
+                }
             }
 
-            this.showSkippedMediumsDialog(provider, skipCounter);
+            this.loadingSkips.put(provider.name(), skipCounter);
             bufferedReader.close();
         }
         catch(Exception e){
@@ -176,36 +193,38 @@ public class FileLoader {
     //Amazon: type,title,director,cast,country,date_added,release_year,rating,duration,listed_in,description
     private Medium createNDAMedium(Object[] data, Provider provider){
         return new Medium(
-                this.convertMediumType(data[1]),
+                (String) data[0],
+                this.convertMediumType((String) data[1]),
                 provider,
-                this.convertTitles(data[2]),
-                this.convertDescription(data[data.length - 1]),
-                this.convertGenres(data[10]),
+                this.convertObjectToString(data[2], "/"),
+                this.convertObjectToString(data[data.length - 1], ", "),
+                this.convertObjectToString(data[10], ", "),
                 (String) data[9],
                 "N/A",
                 (String) data[7],
-                this.convertCast(data[3], data[4]),
-                this.convertCountries(data[5]),
+                this.getCast(data[3], data[4]),
+                this.convertObjectToString(data[5], ", "),
                 (String) data[8],
-                this.convertDateAdded(data[6])
+                this.convertObjectToString(data[6], ", ")
         );
     }
 
     //Apple T: 0 id, 1 title, 2 type, 3 description, 4 release_year, 5 age_certification, 6 runtime, 7 genres, 8 production_countries, 9 seasons
     //Apple C: id,name,character,role
     private Medium createApplePlusMedium(Object[] data, Provider provider){
-        MediumType mediumType = this.convertMediumType(data[2]);
+        MediumType mediumType = this.convertMediumType((String) data[2]);
         return new Medium(
+                (String) data[0],
                 mediumType,
                 provider,
-                this.convertTitles(data[1]),
-                this.convertDescription(data[3]),
-                this.convertGenres(data[7]),
+                this.convertObjectToString(data[1], "/"),
+                this.convertObjectToString(data[3], ", "),
+                this.convertObjectToString(data[7], ", "),
                 (String) data[6],
                 mediumType == MediumType.TVSHOW ? (String) data[9] : "N/A",
                 (String) data[4],
                 this.getApplePlusCastByMovie((String) data[0]),
-                this.convertCountries(data[8]),
+                this.convertObjectToString(data[8], ", "),
                 (String) data[5],
                 "N/A"
         );
@@ -234,16 +253,19 @@ public class FileLoader {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
             String line;
+            int skipCounter = 0;
             ArrayList<Person> credits = new ArrayList<>();
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
                 Object[] data = Util.splitCsvLine(line, false);
 
-                if(!this.isApplePlusCreditsFormattingValid(data))
+                if(!this.isApplePlusCreditsFormattingValid(data)){
+                    skipCounter++;
                     continue;
+                }
 
                 if(Util.containsEnum((String) data[4], PersonRole.class)){
-                    Person person = new Person(this.convertName(data[2]), this.convertName(data[3]), PersonRole.valueOf((String) data[4]));
+                    Person person = new Person(this.convertObjectToString(data[2], " "), this.convertObjectToString(data[3], " "), PersonRole.valueOf((String) data[4]));
                     person.setMovieId((String) data[1]);
 
                     credits.add(person);
@@ -252,6 +274,7 @@ public class FileLoader {
 
             bufferedReader.close();
 
+            this.loadingSkips.put("APPLE_PLUS_CREDITS", skipCounter);
             this.applePlusCredits = credits.toArray(Person[]::new);
         }
         catch(Exception e){
@@ -260,114 +283,179 @@ public class FileLoader {
     }
 
     private void loadReviews(){
-
+        this.loadReviewsByType(FilePath.CRITIC_REVIEWS_PATH, ReviewType.CRITICS);
+        this.loadReviewsByType(FilePath.AUDIENCE_REVIEWS_PATH, ReviewType.AUDIENCE);
     }
 
-    private void loadTop100(){
+    private void loadReviewsByType(String path, ReviewType type){
+        try{
+            //Check if file exists
+            File file = new File(path);
+            if(!file.exists()){
+                throw new FileNotFoundException();
+            }
 
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+            String line;
+            int skipCounter = 0, test = 0;
+            while ((line = bufferedReader.readLine()) != null) {
+                //Split line and normalize it
+                Object[] data = Util.splitCsvLine(line, false);
+
+                //Check if data/line is well formatted regarding the default column amount, otherwise skip it
+                if(!this.isReviewFormattingValid(data)){
+                    skipCounter++;
+                    continue;
+                }
+
+                String title = data[0] instanceof ArrayList<?> ? Util.joinArray((ArrayList<String>) data[0], ", ") : (String) data[0];
+                if(!this.appModel.isTitleInMediums(title)){
+                    test++;
+                    continue;
+                }
+
+                Review review;
+                if(type == ReviewType.CRITICS){
+                    review = new CriticReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " "),
+                            Boolean.parseBoolean((String) data[1]));
+                }
+                else{
+                    review = new AudienceReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " "),
+                             Float.parseFloat((String) data[1]));
+                }
+
+                this.appModel.getReviews().add(review);
+            }
+
+            this.loadingSkips.put(type.name(), skipCounter);
+            bufferedReader.close();
+        }
+        catch(Exception e){
+            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    //TODO: Sum up convert methods, that do the same
-    private MediumType convertMediumType(Object data){
+    // 0 Poster_Link, 1 Series_Title, 2 Released_Year, 3 Certificate, 4 Runtime, 5 Genre, 6 IMDB_Rating, 7 Overview, 8 Meta_score, 9 Director, 10 Star1,
+    // 11 Star2, 12 Star3, 13 Star4, 14 No_of_Votes, 15 Gross
+    private void loadImdbRatings(){
+        try{
+            //Check if file exists
+            File file = new File(FilePath.IMDB_RANKING_PATH);
+            if(!file.exists()){
+                throw new FileNotFoundException();
+            }
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+            String line;
+            int skipCounter = 0, test = 0;
+            while ((line = bufferedReader.readLine()) != null) {
+                //Split line and normalize it
+                Object[] data = Util.splitCsvLine(line, false);
+                Util.removeQuotes(data);
+
+                //Check if data/line is well formatted regarding the default column amount, otherwise skip it
+                if(!this.isImdbRatingFormattingValid(data)){
+                    skipCounter++;
+                    continue;
+                }
+
+                String title = data[1] instanceof ArrayList<?> ? Util.joinArray((ArrayList<String>) data[1], ", ") : (String) data[1];
+                if(!this.appModel.isTitleInMediums(title)){
+                    test++;
+                    continue;
+                }
+
+                Medium imdbMedium = this.appModel.getMediumByTitle(title);
+                if(imdbMedium != null){
+                    ArrayList<String> starsAsString = new ArrayList<>();
+                    starsAsString.add(this.convertObjectToString(data[10], " "));
+                    starsAsString.add(this.convertObjectToString(data[11], " "));
+                    starsAsString.add(this.convertObjectToString(data[12], " "));
+                    starsAsString.add(this.convertObjectToString(data[13], " "));
+
+                    ImdbRating rating = new ImdbRating(
+                            imdbMedium,
+                            this.convertObjectToString(data[0], ""),
+                            ((String) data[6]).isBlank() ? 0f : Float.parseFloat((String) data[6]),
+                            ((String) data[8]).isBlank() ? 0 : Integer.parseInt((String) data[8]),
+                            ((String) data[14]).isBlank() ? 0 : Integer.parseInt((String) data[14]),
+                            Integer.parseInt(this.convertObjectToString(data[15], "")),
+                            this.getCast(null, starsAsString)
+                            );
+
+                    this.appModel.getImdbRatings().add(rating);
+                }
+            }
+
+            this.loadingSkips.put("IMDB_RATING", skipCounter);
+            bufferedReader.close();
+        }
+        catch(Exception e){
+            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private MediumType convertMediumType(String type){
         MediumType mediumType = MediumType.TVSHOW;
-        if(Util.containsEnum((String) data, MediumType.class)){
-            mediumType = MediumType.valueOf(((String) data).toUpperCase().replace(" ", ""));
+        if(Util.containsEnum(type, MediumType.class)){
+            mediumType = MediumType.valueOf(type.toUpperCase().replace(" ", ""));
         }
 
         return mediumType;
     }
 
-    private String convertTitles(Object data){
-        String titles;
+    private String convertObjectToString(Object data, String separator){
+        String string = "";
         if(data instanceof ArrayList<?>)
-            titles = Util.joinArray((ArrayList<String>) data, "/");
-        else
-            titles = (String) data;
+            string = Util.joinArray((ArrayList<String>) data, separator);
+        else if(!((String) data).isEmpty())
+            string = (String) data;
 
-        return titles;
+        return string;
     }
 
-    private String convertDescription(Object data){
-        String description;
-        if(data instanceof ArrayList<?>)
-            description = Util.joinArray((ArrayList<String>) data);
-        else
-            description = (String) data;
-
-        return description;
-    }
-
-    private String convertGenres(Object data){
-        String genres;
-        if(data instanceof ArrayList<?>)
-            genres = Util.joinArray((ArrayList<String>) data, ", ");
-        else
-            genres = (String) data;
-
-        return genres;
-    }
-
-    private String convertCountries(Object data){
-        String countries;
-        if(data instanceof ArrayList<?>)
-            countries = Util.joinArray((ArrayList<String>) data, ", ");
-        else
-            countries = (String) data;
-
-        return countries;
-    }
-
-    private String convertDateAdded(Object data){
-        String dateAdded;
-        if(data instanceof ArrayList<?>)
-            dateAdded = Util.joinArray((ArrayList<String>) data, ", ");
-        else
-            dateAdded = (String) data;
-
-        return dateAdded;
-    }
-
-    private Person[] convertCast(Object directorData, Object actorData){
+    private Person[] getCast(Object directorData, Object actorData){
         ArrayList<Person> cast = new ArrayList<>();
 
         //Add directors
-        if(directorData instanceof ArrayList<?>){
-            for(String s : (ArrayList<String>)directorData){
-                cast.add(new Person(s, null, PersonRole.DIRECTOR));
+        if(directorData != null){
+            if(directorData instanceof ArrayList<?>){
+                for(String s : (ArrayList<String>)directorData){
+                    cast.add(new Person(s, null, PersonRole.DIRECTOR));
+                }
             }
+            else if(!((String) directorData).isEmpty())
+                cast.add(new Person((String) directorData, null, PersonRole.DIRECTOR));
         }
-        else
-            cast.add(new Person((String) directorData, null, PersonRole.DIRECTOR));
 
         //Add actors
-        if(actorData instanceof ArrayList<?>){
-            for(String s : (ArrayList<String>)actorData){
-                cast.add(new Person(s, null, PersonRole.ACTOR));
+        if(actorData != null){
+            if(actorData instanceof ArrayList<?>){
+                for(String s : (ArrayList<String>)actorData){
+                    cast.add(new Person(s, null, PersonRole.ACTOR));
+                }
+            }
+            else if(!((String) actorData).isEmpty()){
+                cast.add(new Person((String) actorData, null, PersonRole.ACTOR));
             }
         }
-        else
-            cast.add(new Person((String) actorData, null, PersonRole.ACTOR));
 
         return cast.toArray(Person[]::new);
     }
 
-    private String convertName(Object data){
-        String character;
-        if(data instanceof ArrayList<?>){
-            character = Util.joinArray((ArrayList<String>) data, " ");
-        }
-        else{
-            character = (String) data;
+    private void showSkipStats(){
+        StringBuilder skippedStats = new StringBuilder();
+        int totalSkips = 0;
+        for (Map.Entry<String, Integer> entry : this.loadingSkips.entrySet()) {
+            skippedStats.append(Util.capitalize(entry.getKey(), "_")).append(": ").append(entry.getValue()).append('\n');
+            totalSkips += entry.getValue();
         }
 
-        return character;
-    }
-
-    //TODO: Show skipped counter of all provider in one dialog
-    private void showSkippedMediumsDialog(Provider provider, int skipCounter){
         this.appModel.getAppView().showDialog(this.appModel.getTranslation("dialog.title.init.dataloading"),
-                skipCounter + " " + Util.capitalize(provider.name(), "_") + this.appModel.getTranslation("dialog.body.init.dataloading"),
-                JOptionPane.INFORMATION_MESSAGE);
+                this.appModel.getTranslation("dialog.body.init.dataloading").replace("#", Integer.toString(totalSkips)) + "\n\n" + skippedStats,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     //NDA = Netflix, Disney Plus, Amazon Prime
@@ -381,6 +469,14 @@ public class FileLoader {
 
     private boolean isApplePlusCreditsFormattingValid(Object[] data){
         return data.length == 5;
+    }
+
+    private boolean isReviewFormattingValid(Object[] data){
+        return data.length == 3 && !(data[1] instanceof ArrayList<?>) && Util.isNumeric((String) data[1]);
+    }
+
+    private boolean isImdbRatingFormattingValid(Object[] data){
+        return data.length == 16;
     }
 
     private final String[] blacklist = new String[]{"s7384"};

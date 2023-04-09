@@ -37,6 +37,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return Util.capitalize(this.role.name(), null) + ": " + this.name + " (" + this.character + ")" + " (" + this.movieId + ")";
+        return Util.capitalize(this.role.name(), null) + ": " + this.name + " (" + this.character + ")";
     }
 }
