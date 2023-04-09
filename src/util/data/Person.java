@@ -31,12 +31,15 @@ public class Person {
 
     public Person(String name, String character, PersonRole role){
         this.name = name;
-        this.character = character == null ? "N/A" : character;
+        this.character = character == null || character.isEmpty() ? "N/A" : character;
         this.role = role;
     }
 
     @Override
     public String toString() {
-        return Util.capitalize(this.role.name(), null) + ": " + this.name + " (" + this.character + ")";
+        if(this.name == null || this.role == null)
+            return "N/A";
+
+        return Util.uppercaseAll(this.role.name()) + ": " + this.name + " (" + this.character + ")";
     }
 }

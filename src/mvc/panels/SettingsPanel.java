@@ -42,8 +42,8 @@ public class SettingsPanel extends JPanel implements IViewPanel {
 
         //Create component panel as a component inside of this panel
         JPanel componentPanel = new JPanel(new GridBagLayout());
-        componentPanel.setBorder(new EmptyBorder(20, 20, 20, 0)); //Border padding
-        this.add(componentPanel, BorderLayout.WEST); //Attach component panel on left side
+        componentPanel.setBorder(new EmptyBorder(20, 20, 200, 500)); //Border padding
+        this.add(componentPanel, BorderLayout.CENTER); //Attach component panel on left side
 
         //Describe the cell behavior in GridLayout
         GridBagConstraints constraints = new GridBagConstraints();
@@ -56,7 +56,7 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         constraints.gridy = 0; //Set cell y
         componentPanel.add(this.languageLabel, constraints); //Add component with constraints
 
-        this.languageComboBox = new JComboBox(Util.getLanguages());
+        this.languageComboBox = new JComboBox(Language.values());
         constraints.gridx = 1;
         componentPanel.add(this.languageComboBox, constraints);
 
@@ -104,6 +104,7 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         });
     }
 
+    @Override
     public void setTranslations(){
         AppModel appModel = this.appView.getAppController().getAppModel();
 

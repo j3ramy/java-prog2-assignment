@@ -9,6 +9,8 @@ import util.interfaces.IViewPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class AppView extends JFrame implements IViewPanel {
@@ -66,6 +68,15 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.statusBarPanel.setBackground(Color.WHITE);
         this.statusBarPanel.setBorder(new EmptyBorder(0, 5, 0, 0));
+
+        this.tabbedPanel.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                String tabName = tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
+                if(tabName.equalsIgnoreCase(appController.getAppModel().getTranslation("label.main.random_medium")))
+                    randomMediumPanel.searchForRandomMedium();
+            }
+        });
     }
 
     @Override
@@ -82,11 +93,33 @@ public class AppView extends JFrame implements IViewPanel {
 
     @Override
     public void initActionListeners(){
-        this.closeButton.addActionListener(e -> {
-            this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.close"),
-                    this.getAppController().getAppModel().getTranslation("dialog.body.main.close"), JOptionPane.INFORMATION_MESSAGE);
-            this.appController.close();
-        });
+        this.closeButton.addActionListener(e -> this.showCloseAppDialog());
+    }
+
+    @Override
+    public void setTranslations() {
+        this.closeButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
+
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.start"), this.startPanel);
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
+
+        this.setUserFeedbackText("label.user.welcome");
+        this.setStatusBarText(AppState.READY);
+    }
+
+    public void enableTabs(){
+        for(int i = 0; i < this.tabbedPanel.getTabCount(); i++){
+            this.tabbedPanel.setEnabledAt(i, true);
+        }
+    }
+
+    public void disableTabs(){
+        for(int i = 0; i < this.tabbedPanel.getTabCount(); i++){
+            //Only disable tabs which have to depend on data sources (which might not be loaded completely)
+            if(i != 0 && i != this.tabbedPanel.getTabCount() - 1)
+                this.tabbedPanel.setEnabledAt(i, false);
+        }
     }
 
     public void setSettings(){
@@ -94,18 +127,10 @@ public class AppView extends JFrame implements IViewPanel {
     }
 
     public void setAllTranslations(){
-        this.closeButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
-
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.start"), this.startPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
-
+        this.setTranslations();
         this.startPanel.setTranslations();
         this.randomMediumPanel.setTranslations();
         this.settingsPanel.setTranslations();
-
-        this.setUserFeedbackText("label.user.welcome");
-        this.setStatusBarText(AppState.READY);
     }
 
     public void setStatusBarText(AppState appState){
@@ -131,6 +156,17 @@ public class AppView extends JFrame implements IViewPanel {
 
     public void showFirstAppStartDialog(){
         this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.no_settings"),
-                this.getAppController().getAppModel().getTranslation("dialog.body.main.no_settings"), JOptionPane.QUESTION_MESSAGE);;
+                this.getAppController().getAppModel().getTranslation("dialog.body.main.no_settings"), JOptionPane.QUESTION_MESSAGE);
+    }
+
+    public void showCloseAppDialog(){
+        this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.close"),
+                this.getAppController().getAppModel().getTranslation("dialog.body.main.close"), JOptionPane.INFORMATION_MESSAGE);
+        this.appController.close();
+    }
+
+    public void showNoMediumFoundDialog(){
+        this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.no_result"),
+                this.getAppController().getAppModel().getTranslation("dialog.body.main.no_result"), JOptionPane.ERROR_MESSAGE);
     }
 }

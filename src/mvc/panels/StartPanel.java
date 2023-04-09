@@ -50,6 +50,7 @@ public class StartPanel extends JPanel implements IViewPanel {
 
     }
 
+    @Override
     public void setTranslations(){
         AppModel appModel = this.appView.getAppController().getAppModel();
 

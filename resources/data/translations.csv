@@ -1,22 +1,36 @@
 label.settings.language,Sprache:,Language:
 label.settings.providers,Deine Anbieter:,Your Providers:
-label.main.start,Start,Start
-label.main.start.content,Mit diser App kannst du dir Filme und Serien für deinen Kinoabend vorschlagen lassen. Viel Spaß!,This app recommends movies and series for your cinema night. Enjoy!
+label.main.start,Willkommen,Welcome
+label.main.start.content,Mit dieser App kannst du dir Filme und Serien für deinen Kinoabend vorschlagen lassen. Viel Spaß!,This app recommends movies and series for your cinema night. Enjoy!
 label.main.settings,Einstellungen,Settings
-label.main.random_medium,Zufälliger Vorschlag,Random Recommendation
+label.main.random_medium,Zufälliges Medium,Random Medium
 label.user.welcome,Willkommen! Navigiere durch die Tabs um die verschiedenen Funktionen zu nutzen:,Welcome! Navigate through the tabs below to use all different features:
 label.status.ready,Bereit,Ready
 label.status.searching,Suche...,Search...
 label.status.load_mediums,Lade Medium Datenquelle...,Load Medium Data Source...
 label.status.load_reviews,Lade Review Datenquelle...,Load Review Data Source...
 label.status.load_imdb_rating,Lade IMDB Rating Datenquelle...,Load IMDB Rating Data Source...
+label.random.type,Mediumart,Medium Type
+label.random.provider,Anbieter,Provider(s)
+label.random.genre,Genre(s),Genre(s)
+label.random.duration,Dauer,Duration
+label.random.season,Staffel(n),Season(s)
+label.random.description,Beschreibung,Description
+label.random.age,Altersfreigabe,Age Rating
+label.random.cast,Cast,Cast
+label.random.country,Herkunftsland/Herkunftsländer,Country/Countries
+label.random.added_at,Hinzugefügt am,Added at
 button.settings.save,Speichern,Save
 button.main.close,Beenden,Close
+button.confirm,Zufrieden?,Happy?
+button.reject,Neuer Vorschlag,New Recommendation
 dialog.title.settings.save,Einstellungen gespeichert,Changes Saved
 dialog.title.main.close,Bye Bye!,Bye Bye!
 dialog.title.main.no_settings,Willkommen!,Welcome!
 dialog.title.init.dataloading,Hinweis,Hint
-dialog.body.settings.save,Deine Einstellungen wurden gespeichert. Um die neuen Provider zu laden starte die App neu,Your changes have been saved. To load the new providers restart the App
+dialog.title.main.no_result,Kein Ergebnis,No Result
+dialog.body.settings.save,Deine Einstellungen wurden gespeichert. Um die geänderten Anbieter zu laden starte die App neu,Your changes have been saved. To load the new providers restart the App
 dialog.body.main.close,Vielen Dank für die Nutzung der App! Bis bald :),Thanks for using this app. See you soon!
-dialog.body.main.no_settings,Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Provider fest (Dies kannst du immer anpassen),Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)
+dialog.body.main.no_settings,Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Anbieter fest (Dies kannst du nachträglich anpassen),Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)
 dialog.body.init.dataloading,# Einträge konnten aufgrund von fehlerhaften Formatierungen innerhalb der Datenquellen nicht geladen werden:,# records could not have been loaded due to wrong data formatting:
+dialog.body.main.no_result,Es wurde kein Medium gefunden. Versuche eine andere Eingabe oder überprüfe die Anbieter in den Einstellungen,No medium found. Try another input or check your providers in the app settings

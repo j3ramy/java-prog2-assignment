@@ -26,20 +26,28 @@ public class FileLoader {
         this.loadCustomData();
         this.loadTranslations();
 
+        this.appModel.getAppView().disableTabs();
+
         new Thread(() -> {
             try {
                 Thread.sleep(500);
 
                 this.appModel.getAppView().setStatusBarText(AppState.LOAD_MEDIUMS);
                 this.loadMediums();
-                this.appModel.getAppView().setStatusBarText(AppState.LOAD_REVIEWS);
-                this.loadReviews();
-                this.appModel.getAppView().setStatusBarText(AppState.LOAD_IMDB_RATING);
-                this.loadImdbRatings();
+
+                if(!this.appModel.getMediums().isEmpty()){
+                    this.appModel.getAppView().setStatusBarText(AppState.LOAD_REVIEWS);
+                    this.loadReviews();
+                    this.appModel.getAppView().setStatusBarText(AppState.LOAD_IMDB_RATING);
+                    this.loadImdbRatings();
+
+                    this.appModel.getAppView().setStatusBarText(AppState.READY);
+
+                    //this.showSkipStats(); TODO: Uncomment
+                }
+
                 this.appModel.getAppView().setStatusBarText(AppState.READY);
-
-                this.showSkipStats();
-
+                this.appModel.getAppView().enableTabs();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -72,7 +80,7 @@ public class FileLoader {
                 ArrayList<Provider> providersList = new ArrayList<>();
                 if(!providersAsStringList.isEmpty()){
                     for (String s : providersAsStringList)
-                        if(Util.containsEnum(s, Provider.class))
+                        if(Util.containsEnumValue(s, Provider.class))
                             providersList.add(Provider.valueOf(s));
                 }
 
@@ -176,7 +184,7 @@ public class FileLoader {
                     this.appModel.getMediums().get(medium.getTitle()).getProviders().add(provider);
                 }
                 else{
-                    this.appModel.getMediums().put(Util.stringToKey(medium.getTitle()), medium);
+                    this.appModel.getMediums().put(Util.stringToKeyFormat(medium.getTitle()), medium);
                 }
             }
 
@@ -192,15 +200,16 @@ public class FileLoader {
     //Disney: type,title,director,cast,country,date_added,release_year,rating,duration,listed_in,description
     //Amazon: type,title,director,cast,country,date_added,release_year,rating,duration,listed_in,description
     private Medium createNDAMedium(Object[] data, Provider provider){
+        MediumType mediumType = this.convertMediumType((String) data[1]);
         return new Medium(
                 (String) data[0],
-                this.convertMediumType((String) data[1]),
+                mediumType,
                 provider,
                 this.convertObjectToString(data[2], "/"),
                 this.convertObjectToString(data[data.length - 1], ", "),
                 this.convertObjectToString(data[10], ", "),
-                (String) data[9],
-                "N/A",
+                mediumType == MediumType.MOVIE ? (String) data[9] : "",
+                mediumType == MediumType.SHOW ? (String) data[9] : "",
                 (String) data[7],
                 this.getCast(data[3], data[4]),
                 this.convertObjectToString(data[5], ", "),
@@ -221,7 +230,7 @@ public class FileLoader {
                 this.convertObjectToString(data[3], ", "),
                 this.convertObjectToString(data[7], ", "),
                 (String) data[6],
-                mediumType == MediumType.TVSHOW ? (String) data[9] : "N/A",
+                mediumType == MediumType.SHOW ? (String) data[9] : "N/A",
                 (String) data[4],
                 this.getApplePlusCastByMovie((String) data[0]),
                 this.convertObjectToString(data[8], ", "),
@@ -264,7 +273,7 @@ public class FileLoader {
                     continue;
                 }
 
-                if(Util.containsEnum((String) data[4], PersonRole.class)){
+                if(Util.containsEnumValue((String) data[4], PersonRole.class)){
                     Person person = new Person(this.convertObjectToString(data[2], " "), this.convertObjectToString(data[3], " "), PersonRole.valueOf((String) data[4]));
                     person.setMovieId((String) data[1]);
 
@@ -309,7 +318,7 @@ public class FileLoader {
                     continue;
                 }
 
-                String title = data[0] instanceof ArrayList<?> ? Util.joinArray((ArrayList<String>) data[0], ", ") : (String) data[0];
+                String title = data[0] instanceof ArrayList<?> ? Util.joinList((List<?>) data[0], ", ") : (String) data[0];
                 if(!this.appModel.isTitleInMediums(title)){
                     test++;
                     continue;
@@ -361,7 +370,7 @@ public class FileLoader {
                     continue;
                 }
 
-                String title = data[1] instanceof ArrayList<?> ? Util.joinArray((ArrayList<String>) data[1], ", ") : (String) data[1];
+                String title = data[1] instanceof ArrayList<?> ? Util.joinList((List<?>) data[1], ", ") : (String) data[1];
                 if(!this.appModel.isTitleInMediums(title)){
                     test++;
                     continue;
@@ -398,22 +407,17 @@ public class FileLoader {
     }
 
     private MediumType convertMediumType(String type){
-        MediumType mediumType = MediumType.TVSHOW;
-        if(Util.containsEnum(type, MediumType.class)){
-            mediumType = MediumType.valueOf(type.toUpperCase().replace(" ", ""));
-        }
-
-        return mediumType;
+        return type.toLowerCase().contains("show") ? MediumType.SHOW : MediumType.MOVIE;
     }
 
     private String convertObjectToString(Object data, String separator){
         String string = "";
         if(data instanceof ArrayList<?>)
-            string = Util.joinArray((ArrayList<String>) data, separator);
+            string = Util.joinList((List<?>) data, separator);
         else if(!((String) data).isEmpty())
             string = (String) data;
 
-        return string;
+        return Util.uppercaseAll(Util.removeForbiddenChars(string));
     }
 
     private Person[] getCast(Object directorData, Object actorData){
@@ -449,7 +453,7 @@ public class FileLoader {
         StringBuilder skippedStats = new StringBuilder();
         int totalSkips = 0;
         for (Map.Entry<String, Integer> entry : this.loadingSkips.entrySet()) {
-            skippedStats.append(Util.capitalize(entry.getKey(), "_")).append(": ").append(entry.getValue()).append('\n');
+            skippedStats.append(Util.uppercaseAll((entry.getKey()))).append(": ").append(entry.getValue()).append('\n');
             totalSkips += entry.getValue();
         }
 

@@ -6,4 +6,5 @@ public interface IViewPanel {
     void initStyles();
     void initImages();
     void initActionListeners();
+    void setTranslations();
 }

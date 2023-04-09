@@ -71,16 +71,16 @@ public class Medium {
         this.id = id;
         this.type = type;
         this.providers.add(provider);
-        this.title = title;
-        this.description = description;
-        this.genres = genres;
-        this.duration = duration;
-        this.seasons = seasons;
-        this.releaseYear = releaseYear;
-        this.cast = cast;
-        this.countries = countries;
-        this.ageRating = ageRating;
-        this.addedAt = addedAt;
+        this.title = title.isEmpty() ? "N/A" : title;
+        this.description = description.isEmpty() ? "N/A" : description;
+        this.genres = genres.isEmpty() ? "N/A" : genres;
+        this.duration = duration.isEmpty() ? "N/A" : duration;
+        this.seasons = seasons.isEmpty() ? "N/A" : seasons;
+        this.releaseYear = releaseYear.isEmpty() ? "N/A" : releaseYear;
+        this.cast = cast.length == 0 ? new Person[]{new Person("N/A", null, null)} : cast;
+        this.countries = countries.isEmpty() ? "N/A" : countries;
+        this.ageRating = ageRating.isEmpty() ? "N/A" : ageRating;
+        this.addedAt = addedAt.isEmpty() ? "N/A" : addedAt;
 
     }
 

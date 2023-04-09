@@ -13,6 +13,7 @@ import util.file.Translation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class AppModel {
     private final AppController appController;
@@ -67,10 +68,20 @@ public class AppModel {
     }
 
     public Medium getMediumByTitle(String title){
-        return this.mediums.get(Util.stringToKey(title));
+        return this.mediums.get(Util.stringToKeyFormat(title));
+    }
+
+    public Medium getRandomMedium(){
+        ArrayList<String> keys = new ArrayList<>(this.mediums.keySet());
+        Random random = new Random();
+
+        if(keys.isEmpty())
+            return null;
+
+        return this.mediums.get(keys.get(random.nextInt(keys.size())));
     }
 
     public boolean isTitleInMediums(String title) {
-        return this.mediums.containsKey(Util.stringToKey(title));
+        return this.mediums.containsKey(Util.stringToKeyFormat(title));
     }
 }

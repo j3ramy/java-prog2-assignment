@@ -1,32 +1,11 @@
 package util;
 
-import util.enums.Language;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class Util {
-
-    public static Language[] getLanguages(){
-        return Language.values();
-    }
-
-    public static String capitalize(String s, String splitBy){
-        if(splitBy != null){
-            String[] words = s.split(splitBy);
-
-            for(int i = 0; i < words.length; i++){
-                words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-            }
-
-            return joinArray(new ArrayList<>(Arrays.asList(words)), " ");
-        }
-
-        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
-    }
-
     public static String convertArrayToCsvString(Object[] array){
         StringBuilder s = new StringBuilder("\"");
 
@@ -104,7 +83,7 @@ public class Util {
         return counter;
     }
 
-    public static boolean containsEnum(String value, Class<?> enumeration){
+    public static boolean containsEnumValue(String value, Class<?> enumeration){
         boolean contains = false;
 
         for(Object s : enumeration.getEnumConstants()){
@@ -115,11 +94,28 @@ public class Util {
         return contains;
     }
 
-    public static String joinArray(ArrayList<String> array){
+    public static String joinArray(Object[] array){
         return joinArray(array, "");
     }
 
-    public static String joinArray(ArrayList<String> list, String separator){
+    public static String joinArray(Object[] array, String separator){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(int i = 0; i < array.length; i++){
+            stringBuilder.append(array[i]);
+
+            if(i != array.length - 1)
+                stringBuilder.append(separator);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public static String joinList(List<?> array){
+        return joinList(array, "");
+    }
+
+    public static String joinList(List<?> list, String separator){
         StringBuilder stringBuilder = new StringBuilder();
 
         for(int i = 0; i < list.size(); i++){
@@ -132,12 +128,37 @@ public class Util {
         return stringBuilder.toString();
     }
 
-    private static final Pattern PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private static final Pattern pattern1 = Pattern.compile("-?\\d+(\\.\\d+)?");
     public static boolean isNumeric(String s){
-        return PATTERN.matcher(s).matches();
+        return pattern1.matcher(s).matches();
     }
 
-    public static String stringToKey(String key){
+    public static String stringToKeyFormat(String key){
         return key.toLowerCase().replace(" ", "_");
+    }
+
+    private static Pattern pattern2 = Pattern.compile("[^a-zA-Z0-9 ,_]");
+    public static String removeForbiddenChars(String s){
+        return s.replaceAll(pattern2.pattern(), "");
+    }
+
+    public static String uppercaseAll(String s){
+        if(s.isEmpty())
+            return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        if(s.contains(" ")){
+            String[] arr = s.split(" ");
+
+            for (String value : arr) {
+                if(!value.isEmpty())
+                    sb.append(Character.toUpperCase(value.charAt(0)))
+                            .append(value.substring(1)).append(" ");
+            }
+            return sb.toString().trim();
+        }
+
+        return sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1).toLowerCase()).toString().trim();
     }
 }
