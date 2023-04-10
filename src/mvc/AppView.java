@@ -9,8 +9,6 @@ import util.interfaces.IViewPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class AppView extends JFrame implements IViewPanel {
@@ -46,6 +44,12 @@ public class AppView extends JFrame implements IViewPanel {
     public void initComponents(){
         this.add(this.mainPanel);
 
+        this.tabbedPanel.addChangeListener(e -> {
+            String tabName = tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
+            if(tabName.equalsIgnoreCase(appController.getAppModel().getTranslation("label.main.random_medium")))
+                randomMediumPanel.searchForRandomMedium();
+        });
+
         this.startPanel = new StartPanel(this);
         this.startPanel.init();
 
@@ -68,15 +72,6 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.statusBarPanel.setBackground(Color.WHITE);
         this.statusBarPanel.setBorder(new EmptyBorder(0, 5, 0, 0));
-
-        this.tabbedPanel.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                String tabName = tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
-                if(tabName.equalsIgnoreCase(appController.getAppModel().getTranslation("label.main.random_medium")))
-                    randomMediumPanel.searchForRandomMedium();
-            }
-        });
     }
 
     @Override
@@ -101,7 +96,10 @@ public class AppView extends JFrame implements IViewPanel {
         this.closeButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
 
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.start"), this.startPanel);
+
+        //JScrollPane scrollPane = new JScrollPane(this.randomMediumPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
+
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
 
         this.setUserFeedbackText("label.user.welcome");
@@ -128,6 +126,7 @@ public class AppView extends JFrame implements IViewPanel {
 
     public void setAllTranslations(){
         this.setTranslations();
+
         this.startPanel.setTranslations();
         this.randomMediumPanel.setTranslations();
         this.settingsPanel.setTranslations();
@@ -148,6 +147,7 @@ public class AppView extends JFrame implements IViewPanel {
     public void setUserFeedbackText(String key){
         JLabel userFeedbackLabel = (JLabel) this.userFeedbackPanel.getComponents()[0];
         userFeedbackLabel.setText(this.getAppController().getAppModel().getTranslation(key));
+        userFeedbackLabel.setFont(new Font(null, Font.BOLD, 14));
     }
 
     public void showDialog(String title, String message, int dialogType) {

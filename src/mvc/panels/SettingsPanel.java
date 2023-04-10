@@ -142,6 +142,9 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         //Set translations again in real time
         this.appView.setAllTranslations();
 
+        if(!this.appView.getAppController().getAppModel().hasMediums())
+            this.appView.disableTabs();
+
         AppModel appModel = this.appView.getAppController().getAppModel();
         this.appView.showDialog(appModel.getTranslation("dialog.title.settings.save"),
                 appModel.getTranslation("dialog.body.settings.save"), JOptionPane.INFORMATION_MESSAGE);

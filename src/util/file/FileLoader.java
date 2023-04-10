@@ -34,18 +34,21 @@ public class FileLoader {
                 this.appModel.getAppView().setStatusBarText(AppState.LOAD_MEDIUMS);
                 this.loadMediums();
 
-                if(!this.appModel.getMediums().isEmpty()){
+                if(this.appModel.hasMediums()){
                     this.appModel.getAppView().setStatusBarText(AppState.LOAD_REVIEWS);
                     this.loadReviews();
                     this.appModel.getAppView().setStatusBarText(AppState.LOAD_IMDB_RATING);
                     this.loadImdbRatings();
 
                     this.appModel.getAppView().setStatusBarText(AppState.READY);
+                    this.appModel.getAppView().enableTabs();
 
                     //this.showSkipStats(); TODO: Uncomment
                 }
+                else{
+                    this.appModel.getAppView().showNoMediumFoundDialog();
+                }
 
-                this.appModel.getAppView().enableTabs();
                 this.appModel.getAppView().setStatusBarText(AppState.READY);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -206,7 +209,7 @@ public class FileLoader {
                 mediumType,
                 provider,
                 this.convertObjectToString(data[2], "/"),
-                this.convertObjectToString(data[data.length - 1], ", "),
+                this.convertObjectToString(data[data.length - 1], ", ", false),
                 this.convertObjectToString(data[10], ", "),
                 mediumType == MediumType.MOVIE ? (String) data[9] : "",
                 mediumType == MediumType.SHOW ? (String) data[9] : "",
@@ -227,7 +230,7 @@ public class FileLoader {
                 mediumType,
                 provider,
                 this.convertObjectToString(data[1], "/"),
-                this.convertObjectToString(data[3], ", "),
+                this.convertObjectToString(data[3], ", ", false),
                 this.convertObjectToString(data[7], ", "),
                 (String) data[6],
                 mediumType == MediumType.SHOW ? (String) data[9] : "N/A",
@@ -326,11 +329,11 @@ public class FileLoader {
 
                 Review review;
                 if(type == ReviewType.CRITICS){
-                    review = new CriticReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " "),
+                    review = new CriticReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false),
                             Boolean.parseBoolean((String) data[1]));
                 }
                 else{
-                    review = new AudienceReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " "),
+                    review = new AudienceReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false),
                              Float.parseFloat((String) data[1]));
                 }
 
@@ -411,13 +414,20 @@ public class FileLoader {
     }
 
     private String convertObjectToString(Object data, String separator){
+        return this.convertObjectToString(data, separator, true);
+    }
+
+    private String convertObjectToString(Object data, String separator, boolean uppercaseAll) {
         String string = "";
         if(data instanceof ArrayList<?>)
             string = Util.joinList((List<?>) data, separator);
         else if(!((String) data).isEmpty())
             string = (String) data;
 
-        return Util.uppercaseAll(Util.removeForbiddenChars(string));
+        if(uppercaseAll)
+            return Util.uppercaseAll(Util.removeForbiddenChars(string));
+        else
+            return Util.removeForbiddenChars(string);
     }
 
     private Person[] getCast(Object directorData, Object actorData){

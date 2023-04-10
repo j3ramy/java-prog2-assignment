@@ -77,7 +77,7 @@ public class Medium {
         this.duration = duration.isEmpty() ? "N/A" : duration;
         this.seasons = seasons.isEmpty() ? "N/A" : seasons;
         this.releaseYear = releaseYear.isEmpty() ? "N/A" : releaseYear;
-        this.cast = cast.length == 0 ? new Person[]{new Person("N/A", null, null)} : cast;
+        this.cast = cast == null || cast.length == 0 ? new Person[]{new Person("N/A", null, null)} : cast;
         this.countries = countries.isEmpty() ? "N/A" : countries;
         this.ageRating = ageRating.isEmpty() ? "N/A" : ageRating;
         this.addedAt = addedAt.isEmpty() ? "N/A" : addedAt;

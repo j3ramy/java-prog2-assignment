@@ -13,4 +13,5 @@ public class FilePath {
     public static final String AUDIENCE_REVIEWS_PATH = "././resources/data/audience_reviews.csv";
 
     public static final String MENU_IMAGE_PATH = "././resources/images/menu_image.png";
+    public static final String POPCORN_IMAGE_PATH = "././resources/images/popcorn.png";
 }

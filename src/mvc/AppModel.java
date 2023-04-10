@@ -1,6 +1,7 @@
 package mvc;
 
 import util.Util;
+import util.data.AudienceReview;
 import util.data.ImdbRating;
 import util.data.Medium;
 import util.data.Review;
@@ -79,6 +80,59 @@ public class AppModel {
             return null;
 
         return this.mediums.get(keys.get(random.nextInt(keys.size())));
+    }
+
+    //Returns array of AudienceReview only, because CriticsReview does not have a rating as a number
+    public AudienceReview[] getBestAndWorstReviewByTitle(String title){
+        AudienceReview[] reviews = new AudienceReview[2];
+        for(AudienceReview review : this.getAudienceReviewsByTitle(title)){
+            if(reviews[1] == null || review.getRating() >= reviews[1].getRating())
+                reviews[1] = review;
+
+            if(reviews[0] == null || review.getRating() <= reviews[0].getRating())
+                reviews[0] = review;
+        }
+
+        if(reviews[0] != null && reviews[1] != null){
+            reviews[0].setBest(false);
+            reviews[1].setBest(true);
+        }
+
+        return reviews;
+    }
+
+    public ArrayList<Review> getAllReviewsByTitle(String title){
+        ArrayList<Review> reviews = new ArrayList<>();
+
+        if(isTitleInMediums(title)){
+            for(Review review : this.reviews){
+                if(review.getMediumTitle().equalsIgnoreCase(title))
+                    reviews.add(review);
+            }
+        }
+
+        return reviews;
+    }
+
+    public ArrayList<AudienceReview> getAudienceReviewsByTitle(String title){
+        ArrayList<AudienceReview> reviews = new ArrayList<>();
+
+        if(isTitleInMediums(title)){
+            for(Review review : this.reviews){
+                if(review.getMediumTitle().equalsIgnoreCase(title) && review instanceof AudienceReview)
+                    reviews.add((AudienceReview) review);
+            }
+        }
+
+        return reviews;
+    }
+
+    public boolean hasMediums(){
+        return !this.mediums.isEmpty();
+    }
+
+    public boolean hasTitleReviews(String title){
+        return !this.getAllReviewsByTitle(title).isEmpty();
     }
 
     public boolean isTitleInMediums(String title) {

@@ -16,7 +16,7 @@ public class AppController {
         //Init AppView
         this.appView = new AppView(this);
 
-        this.appView.setMinimumSize(new Dimension(1280, 720)); //720p
+        this.appView.setMinimumSize(new Dimension(1280, 810));
         this.appView.setTitle("Media Recommendation App (J. Seidel, WWI22SCA)");
         this.appView.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //Terminate the complete app when 'X' on the window title bar is clicked
         this.appView.setLocationRelativeTo(null); //Let window appear in the center of the screen when started
