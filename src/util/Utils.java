@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Util {
+public class Utils {
     public static String convertArrayToCsvString(Object[] array){
         StringBuilder s = new StringBuilder("\"");
 
@@ -154,7 +154,7 @@ public class Util {
             for (String value : arr) {
                 if(!value.isEmpty())
                     sb.append(Character.toUpperCase(value.charAt(0)))
-                            .append(value.substring(1)).append(" ");
+                            .append(value.substring(1).toLowerCase()).append(" ");
             }
             return sb.toString().trim();
         }

@@ -1,19 +1,21 @@
 package util.data;
 
+import util.enums.AudienceReviewClassification;
+
 public class AudienceReview extends Review {
     private final float rating;
-    private boolean isBest = false;
+    private AudienceReviewClassification classification = AudienceReviewClassification.NONE;
 
     public float getRating() {
         return rating;
     }
 
-    public boolean isBest() {
-        return isBest;
+    public AudienceReviewClassification getClassification() {
+        return classification;
     }
 
-    public void setBest(boolean best) {
-        isBest = best;
+    public void setClassification(AudienceReviewClassification classification) {
+        this.classification = classification;
     }
 
     public AudienceReview(String mediumTitle, String comment, float rating){

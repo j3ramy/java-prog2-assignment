@@ -3,7 +3,7 @@ package mvc.panels;
 import mvc.AppModel;
 import mvc.AppView;
 import util.Colors;
-import util.Util;
+import util.Utils;
 import util.data.Medium;
 import util.interfaces.IViewPanel;
 
@@ -168,14 +168,17 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
     public void fillDataView(Medium medium){
         this.titleLabel.setText(medium.getTitle() + " (" + medium.getReleaseYear() + ")");
 
-        this.typeLabel.setText(Util.uppercaseAll(medium.getType().name()));
-        this.providerLabel.setText(Util.joinList(medium.getProviders(), ", "));
+        this.typeLabel.setText(Utils.uppercaseAll(medium.getType().name()));
+
+        String formattedKey = Utils.uppercaseAll(Utils.joinArray(Utils.joinList(medium.getProviders(), " ").split("_"), " "));
+        this.providerLabel.setText(formattedKey);
+
         this.genreTextArea.setText(medium.getGenres());
         this.durationLabel.setText(medium.getDuration());
         this.seasonLabel.setText(medium.getSeasons());
         this.descriptionTextArea.setText(medium.getDescription().trim());
         this.ageRatingLabel.setText(medium.getAgeRating());
-        this.castTextArea.setText(Util.joinArray(medium.getCast(), ", "));
+        this.castTextArea.setText(Utils.joinArray(medium.getCast(), ", "));
         this.countryTextArea.setText(medium.getCountries());
         this.addedAtLabel.setText(medium.getAddedAt());
 

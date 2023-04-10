@@ -2,7 +2,7 @@ package mvc.panels;
 
 import mvc.AppModel;
 import mvc.AppView;
-import util.file.FilePath;
+import util.file.FilePaths;
 import util.interfaces.IViewPanel;
 
 import javax.swing.*;
@@ -51,7 +51,7 @@ public class StartPanel extends JPanel implements IViewPanel {
     @Override
     public void initImages() {
         try {
-            ImageIcon imageIcon = new ImageIcon(FilePath.POPCORN_IMAGE_PATH);
+            ImageIcon imageIcon = new ImageIcon(FilePaths.POPCORN_IMAGE_PATH);
             Image image = imageIcon.getImage().getScaledInstance(281, 375,  Image.SCALE_SMOOTH);
             this.image.setIcon(new ImageIcon(image));
         }

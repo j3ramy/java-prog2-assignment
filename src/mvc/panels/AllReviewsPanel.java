@@ -65,7 +65,7 @@ public class AllReviewsPanel extends JPanel implements IViewPanel {
         constraints.gridwidth = 2;
         componentPanel.add(this.reviewViewPanel, constraints);
 
-        this.indexFeedbackLabel = new JLabel("TEEEEEST", JLabel.CENTER);
+        this.indexFeedbackLabel = new JLabel("", JLabel.CENTER);
         constraints.gridx = 0;
         constraints.gridy = 1;
         componentPanel.add(this.indexFeedbackLabel, constraints);

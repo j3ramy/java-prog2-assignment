@@ -1,7 +1,7 @@
 package util.file;
 
 import mvc.AppModel;
-import util.Util;
+import util.Utils;
 
 import javax.swing.*;
 import java.io.BufferedWriter;
@@ -18,14 +18,14 @@ public class FileSaver {
 
     public void saveCustomData(){
         try{
-            File file = new File(FilePath.CUSTOM_DATA_PATH);
+            File file = new File(FilePaths.CUSTOM_DATA_PATH);
             if(!file.exists() && !file.createNewFile()){
                 throw new FileAlreadyExistsException(file.getName());
             }
 
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
             bufferedWriter.write(this.appModel.getCustomData().getLanguage() + "," +
-                    Util.convertArrayToCsvString(this.appModel.getCustomData().getProvidersAsString()));
+                    Utils.convertArrayToCsvString(this.appModel.getCustomData().getProvidersAsString()));
             bufferedWriter.close();
         }
         catch(Exception e){

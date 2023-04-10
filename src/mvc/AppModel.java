@@ -1,20 +1,16 @@
 package mvc;
 
-import util.Util;
-import util.data.AudienceReview;
-import util.data.ImdbRating;
-import util.data.Medium;
-import util.data.Review;
+import util.Algorithms;
+import util.Utils;
+import util.data.*;
+import util.enums.AudienceReviewClassification;
 import util.enums.Language;
 import util.file.CustomData;
 import util.file.FileLoader;
 import util.file.FileSaver;
 import util.file.Translation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.*;
 
 public class AppModel {
     private final AppController appController;
@@ -69,7 +65,7 @@ public class AppModel {
     }
 
     public Medium getMediumByTitle(String title){
-        return this.mediums.get(Util.stringToKeyFormat(title));
+        return this.mediums.get(Utils.stringToKeyFormat(title));
     }
 
     public Medium getRandomMedium(){
@@ -94,8 +90,8 @@ public class AppModel {
         }
 
         if(reviews[0] != null && reviews[1] != null){
-            reviews[0].setBest(false);
-            reviews[1].setBest(true);
+            reviews[0].setClassification(AudienceReviewClassification.WORST);
+            reviews[1].setClassification(AudienceReviewClassification.BEST);
         }
 
         return reviews;
@@ -106,9 +102,18 @@ public class AppModel {
 
         if(isTitleInMediums(title)){
             for(Review review : this.reviews){
-                if(review.getMediumTitle().equalsIgnoreCase(title))
-                    reviews.add(review);
+                if(review.getMediumTitle().equalsIgnoreCase(title)){
+                    reviews.add(review);;
+                }
             }
+
+            ArrayList<AudienceReview> audienceReviews = this.getAudienceReviewsOnly(reviews);
+            this.sortAudienceReviewsByRatingDesc(audienceReviews);
+            ArrayList<CriticReview> criticReviews = this.getCriticsReviewsOnly(reviews);
+
+            reviews.clear();
+            reviews.addAll(audienceReviews);
+            reviews.addAll(criticReviews);
         }
 
         return reviews;
@@ -127,15 +132,38 @@ public class AppModel {
         return reviews;
     }
 
+    private ArrayList<CriticReview> getCriticsReviewsOnly(ArrayList<Review> reviews){
+        ArrayList<CriticReview> criticReviews = new ArrayList<>();
+        for(Review review : reviews){
+            if(review instanceof CriticReview){
+                criticReviews.add(((CriticReview) review));
+            }
+        }
+
+        return criticReviews;
+    }
+
+    private ArrayList<AudienceReview> getAudienceReviewsOnly(ArrayList<Review> reviews){
+        ArrayList<AudienceReview> audienceReviews = new ArrayList<>();
+        for(Review review : reviews){
+            if(review instanceof AudienceReview){
+                audienceReviews.add(((AudienceReview) review));
+            }
+        }
+
+        return audienceReviews;
+    }
+
+    private void sortAudienceReviewsByRatingDesc(ArrayList<AudienceReview> reviews){
+        Algorithms.quickSortAudienceReviews(reviews, 0, reviews.size() - 1);
+        Collections.reverse(reviews);
+    }
+
     public boolean hasMediums(){
         return !this.mediums.isEmpty();
     }
 
-    public boolean hasTitleReviews(String title){
-        return !this.getAllReviewsByTitle(title).isEmpty();
-    }
-
     public boolean isTitleInMediums(String title) {
-        return this.mediums.containsKey(Util.stringToKeyFormat(title));
+        return this.mediums.containsKey(Utils.stringToKeyFormat(title));
     }
 }

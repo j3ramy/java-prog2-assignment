@@ -1,6 +1,6 @@
 package util.data;
 
-import util.Util;
+import util.Utils;
 import util.enums.PersonRole;
 
 public class Person {
@@ -40,6 +40,6 @@ public class Person {
         if(this.name == null || this.role == null)
             return "N/A";
 
-        return Util.uppercaseAll(this.role.name()) + ": " + this.name + " (" + this.character + ")";
+        return Utils.uppercaseAll(this.role.name()) + ": " + this.name + " (" + this.character + ")";
     }
 }

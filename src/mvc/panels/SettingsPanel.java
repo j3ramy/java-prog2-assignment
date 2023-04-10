@@ -2,7 +2,6 @@ package mvc.panels;
 
 import mvc.AppModel;
 import mvc.AppView;
-import util.Util;
 import util.enums.Language;
 import util.enums.Provider;
 import util.file.CustomData;

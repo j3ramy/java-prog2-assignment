@@ -1,7 +1,7 @@
 package util.file;
 
 import mvc.AppModel;
-import util.Util;
+import util.Utils;
 import util.data.*;
 import util.enums.*;
 
@@ -43,7 +43,7 @@ public class FileLoader {
                     this.appModel.getAppView().setStatusBarText(AppState.READY);
                     this.appModel.getAppView().enableTabs();
 
-                    //this.showSkipStats(); TODO: Uncomment
+                    this.showSkipStats();
                 }
                 else{
                     this.appModel.getAppView().showNoMediumFoundDialog();
@@ -59,9 +59,10 @@ public class FileLoader {
     private void loadCustomData(){
         try{
             //Check if file exists
-            File file = new File(FilePath.CUSTOM_DATA_PATH);
+            File file = new File(FilePaths.CUSTOM_DATA_PATH);
             if(!file.exists()){
-                throw new FileNotFoundException();
+                if(!new File(FilePaths.CUSTOM_DATA_PATH).createNewFile())
+                    throw new FileNotFoundException();
             }
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -74,15 +75,15 @@ public class FileLoader {
             }
             else{
                 //Split line and normalize it
-                Object[] data = Util.splitCsvLine(bufferedReader.readLine(), true);
-                Util.removeQuotes(data);
+                Object[] data = Utils.splitCsvLine(bufferedReader.readLine(), true);
+                Utils.removeQuotes(data);
 
                 //Convert string providers into Provider list when providers are chosen (exist)
                 ArrayList<String> providersAsStringList = (ArrayList<String>) data[1];
                 ArrayList<Provider> providersList = new ArrayList<>();
                 if(!providersAsStringList.isEmpty()){
                     for (String s : providersAsStringList)
-                        if(Util.containsEnumValue(s, Provider.class))
+                        if(Utils.containsEnumValue(s, Provider.class))
                             providersList.add(Provider.valueOf(s));
                 }
 
@@ -108,7 +109,7 @@ public class FileLoader {
     private void loadTranslations(){
         try{
             //Check if file exists
-            File file = new File(FilePath.TRANSLATIONS_PATH);
+            File file = new File(FilePaths.TRANSLATIONS_PATH);
             if(!file.exists()){
                 throw new FileNotFoundException();
             }
@@ -118,7 +119,7 @@ public class FileLoader {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Util.splitCsvLine(line, false);
+                Object[] data = Utils.splitCsvLine(line, false);
                 //Add it to the translation hash map
                 this.appModel.getTranslations().put(data[0].toString(), new Translation(data[1].toString(), data[2].toString()));
             }
@@ -136,13 +137,13 @@ public class FileLoader {
     //Total records data source: 20.118
     //Total records loaded: 19.640; difference because Netflix (154), DP (33), Amazon (287), Apple (4) haven't been loaded
     private void loadMediums(){
-        if(this.appModel.getCustomData().hasProvider(Provider.NETFLIX)) this.loadMediumsFromProvider(FilePath.NETFLIX_TITLES_PATH, Provider.NETFLIX);
-        if(this.appModel.getCustomData().hasProvider(Provider.DISNEY_PLUS)) this.loadMediumsFromProvider(FilePath.DISNEY_PLUS_TITLES_PATH, Provider.DISNEY_PLUS);
-        if(this.appModel.getCustomData().hasProvider(Provider.AMAZON_PRIME)) this.loadMediumsFromProvider(FilePath.AMAZON_PRIME_TITLES_PATH, Provider.AMAZON_PRIME);
+        if(this.appModel.getCustomData().hasProvider(Provider.NETFLIX)) this.loadMediumsFromProvider(FilePaths.NETFLIX_TITLES_PATH, Provider.NETFLIX);
+        if(this.appModel.getCustomData().hasProvider(Provider.DISNEY_PLUS)) this.loadMediumsFromProvider(FilePaths.DISNEY_PLUS_TITLES_PATH, Provider.DISNEY_PLUS);
+        if(this.appModel.getCustomData().hasProvider(Provider.AMAZON_PRIME)) this.loadMediumsFromProvider(FilePaths.AMAZON_PRIME_TITLES_PATH, Provider.AMAZON_PRIME);
 
         if(this.appModel.getCustomData().hasProvider(Provider.APPLE_PLUS)){
             this.loadApplePlusCredits();
-            this.loadMediumsFromProvider(FilePath.APPLE_PLUS_TITLES_PATH, Provider.APPLE_PLUS);
+            this.loadMediumsFromProvider(FilePaths.APPLE_PLUS_TITLES_PATH, Provider.APPLE_PLUS);
         }
     }
 
@@ -160,8 +161,8 @@ public class FileLoader {
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Util.splitCsvLine(line, false);
-                Util.removeQuotes(data);
+                Object[] data = Utils.splitCsvLine(line, false);
+                Utils.removeQuotes(data);
 
                 Medium medium;
                 if(provider != Provider.APPLE_PLUS){
@@ -187,7 +188,7 @@ public class FileLoader {
                     this.appModel.getMediums().get(medium.getTitle()).getProviders().add(provider);
                 }
                 else{
-                    this.appModel.getMediums().put(Util.stringToKeyFormat(medium.getTitle()), medium);
+                    this.appModel.getMediums().put(Utils.stringToKeyFormat(medium.getTitle()), medium);
                 }
             }
 
@@ -257,7 +258,7 @@ public class FileLoader {
     private void loadApplePlusCredits(){
         try{
             //Check if file exists
-            File file = new File(FilePath.APPLE_PLUS_CREDITS_PATH);
+            File file = new File(FilePaths.APPLE_PLUS_CREDITS_PATH);
             if(!file.exists()){
                 throw new FileNotFoundException();
             }
@@ -269,14 +270,14 @@ public class FileLoader {
             ArrayList<Person> credits = new ArrayList<>();
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Util.splitCsvLine(line, false);
+                Object[] data = Utils.splitCsvLine(line, false);
 
                 if(!this.isApplePlusCreditsFormattingValid(data)){
                     skipCounter++;
                     continue;
                 }
 
-                if(Util.containsEnumValue((String) data[4], PersonRole.class)){
+                if(Utils.containsEnumValue((String) data[4], PersonRole.class)){
                     Person person = new Person(this.convertObjectToString(data[2], " "), this.convertObjectToString(data[3], " "), PersonRole.valueOf((String) data[4]));
                     person.setMovieId((String) data[1]);
 
@@ -295,8 +296,8 @@ public class FileLoader {
     }
 
     private void loadReviews(){
-        this.loadReviewsByType(FilePath.CRITIC_REVIEWS_PATH, ReviewType.CRITICS);
-        this.loadReviewsByType(FilePath.AUDIENCE_REVIEWS_PATH, ReviewType.AUDIENCE);
+        this.loadReviewsByType(FilePaths.CRITIC_REVIEWS_PATH, ReviewType.CRITICS);
+        this.loadReviewsByType(FilePaths.AUDIENCE_REVIEWS_PATH, ReviewType.AUDIENCE);
     }
 
     private void loadReviewsByType(String path, ReviewType type){
@@ -313,7 +314,7 @@ public class FileLoader {
             int skipCounter = 0, test = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Util.splitCsvLine(line, false);
+                Object[] data = Utils.splitCsvLine(line, false);
 
                 //Check if data/line is well formatted regarding the default column amount, otherwise skip it
                 if(!this.isReviewFormattingValid(data)){
@@ -321,7 +322,7 @@ public class FileLoader {
                     continue;
                 }
 
-                String title = data[0] instanceof ArrayList<?> ? Util.joinList((List<?>) data[0], ", ") : (String) data[0];
+                String title = data[0] instanceof ArrayList<?> ? Utils.joinList((List<?>) data[0], ", ") : (String) data[0];
                 if(!this.appModel.isTitleInMediums(title)){
                     test++;
                     continue;
@@ -353,7 +354,7 @@ public class FileLoader {
     private void loadImdbRatings(){
         try{
             //Check if file exists
-            File file = new File(FilePath.IMDB_RANKING_PATH);
+            File file = new File(FilePaths.IMDB_RANKING_PATH);
             if(!file.exists()){
                 throw new FileNotFoundException();
             }
@@ -364,8 +365,8 @@ public class FileLoader {
             int skipCounter = 0, test = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Util.splitCsvLine(line, false);
-                Util.removeQuotes(data);
+                Object[] data = Utils.splitCsvLine(line, false);
+                Utils.removeQuotes(data);
 
                 //Check if data/line is well formatted regarding the default column amount, otherwise skip it
                 if(!this.isImdbRatingFormattingValid(data)){
@@ -373,7 +374,7 @@ public class FileLoader {
                     continue;
                 }
 
-                String title = data[1] instanceof ArrayList<?> ? Util.joinList((List<?>) data[1], ", ") : (String) data[1];
+                String title = data[1] instanceof ArrayList<?> ? Utils.joinList((List<?>) data[1], ", ") : (String) data[1];
                 if(!this.appModel.isTitleInMediums(title)){
                     test++;
                     continue;
@@ -420,14 +421,14 @@ public class FileLoader {
     private String convertObjectToString(Object data, String separator, boolean uppercaseAll) {
         String string = "";
         if(data instanceof ArrayList<?>)
-            string = Util.joinList((List<?>) data, separator);
+            string = Utils.joinList((List<?>) data, separator);
         else if(!((String) data).isEmpty())
             string = (String) data;
 
         if(uppercaseAll)
-            return Util.uppercaseAll(Util.removeForbiddenChars(string));
+            return Utils.uppercaseAll(Utils.removeForbiddenChars(string));
         else
-            return Util.removeForbiddenChars(string);
+            return Utils.removeForbiddenChars(string);
     }
 
     private Person[] getCast(Object directorData, Object actorData){
@@ -463,7 +464,8 @@ public class FileLoader {
         StringBuilder skippedStats = new StringBuilder();
         int totalSkips = 0;
         for (Map.Entry<String, Integer> entry : this.loadingSkips.entrySet()) {
-            skippedStats.append(Util.uppercaseAll((entry.getKey()))).append(": ").append(entry.getValue()).append('\n');
+            String formattedKey = Utils.uppercaseAll(Utils.joinArray(entry.getKey().split("_"), " "));
+            skippedStats.append(formattedKey).append(": ").append(entry.getValue()).append('\n');
             totalSkips += entry.getValue();
         }
 
@@ -486,7 +488,7 @@ public class FileLoader {
     }
 
     private boolean isReviewFormattingValid(Object[] data){
-        return data.length == 3 && !(data[1] instanceof ArrayList<?>) && Util.isNumeric((String) data[1]);
+        return data.length == 3 && !(data[1] instanceof ArrayList<?>) && Utils.isNumeric((String) data[1]);
     }
 
     private boolean isImdbRatingFormattingValid(Object[] data){

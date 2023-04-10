@@ -1,6 +1,6 @@
 package util.file;
 
-public class FilePath {
+public class FilePaths {
     public static final String CUSTOM_DATA_PATH = "././resources/data/custom_data.csv";
     public static final String TRANSLATIONS_PATH = "././resources/data/translations.csv";
     public static final String NETFLIX_TITLES_PATH = "././resources/data/netflix_titles.csv";

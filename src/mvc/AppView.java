@@ -4,7 +4,7 @@ import mvc.panels.RandomMediumPanel;
 import mvc.panels.SettingsPanel;
 import mvc.panels.StartPanel;
 import util.enums.AppState;
-import util.file.FilePath;
+import util.file.FilePaths;
 import util.interfaces.IViewPanel;
 
 import javax.swing.*;
@@ -77,7 +77,7 @@ public class AppView extends JFrame implements IViewPanel {
     @Override
     public void initImages(){
         try {
-            ImageIcon imageIcon = new ImageIcon(FilePath.MENU_IMAGE_PATH);
+            ImageIcon imageIcon = new ImageIcon(FilePaths.MENU_IMAGE_PATH);
             Image image = imageIcon.getImage().getScaledInstance(150, 150,  Image.SCALE_SMOOTH);
             this.menuImage.setIcon(new ImageIcon(image));
         }

@@ -115,8 +115,11 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
                 this.ratingLabel.setText(sentiment);
             }
             else if(review instanceof AudienceReview){
-                this.headingLabel.setText(appModel.getTranslation("label.reviewdata.audience") + " (" +
-                        ((((AudienceReview) review).isBest() ? appModel.getTranslation("label.reviewdata.best") : appModel.getTranslation("label.reviewdata.worst")) + ")"));
+                this.headingLabel.setText(appModel.getTranslation("label.reviewdata.audience"));
+                switch (((AudienceReview) review).getClassification()){
+                    case BEST -> this.headingLabel.setText(this.headingLabel.getText() + " (" + appModel.getTranslation("label.reviewdata.best") + ")");
+                    case WORST -> this.headingLabel.setText(this.headingLabel.getText() + " (" + appModel.getTranslation("label.reviewdata.worst") + ")");
+                }
 
                 this.ratingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
                         BorderFactory.createTitledBorder(appModel.getTranslation("label.reviewdata.rating"))));
