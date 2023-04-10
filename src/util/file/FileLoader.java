@@ -1,5 +1,6 @@
 package util.file;
 
+import com.sun.jdi.AbsentInformationException;
 import mvc.AppModel;
 import util.Utils;
 import util.data.*;
@@ -330,8 +331,9 @@ public class FileLoader {
 
                 Review review;
                 if(type == ReviewType.CRITICS){
+                    boolean sentiment = !data[1].equals("0");
                     review = new CriticReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false),
-                            Boolean.parseBoolean((String) data[1]));
+                            sentiment);
                 }
                 else{
                     review = new AudienceReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false),
