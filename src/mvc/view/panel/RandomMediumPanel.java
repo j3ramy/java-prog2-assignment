@@ -109,7 +109,7 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
     }
 
     private long lastTimeClicked = 0;
-    private final int buttonClickTimeout = 300*; //In ms
+    private final int buttonClickTimeout = 300; //In ms
     @Override
     public void initActionListeners(){
         this.confirmButton.addActionListener((e) -> this.appView.showCloseAppDialog());
