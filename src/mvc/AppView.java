@@ -1,8 +1,8 @@
 package mvc;
 
-import mvc.panels.RandomMediumPanel;
-import mvc.panels.SettingsPanel;
-import mvc.panels.StartPanel;
+import mvc.view.panel.RandomMediumPanel;
+import mvc.view.panel.SettingsPanel;
+import mvc.view.panel.StartPanel;
 import util.enums.AppState;
 import util.file.FilePaths;
 import util.interfaces.IViewPanel;

@@ -1,12 +1,13 @@
-package mvc.panels;
+package mvc.view.panel;
 
 import mvc.AppModel;
 import mvc.AppView;
+import mvc.view.widget.AllReviewsPanel;
+import mvc.view.widget.MetadataViewPanel;
+import mvc.view.widget.ReviewViewPanel;
 import util.Colors;
 import util.data.AudienceReview;
 import util.data.Medium;
-import util.enums.MediumType;
-import util.enums.Provider;
 import util.interfaces.IViewPanel;
 
 import javax.swing.*;
@@ -107,11 +108,18 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
 
     }
 
+    private long lastTimeClicked = 0;
+    private final int buttonClickTimeout = 300*; //In ms
     @Override
     public void initActionListeners(){
         this.confirmButton.addActionListener((e) -> this.appView.showCloseAppDialog());
 
-        this.rejectButton.addActionListener((e) -> this.searchForRandomMedium());
+        this.rejectButton.addActionListener((e) -> {
+            if(System.currentTimeMillis() > lastTimeClicked + buttonClickTimeout){ //Spam click protection
+                this.searchForRandomMedium();
+                lastTimeClicked = System.currentTimeMillis();
+            }
+        });
 
         this.showAllReviewsButton.addActionListener((e) -> {
             AppModel appModel = this.appView.getAppController().getAppModel();

@@ -1,4 +1,4 @@
-package mvc.panels;
+package mvc.view.widget;
 
 import mvc.AppModel;
 import mvc.AppView;
@@ -103,6 +103,7 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
 
         if(review == null){
             this.headingLabel.setText(appModel.getTranslation("label.reviewdata.no_comment"));
+            this.clear();
         }
         else{
             if(review instanceof CriticReview){
@@ -134,5 +135,11 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
         }
 
         this.setVisible(true);
+    }
+
+    private void clear(){
+        this.mediumTitleLabel.setText("");
+        this.ratingLabel.setText("");
+        this.commentTextArea.setText("");
     }
 }

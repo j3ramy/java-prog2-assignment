@@ -1,4 +1,4 @@
-package mvc.panels;
+package mvc.view.widget;
 
 import mvc.AppModel;
 import mvc.AppView;
