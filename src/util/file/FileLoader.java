@@ -26,8 +26,6 @@ public class FileLoader {
     public void loadFiles(){
         this.loadCustomData();
 
-        this.appModel.getAppView().disableTabs();
-
         new Thread(() -> {
             try {
                 Thread.sleep(500);

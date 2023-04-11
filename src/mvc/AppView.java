@@ -109,6 +109,8 @@ public class AppView extends JFrame implements IViewPanel {
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.search_medium"), this.searchMediumPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
 
+        this.disableTabs();
+
         this.setUserFeedbackText("label.user.welcome");
         this.setStatusBarText(AppState.READY);
     }
@@ -122,8 +124,8 @@ public class AppView extends JFrame implements IViewPanel {
     public void disableTabs(){
         for(int i = 0; i < this.tabbedPanel.getTabCount(); i++){
             //Only disable tabs which have to depend on data sources (which might not be loaded completely)
-            //if(i != 0 && i != this.tabbedPanel.getTabCount() - 1) //Disable all tabs except start and settings tab
-                //this.tabbedPanel.setEnabledAt(i, false);
+            if(i != 0 && i != this.tabbedPanel.getTabCount() - 1) //Disable all tabs except start and settings tab
+                this.tabbedPanel.setEnabledAt(i, false);
         }
     }
 

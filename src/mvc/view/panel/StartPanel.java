@@ -51,8 +51,8 @@ public class StartPanel extends JPanel implements IViewPanel {
     @Override
     public void initImages() {
         try {
-            ImageIcon imageIcon = new ImageIcon(FilePaths.POPCORN_IMAGE_PATH);
-            Image image = imageIcon.getImage().getScaledInstance(281, 375,  Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(FilePaths.WELCOME_IMAGE_PATH);
+            Image image = imageIcon.getImage().getScaledInstance(350, 175,  Image.SCALE_SMOOTH);
             this.image.setIcon(new ImageIcon(image));
         }
         catch (Exception e){
