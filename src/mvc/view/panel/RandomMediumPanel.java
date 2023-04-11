@@ -5,7 +5,6 @@ import mvc.AppView;
 import mvc.view.widget.AllReviewsPanel;
 import mvc.view.widget.MetadataViewPanel;
 import mvc.view.widget.ReviewViewPanel;
-import util.Colors;
 import util.data.AudienceReview;
 import util.data.Medium;
 import util.interfaces.IViewPanel;
@@ -17,7 +16,7 @@ import java.awt.*;
 public class RandomMediumPanel extends JPanel implements IViewPanel {
     private final AppView appView;
 
-    private JButton confirmButton, rejectButton, showAllReviewsButton;
+    private JButton loadMediumButton, showAllReviewsButton;
     private MetadataViewPanel metadataViewPanel;
     private ReviewViewPanel bestReviewViewPanel, worstReviewViewPanel;
     private Medium medium;
@@ -52,16 +51,10 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        JPanel buttonContainer = new JPanel(new GridLayout(2, 1, 0, 10));
+        this.loadMediumButton = new JButton();
         constraints.gridx = 0;
         constraints.gridy = 0;
-        componentPanel.add(buttonContainer, constraints);
-
-        this.confirmButton = new JButton();
-        buttonContainer.add(this.confirmButton);
-
-        this.rejectButton = new JButton();
-        buttonContainer.add(this.rejectButton);
+        componentPanel.add(this.loadMediumButton, constraints);
 
         this.metadataViewPanel = new MetadataViewPanel(this.appView);
         this.metadataViewPanel.init();
@@ -71,7 +64,7 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         constraints.fill = GridBagConstraints.BOTH;
         componentPanel.add(this.metadataViewPanel, constraints);
 
-        buttonContainer = new JPanel(new GridLayout(1, 1));
+        JPanel buttonContainer = new JPanel(new GridLayout(1, 1));
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 1;
@@ -79,6 +72,7 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         componentPanel.add(buttonContainer, constraints);
 
         this.showAllReviewsButton = new JButton();
+        this.showAllReviewsButton.setVisible(false);
         buttonContainer.add(this.showAllReviewsButton);
 
         this.bestReviewViewPanel = new ReviewViewPanel(this.appView);
@@ -96,9 +90,6 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
 
     @Override
     public void initStyles() {
-        this.confirmButton.setBackground(Colors.GREEN);
-        this.rejectButton.setBackground(Colors.RED);
-
         this.bestReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         this.worstReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
     }
@@ -112,12 +103,10 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
     private final int buttonClickTimeout = 300; //In ms
     @Override
     public void initActionListeners(){
-        this.confirmButton.addActionListener((e) -> this.appView.showCloseAppDialog());
-
-        this.rejectButton.addActionListener((e) -> {
-            if(System.currentTimeMillis() > lastTimeClicked + buttonClickTimeout){ //Spam click protection
+        this.loadMediumButton.addActionListener((e) -> {
+            if(System.currentTimeMillis() > this.lastTimeClicked + this.buttonClickTimeout){ //Spam click protection
                 this.searchForRandomMedium();
-                lastTimeClicked = System.currentTimeMillis();
+                this.lastTimeClicked = System.currentTimeMillis();
             }
         });
 
@@ -134,8 +123,7 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
     public void setTranslations(){
         AppModel appModel = this.appView.getAppController().getAppModel();
 
-        this.confirmButton.setText(appModel.getTranslation("button.confirm"));
-        this.rejectButton.setText(appModel.getTranslation("button.reject"));
+        this.loadMediumButton.setText(appModel.getTranslation("button.random_medium"));
         this.showAllReviewsButton.setText(appModel.getTranslation("button.all_reviews"));
 
         this.metadataViewPanel.setTranslations();
@@ -146,8 +134,6 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
     public void searchForRandomMedium(){
         AppModel appModel = this.appView.getAppController().getAppModel();
         Medium medium = appModel.getRandomMedium();
-        //Medium medium = new Medium("", MediumType.MOVIE, Provider.NETFLIX, "Hawkeye", "", "", "",
-        //        "", "", null, "", "", "");
 
         if(medium == null){
             this.appView.showNoMediumFoundDialog();
@@ -158,8 +144,11 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         this.metadataViewPanel.fillDataView(medium);
 
         AudienceReview[] reviews = appModel.getBestAndWorstReviewByTitle(medium.getTitle());
+        this.showAllReviewsButton.setVisible(true);
         this.showAllReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null);
         this.worstReviewViewPanel.fillDataView(reviews[0]);
         this.bestReviewViewPanel.fillDataView(reviews[1]);
+
+        this.appView.showAcceptRecommendationDialog((e) -> this.appView.showCloseAppDialog(), (e) -> this.searchForRandomMedium(), 1, 1);
     }
 }

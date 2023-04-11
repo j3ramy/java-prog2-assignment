@@ -1,6 +1,7 @@
 package mvc;
 
 import mvc.view.panel.RandomMediumPanel;
+import mvc.view.panel.SearchMediumPanel;
 import mvc.view.panel.SettingsPanel;
 import mvc.view.panel.StartPanel;
 import util.enums.AppState;
@@ -10,6 +11,7 @@ import util.interfaces.IViewPanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class AppView extends JFrame implements IViewPanel {
     private final AppController appController;
@@ -18,6 +20,7 @@ public class AppView extends JFrame implements IViewPanel {
 
     private StartPanel startPanel;
     private RandomMediumPanel randomMediumPanel;
+    private SearchMediumPanel searchMediumPanel;
     private SettingsPanel settingsPanel;
 
     private JTabbedPane tabbedPanel;
@@ -44,17 +47,23 @@ public class AppView extends JFrame implements IViewPanel {
     public void initComponents(){
         this.add(this.mainPanel);
 
+        /*
         this.tabbedPanel.addChangeListener(e -> {
             String tabName = tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
             if(tabName.equalsIgnoreCase(appController.getAppModel().getTranslation("label.main.random_medium")))
                 randomMediumPanel.searchForRandomMedium();
         });
 
+         */
+
         this.startPanel = new StartPanel(this);
         this.startPanel.init();
 
         this.randomMediumPanel = new RandomMediumPanel(this);
         this.randomMediumPanel.init();
+
+        this.searchMediumPanel = new SearchMediumPanel(this);
+        this.searchMediumPanel.init();
 
         this.settingsPanel = new SettingsPanel(this);
         this.settingsPanel.init();
@@ -96,10 +105,8 @@ public class AppView extends JFrame implements IViewPanel {
         this.closeButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
 
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.start"), this.startPanel);
-
-        //JScrollPane scrollPane = new JScrollPane(this.randomMediumPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
-
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.search_medium"), this.searchMediumPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
 
         this.setUserFeedbackText("label.user.welcome");
@@ -115,8 +122,8 @@ public class AppView extends JFrame implements IViewPanel {
     public void disableTabs(){
         for(int i = 0; i < this.tabbedPanel.getTabCount(); i++){
             //Only disable tabs which have to depend on data sources (which might not be loaded completely)
-            if(i != 0 && i != this.tabbedPanel.getTabCount() - 1)
-                this.tabbedPanel.setEnabledAt(i, false);
+            //if(i != 0 && i != this.tabbedPanel.getTabCount() - 1) //Disable all tabs except start and settings tab
+                //this.tabbedPanel.setEnabledAt(i, false);
         }
     }
 
@@ -129,6 +136,7 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.startPanel.setTranslations();
         this.randomMediumPanel.setTranslations();
+        this.searchMediumPanel.setTranslations();
         this.settingsPanel.setTranslations();
     }
 
@@ -168,5 +176,17 @@ public class AppView extends JFrame implements IViewPanel {
     public void showNoMediumFoundDialog(){
         this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.no_result"),
                 this.getAppController().getAppModel().getTranslation("dialog.body.main.no_result"), JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showAcceptRecommendationDialog(ActionListener confirmAction, ActionListener rejectAction, int currentIndex, int mediumCount){
+        String title = this.getAppController().getAppModel().getTranslation("dialog.title.recommendation").
+                replace("#", Integer.toString(currentIndex)).replace("+", Integer.toString(mediumCount));
+        int input = JOptionPane.showConfirmDialog(null, this.getAppController().getAppModel().getTranslation("dialog.body.recommendation"),
+                title, JOptionPane.YES_NO_CANCEL_OPTION);
+
+        switch (input) {
+            case 0 -> confirmAction.actionPerformed(null);
+            case 1 -> rejectAction.actionPerformed(null);
+        }
     }
 }

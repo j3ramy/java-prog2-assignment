@@ -68,6 +68,16 @@ public class AppModel {
         return this.mediums.get(Utils.stringToKeyFormat(title));
     }
 
+    public ArrayList<Medium> getMediumsByTitle(String title){
+        ArrayList<Medium> mediums = new ArrayList<>();
+        for(String keys : this.mediums.keySet()){
+            if(keys.contains(Utils.stringToKeyFormat(title)))
+                mediums.add(this.mediums.get(keys));
+        }
+
+        return mediums;
+    }
+
     public Medium getRandomMedium(){
         ArrayList<String> keys = new ArrayList<>(this.mediums.keySet());
         Random random = new Random();
