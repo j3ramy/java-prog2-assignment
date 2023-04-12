@@ -64,6 +64,16 @@ public class AppModel {
         return this.customData.getLanguage() == Language.DE ? this.translations.get(key).getTranslationDe() : this.translations.get(key).getTranslationEn();
     }
 
+    public Medium getRandomMedium(){
+        ArrayList<String> keys = new ArrayList<>(this.mediums.keySet());
+        Random random = new Random();
+
+        if(keys.isEmpty())
+            return null;
+
+        return this.mediums.get(keys.get(random.nextInt(keys.size())));
+    }
+
     public Medium getMediumByTitle(String title){
         return this.mediums.get(Utils.stringToKeyFormat(title));
     }
@@ -78,14 +88,52 @@ public class AppModel {
         return mediums;
     }
 
-    public Medium getRandomMedium(){
-        ArrayList<String> keys = new ArrayList<>(this.mediums.keySet());
-        Random random = new Random();
+    //TODO: Remove nested for loop
+    public ArrayList<Medium> getMediumsByGenres(String[] genres){
+        ArrayList<Medium> mediums = new ArrayList<>();
+        for(Medium medium : this.mediums.values()){
+            int genreMatchCounter = 0;
+            for(String genre : genres){
+                String formattedGenre = Utils.removeForbiddenChars(genre.toLowerCase().strip());
+                if(medium.getGenres().toLowerCase().contains(formattedGenre))
+                    genreMatchCounter++;
+            }
 
-        if(keys.isEmpty())
-            return null;
+            if(genreMatchCounter == genres.length)
+                mediums.add(medium);
+        }
 
-        return this.mediums.get(keys.get(random.nextInt(keys.size())));
+        return mediums;
+    }
+
+    //TODO: Remove nested for loop
+    public ArrayList<Medium> getMediumsByCast(String[] cast){
+        ArrayList<Medium> mediums = new ArrayList<>();
+        for(Medium medium : this.mediums.values()){
+            int actorMatchCounter = 0;
+            for(String actor : cast){
+                String formattedActor = Utils.removeForbiddenChars(actor.toLowerCase().strip());
+                for(Person person : medium.getCast()){
+                    if(person.getName().toLowerCase().contains(formattedActor))
+                        actorMatchCounter++;
+                }
+            }
+
+            if(actorMatchCounter == cast.length)
+                mediums.add(medium);
+        }
+
+        return mediums;
+    }
+
+    public ArrayList<ImdbRating> getTop100(){
+        ArrayList<ImdbRating> ratings = new ArrayList<>();
+        for(int i = 0; i < 100; i++){
+            if(i < this.imdbRatings.size() - 1)
+                ratings.add(this.imdbRatings.get(i));
+        }
+
+        return ratings;
     }
 
     //Returns array of AudienceReview only, because CriticsReview does not have a rating as a number
@@ -113,7 +161,7 @@ public class AppModel {
         if(isTitleInMediums(title)){
             for(Review review : this.reviews){
                 if(review.getMediumTitle().equalsIgnoreCase(title)){
-                    reviews.add(review);;
+                    reviews.add(review);
                 }
             }
 
@@ -165,7 +213,7 @@ public class AppModel {
     }
 
     private void sortAudienceReviewsByRatingDesc(ArrayList<AudienceReview> reviews){
-        Algorithms.quickSortAudienceReviews(reviews, 0, reviews.size() - 1);
+        Algorithms.countingSort(reviews);
         Collections.reverse(reviews);
     }
 

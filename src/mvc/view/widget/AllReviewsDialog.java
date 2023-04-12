@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class AllReviewsPanel extends JPanel implements IViewPanel {
+public class AllReviewsDialog extends JPanel implements IViewPanel {
     private final AppView appView;
     private final ArrayList<Review> reviews;
 
@@ -20,7 +20,7 @@ public class AllReviewsPanel extends JPanel implements IViewPanel {
     private JButton previousButton, nextButton;
     private int currentIndex = 0;
 
-    public AllReviewsPanel(AppView appView, String title){
+    public AllReviewsDialog(AppView appView, String title){
         this.appView = appView;
         this.reviews = this.appView.getAppController().getAppModel().getAllReviewsByTitle(title);
 

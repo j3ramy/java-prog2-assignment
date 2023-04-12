@@ -3,35 +3,51 @@ package util;
 import util.data.AudienceReview;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Algorithms {
-    public static void quickSortAudienceReviews(ArrayList<AudienceReview> reviews, int begin, int end) {
-        if (begin < end) {
-            int partitionIndex = partitionAudienceReview(reviews, begin, end);
+    public static void countingSort(ArrayList<AudienceReview> arr) {
+        int n = arr.size();
+        float maxRating = getMaxRating(arr);
 
-            quickSortAudienceReviews(reviews, begin, partitionIndex - 1);
-            quickSortAudienceReviews(reviews, partitionIndex + 1, end);
+        // Erstellen des Count-Arrays und Zählen der Werte
+        ArrayList<AudienceReview>[] count = new ArrayList[(int) (maxRating * 10) + 1];
+        for (int i = 0; i < count.length; i++) {
+            count[i] = new ArrayList<>();
         }
-    }
 
-    private static int partitionAudienceReview(ArrayList<AudienceReview> reviews, int begin, int end) {
-        float pivot = reviews.get(end).getRating();
-        int i = (begin - 1);
+        for (AudienceReview audienceReview : arr) {
+            int index = (int) (audienceReview.getRating() * 10);
+            count[index].add(audienceReview);
+        }
 
-        for (int j = begin; j < end; j++) {
-            if (reviews.get(j).getRating() <= pivot) {
-                i++;
+        // Erstellen des Output-Arrays und Sortieren der Werte
+        ArrayList<AudienceReview> output = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            output.add(null);
+        }
 
-                AudienceReview swapTemp = reviews.get(i);
-                reviews.set(i, reviews.get(j));
-                reviews.set(j, swapTemp);
+        int k = 0;
+        for (ArrayList<AudienceReview> reviews : count) {
+            for (AudienceReview review : reviews) {
+                output.set(k++, review);
             }
         }
 
-        AudienceReview swapTemp = reviews.get(i + 1);
-        reviews.set(i + 1, reviews.get(end));
-        reviews.set(end, swapTemp);
+        // Kopieren des Output-Arrays in die ursprüngliche ArrayList
+        for (int i = 0; i < n; i++) {
+            arr.set(i, output.get(i));
+        }
+    }
 
-        return i + 1;
+    private static float getMaxRating(ArrayList<AudienceReview> arr){
+        float maxFloat = 0f;
+
+        for(AudienceReview review : arr){
+            if(review.getRating() > maxFloat)
+                maxFloat = review.getRating();
+        }
+
+        return maxFloat;
     }
 }

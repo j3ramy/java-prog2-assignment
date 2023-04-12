@@ -2,7 +2,7 @@ package mvc.view.panel;
 
 import mvc.AppModel;
 import mvc.AppView;
-import mvc.view.widget.AllReviewsPanel;
+import mvc.view.widget.AllReviewsDialog;
 import mvc.view.widget.MetadataViewPanel;
 import mvc.view.widget.ReviewViewPanel;
 import util.data.AudienceReview;
@@ -99,21 +99,14 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
 
     }
 
-    private long lastTimeClicked = 0;
-    private final int buttonClickTimeout = 300; //In ms
     @Override
     public void initActionListeners(){
-        this.loadMediumButton.addActionListener((e) -> {
-            if(System.currentTimeMillis() > this.lastTimeClicked + this.buttonClickTimeout){ //Spam click protection
-                this.searchForRandomMedium();
-                this.lastTimeClicked = System.currentTimeMillis();
-            }
-        });
+        this.loadMediumButton.addActionListener((e) -> this.searchForRandomMedium());
 
         this.showAllReviewsButton.addActionListener((e) -> {
             AppModel appModel = this.appView.getAppController().getAppModel();
             UIManager.put("OptionPane.minimumSize", new Dimension(600,400));
-            JOptionPane.showMessageDialog(null, new AllReviewsPanel(this.appView, this.medium.getTitle()),
+            JOptionPane.showMessageDialog(null, new AllReviewsDialog(this.appView, this.medium.getTitle()),
                     appModel.getTranslation("dialog.title.all_reviews") + " " + this.medium.getTitle(), JOptionPane.PLAIN_MESSAGE);
             UIManager.put("OptionPane.minimumSize", null);
         });

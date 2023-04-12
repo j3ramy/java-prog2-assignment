@@ -2,6 +2,7 @@ package mvc.view.panel;
 
 import mvc.AppModel;
 import mvc.AppView;
+import util.Colors;
 import util.file.FilePaths;
 import util.interfaces.IViewPanel;
 
@@ -43,6 +44,7 @@ public class StartPanel extends JPanel implements IViewPanel {
     public void initStyles() {
         this.contentLabel.setBorder(new EmptyBorder(20, 0, 0, 0));
         this.contentLabel.setFont(new Font(null, Font.PLAIN, 14));
+        this.contentLabel.setForeground(Colors.RED);
         this.contentLabel.setHorizontalAlignment(JLabel.CENTER);
 
         this.image.setHorizontalAlignment(JLabel.CENTER);

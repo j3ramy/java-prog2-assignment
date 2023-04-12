@@ -5,6 +5,7 @@ label.main.start.content,Mit dieser App kannst du dir Filme und Serien für dein
 label.main.settings,Einstellungen,Settings
 label.main.random_medium,Zufälliges Medium,Random Medium
 label.main.search_medium,Medium suchen,Search Medium
+label.main.top_100,Top 100,Top 100
 label.user.welcome,Willkommen! Navigiere durch die Tabs um die verschiedenen Funktionen zu nutzen:,Welcome! Navigate through the tabs below to use all different features:
 label.status.ready,Bereit,Ready
 label.status.searching,Suche...,Search...
@@ -31,6 +32,16 @@ label.reviewdata.rating,Bewertung,Rating
 label.reviewdata.sentiment,Empfehlung,Sentiment
 label.reviewdata.comment,Kommentar,Comment
 label.reviewdata.no_comment,Es wurde keine Bewertung gefunden,No review found
+label.imdb.heading,IMDB Bewertung,IMDB Rating
+label.imdb.rating,Bewertung,Rating
+label.imdb.meta_score,Meta Score,Meta Score
+label.imdb.votes,Abstimmungen,Votes
+label.imdb.gross,Abstimmungen (kumul.),Gross
+label.imdb.star1,Star 1,Star 1
+label.imdb.star2,Star 2,Star 2
+label.imdb.star3,Star 3,Star 3
+label.imdb.star4,Star 4,Star 4
+label.reviewdata.no_comment,Es wurde keine Bewertung gefunden,No review found
 label.search.search_by,Suchen nach:,Search by:
 label.yes,Ja,Yes
 label.no,Nein,No
@@ -42,6 +53,10 @@ button.all_reviews,Alle Bewertungen,All Reviews
 button.previous,Zurück,Back
 button.next,Nächste,Next
 button.search,Suchen,Search
+button.load,Laden,Load
+radio.title,Titel,Title
+radio.genre,Genre(s) (Mehrere mit Komma trennen),Genre(s) (Seperate multiple with a comma)
+radio.cast,Cast (Mehrere mit Komma trennen),Cast (Seperate multiple with a comma)
 dialog.title.settings.save,Einstellungen gespeichert,Changes Saved
 dialog.title.main.close,Bye Bye!,Bye Bye!
 dialog.title.main.no_settings,Willkommen!,Welcome!

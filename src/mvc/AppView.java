@@ -1,9 +1,6 @@
 package mvc;
 
-import mvc.view.panel.RandomMediumPanel;
-import mvc.view.panel.SearchMediumPanel;
-import mvc.view.panel.SettingsPanel;
-import mvc.view.panel.StartPanel;
+import mvc.view.panel.*;
 import util.enums.AppState;
 import util.file.FilePaths;
 import util.interfaces.IViewPanel;
@@ -21,6 +18,7 @@ public class AppView extends JFrame implements IViewPanel {
     private StartPanel startPanel;
     private RandomMediumPanel randomMediumPanel;
     private SearchMediumPanel searchMediumPanel;
+    private Top100Panel top100Panel;
     private SettingsPanel settingsPanel;
 
     private JTabbedPane tabbedPanel;
@@ -47,15 +45,6 @@ public class AppView extends JFrame implements IViewPanel {
     public void initComponents(){
         this.add(this.mainPanel);
 
-        /*
-        this.tabbedPanel.addChangeListener(e -> {
-            String tabName = tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
-            if(tabName.equalsIgnoreCase(appController.getAppModel().getTranslation("label.main.random_medium")))
-                randomMediumPanel.searchForRandomMedium();
-        });
-
-         */
-
         this.startPanel = new StartPanel(this);
         this.startPanel.init();
 
@@ -64,6 +53,9 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.searchMediumPanel = new SearchMediumPanel(this);
         this.searchMediumPanel.init();
+
+        this.top100Panel = new Top100Panel(this);
+        this.top100Panel.init();
 
         this.settingsPanel = new SettingsPanel(this);
         this.settingsPanel.init();
@@ -97,6 +89,13 @@ public class AppView extends JFrame implements IViewPanel {
 
     @Override
     public void initActionListeners(){
+        this.tabbedPanel.addChangeListener(e -> {
+            if(this.tabbedPanel.getSelectedIndex() == 2)
+            {
+                this.searchMediumPanel.focusInputTextField();
+            }
+        });
+
         this.closeButton.addActionListener(e -> this.showCloseAppDialog());
     }
 
@@ -107,6 +106,7 @@ public class AppView extends JFrame implements IViewPanel {
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.start"), this.startPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.search_medium"), this.searchMediumPanel);
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100"), this.top100Panel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
 
         this.disableTabs();
@@ -139,6 +139,7 @@ public class AppView extends JFrame implements IViewPanel {
         this.startPanel.setTranslations();
         this.randomMediumPanel.setTranslations();
         this.searchMediumPanel.setTranslations();
+        this.top100Panel.setTranslations();
         this.settingsPanel.setTranslations();
     }
 
@@ -167,6 +168,8 @@ public class AppView extends JFrame implements IViewPanel {
     public void showFirstAppStartDialog(){
         this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.no_settings"),
                 this.getAppController().getAppModel().getTranslation("dialog.body.main.no_settings"), JOptionPane.QUESTION_MESSAGE);
+
+        this.tabbedPanel.setSelectedIndex(this.tabbedPanel.getTabCount() - 1);
     }
 
     public void showCloseAppDialog(){

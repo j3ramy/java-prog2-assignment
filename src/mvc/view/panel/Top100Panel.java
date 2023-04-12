@@ -3,35 +3,31 @@ package mvc.view.panel;
 import mvc.AppModel;
 import mvc.AppView;
 import mvc.view.widget.AllReviewsDialog;
+import mvc.view.widget.ImdbRatingViewPanel;
 import mvc.view.widget.MetadataViewPanel;
 import mvc.view.widget.ReviewViewPanel;
 import util.data.AudienceReview;
+import util.data.ImdbRating;
 import util.data.Medium;
 import util.interfaces.IViewPanel;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class SearchMediumPanel extends JPanel implements IViewPanel {
+public class Top100Panel extends JPanel implements IViewPanel {
     private final AppView appView;
 
-    private JPanel radioButtonContainer;
-    private JRadioButton titleRadioButton, genreRadioButton, castRadioButton;
-    private JTextField inputTextField;
     private JButton searchMediumButton, showAllReviewsButton;
+    private ImdbRatingViewPanel imdbRatingViewPanel;
     private MetadataViewPanel metadataViewPanel;
     private ReviewViewPanel bestReviewViewPanel, worstReviewViewPanel;
     private Medium medium;
-    private ArrayList<Medium> currentSearchResults;
-    private int currentSearchIndex = 0;
-    private String lastSearch;
+    private ArrayList<ImdbRating> imdbRatings;
+    private int currentListIndex = 0;
 
-    public SearchMediumPanel(AppView appView){
+    public Top100Panel(AppView appView){
         this.appView = appView;
     }
 
@@ -67,36 +63,18 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         constraints.gridy = 0;
         componentPanel.add(widgetContainer, constraints);
 
-        this.radioButtonContainer = new JPanel(new GridLayout(3, 1));
-        widgetContainer.add(this.radioButtonContainer);
-
-        this.titleRadioButton = new JRadioButton();
-        this.titleRadioButton.setSelected(true);
-        this.radioButtonContainer.add(this.titleRadioButton);
-
-        this.genreRadioButton = new JRadioButton();
-        this.radioButtonContainer.add(this.genreRadioButton);
-
-        this.castRadioButton = new JRadioButton();
-        this.radioButtonContainer.add(this.castRadioButton);
-
-        ButtonGroup radioButtonGroup = new ButtonGroup();
-        radioButtonGroup.add(this.titleRadioButton);
-        radioButtonGroup.add(this.genreRadioButton);
-        radioButtonGroup.add(this.castRadioButton);
-
-        widgetContainer.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        this.inputTextField = new JFormattedTextField();
-        widgetContainer.add(this.inputTextField);
-
-        widgetContainer.add(Box.createRigidArea(new Dimension(0, 10)));
-
         this.searchMediumButton = new JButton();
-        this.searchMediumButton.setEnabled(false);
         searchMediumButton.setHorizontalAlignment(JButton.CENTER);
         searchMediumButton.setAlignmentX(CENTER_ALIGNMENT);
         widgetContainer.add(this.searchMediumButton);
+
+        widgetContainer.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        this.imdbRatingViewPanel = new ImdbRatingViewPanel(this.appView);
+        this.imdbRatingViewPanel.init();
+        widgetContainer.add(this.imdbRatingViewPanel);
+
+        widgetContainer.add(Box.createRigidArea(new Dimension(0, 10)));
 
         this.metadataViewPanel = new MetadataViewPanel(this.appView);
         this.metadataViewPanel.init();
@@ -142,23 +120,6 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
 
     @Override
     public void initActionListeners(){
-        this.inputTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                this.changedUpdate(e);
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                this.changedUpdate(e);
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                searchMediumButton.setEnabled(!inputTextField.getText().isEmpty());
-            }
-        });
-
         this.searchMediumButton.addActionListener((e) -> this.searchMedium());
 
         this.showAllReviewsButton.addActionListener((e) -> {
@@ -174,45 +135,38 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
     public void setTranslations(){
         AppModel appModel = this.appView.getAppController().getAppModel();
 
-        this.radioButtonContainer.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0),
-                BorderFactory.createTitledBorder(appModel.getTranslation("label.search.search_by"))));
-
-        this.titleRadioButton.setText(appModel.getTranslation("radio.title"));
-        this.genreRadioButton.setText(appModel.getTranslation("radio.genre"));
-        this.castRadioButton.setText(appModel.getTranslation("radio.cast"));
-        this.searchMediumButton.setText(appModel.getTranslation("button.search"));
+        this.searchMediumButton.setText(appModel.getTranslation("button.load"));
         this.showAllReviewsButton.setText(appModel.getTranslation("button.all_reviews"));
 
+        this.imdbRatingViewPanel.setTranslations();
         this.metadataViewPanel.setTranslations();
         this.bestReviewViewPanel.setTranslations();
         this.worstReviewViewPanel.setTranslations();
     }
 
-    public void focusInputTextField(){
-        this.inputTextField.requestFocusInWindow();
-    }
-
     public void searchMedium(){
         AppModel appModel = this.appView.getAppController().getAppModel();
 
-        if(this.currentSearchResults == null || !this.lastSearch.equalsIgnoreCase(this.inputTextField.getText())){
+        if(this.imdbRatings == null){
             this.reset();
 
-            if(!this.getMediums()){
+            this.imdbRatings = appModel.getTop100();
+            if(this.imdbRatings.isEmpty()){
                 this.appView.showNoMediumFoundDialog();
                 return;
             }
         }
 
         if(!this.isAtEndOfResults()){
-            this.medium = this.currentSearchResults.get(this.currentSearchIndex);
-            this.currentSearchIndex++;
+            this.medium = this.imdbRatings.get(this.currentListIndex).getMedium();
+            this.currentListIndex++;
         }
         else{
             this.reset();
             return;
         }
 
+        this.imdbRatingViewPanel.fillDataView(this.imdbRatings.get(this.currentListIndex - 1));
         this.metadataViewPanel.fillDataView(this.medium);
 
         AudienceReview[] reviews = appModel.getBestAndWorstReviewByTitle(this.medium.getTitle());
@@ -222,30 +176,14 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         this.bestReviewViewPanel.fillDataView(reviews[1]);
 
         this.appView.showAcceptRecommendationDialog((e) -> this.appView.showCloseAppDialog(), (e) -> this.searchMedium(),
-                this.currentSearchIndex, this.currentSearchResults.size());
-    }
-
-    private boolean getMediums(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
-        this.lastSearch = this.inputTextField.getText();
-
-        if(this.titleRadioButton.isSelected()){
-            this.currentSearchResults = appModel.getMediumsByTitle(this.inputTextField.getText());
-        }
-        else if(this.genreRadioButton.isSelected()){
-            this.currentSearchResults = appModel.getMediumsByGenres(this.inputTextField.getText().split(","));
-        }
-        else{
-            this.currentSearchResults = appModel.getMediumsByCast(this.inputTextField.getText().split(","));
-        }
-
-        return !this.currentSearchResults.isEmpty();
+                this.currentListIndex, this.imdbRatings.size());
     }
 
     private void reset(){
-        this.currentSearchResults = null;
-        this.currentSearchIndex = 0;
+        this.imdbRatings = null;
+        this.currentListIndex = 0;
 
+        this.imdbRatingViewPanel.setVisible(false);
         this.showAllReviewsButton.setVisible(false);
         this.metadataViewPanel.setVisible(false);
         this.bestReviewViewPanel.setVisible(false);
@@ -253,6 +191,6 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
     }
 
     private boolean isAtEndOfResults(){
-        return this.currentSearchIndex == this.currentSearchResults.size();
+        return this.currentListIndex == this.imdbRatings.size();
     }
 }
