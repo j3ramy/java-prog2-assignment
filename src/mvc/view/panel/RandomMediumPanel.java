@@ -95,19 +95,16 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
     }
 
     @Override
-    public void initImages() {
-
-    }
+    public void initImages() {}
 
     @Override
     public void initActionListeners(){
         this.loadMediumButton.addActionListener((e) -> this.searchForRandomMedium());
 
         this.showAllReviewsButton.addActionListener((e) -> {
-            AppModel appModel = this.appView.getAppController().getAppModel();
             UIManager.put("OptionPane.minimumSize", new Dimension(600,400));
             JOptionPane.showMessageDialog(null, new AllReviewsDialog(this.appView, this.medium.getTitle()),
-                    appModel.getTranslation("dialog.title.all_reviews") + " " + this.medium.getTitle(), JOptionPane.PLAIN_MESSAGE);
+                    this.appView.getAppModel().getTranslation("dialog.title.all_reviews") + " " + this.medium.getTitle(), JOptionPane.PLAIN_MESSAGE);
             UIManager.put("OptionPane.minimumSize", null);
         });
     }
@@ -125,8 +122,7 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
     }
 
     public void searchForRandomMedium(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
-        Medium medium = appModel.getRandomMedium();
+        Medium medium = this.appView.getAppModel().getRandomMedium();
 
         if(medium == null){
             this.appView.showNoMediumFoundDialog();
@@ -136,7 +132,7 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         this.medium = medium;
         this.metadataViewPanel.fillDataView(medium);
 
-        AudienceReview[] reviews = appModel.getBestAndWorstReviewByTitle(medium.getTitle());
+        AudienceReview[] reviews = this.appView.getAppModel().getBestAndWorstReviewByTitle(medium.getTitle());
         this.showAllReviewsButton.setVisible(true);
         this.showAllReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null);
         this.worstReviewViewPanel.fillDataView(reviews[0]);

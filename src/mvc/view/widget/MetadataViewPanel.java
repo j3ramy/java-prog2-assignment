@@ -128,7 +128,7 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
 
         this.setBorder(new EmptyBorder(0, 20, 20, 0));
 
-        this.titleLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(Colors.BORDER)));
+        this.titleLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(Colors.LIGHT_BLUE)));
 
         this.titleLabel.setFont(new Font(null, Font.BOLD, 14));
         this.typeLabel.setFont(new Font(null, Font.PLAIN, 12));
@@ -141,6 +141,17 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
         this.castTextArea.setFont(new Font(null, Font.PLAIN, 12));
         this.countryTextArea.setFont(new Font(null, Font.PLAIN, 12));
         this.addedAtLabel.setFont(new Font(null, Font.PLAIN, 12));
+
+        this.providerLabel.setVerticalTextPosition(JLabel.TOP);
+        this.providerLabel.setVerticalAlignment(JLabel.TOP);
+        this.ageRatingLabel.setVerticalTextPosition(JLabel.TOP);
+        this.ageRatingLabel.setVerticalAlignment(JLabel.TOP);
+        this.durationLabel.setVerticalTextPosition(JLabel.TOP);
+        this.durationLabel.setVerticalAlignment(JLabel.TOP);
+        this.seasonLabel.setVerticalTextPosition(JLabel.TOP);
+        this.seasonLabel.setVerticalAlignment(JLabel.TOP);
+        this.addedAtLabel.setVerticalTextPosition(JLabel.TOP);
+        this.addedAtLabel.setVerticalAlignment(JLabel.TOP);
     }
 
     @Override
@@ -166,11 +177,11 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
     }
 
     public void fillDataView(Medium medium){
-        this.titleLabel.setText(medium.getTitle() + " (" + medium.getReleaseYear() + ")");
+        this.titleLabel.setText(medium.getTitle() + " (" + (medium.getReleaseYear() == 0 ? "N/A" : medium.getReleaseYear()) + ")");
 
         this.typeLabel.setText(Utils.uppercaseAll(medium.getType().name()));
 
-        String formattedKey = Utils.uppercaseAll(Utils.joinArray(Utils.joinList(medium.getProviders(), " ").split("_"), " "));
+        String formattedKey = Utils.uppercaseAll(Utils.joinArray(Utils.joinList(medium.getProviders(), ", ").split("_"), " "));
         this.providerLabel.setText(formattedKey);
 
         this.genreTextArea.setText(medium.getGenres());

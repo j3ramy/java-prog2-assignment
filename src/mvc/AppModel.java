@@ -81,14 +81,14 @@ public class AppModel {
     public ArrayList<Medium> getMediumsByTitle(String title){
         ArrayList<Medium> mediums = new ArrayList<>();
         for(String keys : this.mediums.keySet()){
-            if(keys.contains(Utils.stringToKeyFormat(title)))
+            if(keys.contains(Utils.removeForbiddenChars(Utils.stringToKeyFormat(title))))
                 mediums.add(this.mediums.get(keys));
         }
 
         return mediums;
     }
 
-    //TODO: Remove nested for loop
+    //TODO: Sort list by ratings in the end
     public ArrayList<Medium> getMediumsByGenres(String[] genres){
         ArrayList<Medium> mediums = new ArrayList<>();
         for(Medium medium : this.mediums.values()){
@@ -103,10 +103,13 @@ public class AppModel {
                 mediums.add(medium);
         }
 
+        Algorithms.countingSortMediumsByReleaseYear(mediums);
+        Collections.reverse(mediums);
+
         return mediums;
     }
 
-    //TODO: Remove nested for loop
+    //TODO: Sort list by ratings in the end
     public ArrayList<Medium> getMediumsByCast(String[] cast){
         ArrayList<Medium> mediums = new ArrayList<>();
         for(Medium medium : this.mediums.values()){
@@ -122,6 +125,9 @@ public class AppModel {
             if(actorMatchCounter == cast.length)
                 mediums.add(medium);
         }
+
+        Algorithms.countingSortMediumsByReleaseYear(mediums);
+        Collections.reverse(mediums);
 
         return mediums;
     }
@@ -213,7 +219,7 @@ public class AppModel {
     }
 
     private void sortAudienceReviewsByRatingDesc(ArrayList<AudienceReview> reviews){
-        Algorithms.countingSort(reviews);
+        Algorithms.countingSortAudienceReviewByRating(reviews);
         Collections.reverse(reviews);
     }
 

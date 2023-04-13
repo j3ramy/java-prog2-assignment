@@ -76,12 +76,17 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
     public void initStyles() {
         this.setVisible(false);
 
-        this.headingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(Colors.BORDER)));
+        this.headingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(Colors.LIGHT_BLUE)));
 
         this.headingLabel.setFont(new Font(null, Font.BOLD, 14));
         this.mediumTitleLabel.setFont(new Font(null, Font.PLAIN, 12));
         this.ratingLabel.setFont(new Font(null, Font.PLAIN, 12));
         this.commentTextArea.setFont(new Font(null, Font.PLAIN, 12));
+
+        this.mediumTitleLabel.setVerticalTextPosition(JLabel.TOP);
+        this.mediumTitleLabel.setVerticalAlignment(JLabel.TOP);
+        this.ratingLabel.setVerticalTextPosition(JLabel.TOP);
+        this.ratingLabel.setVerticalAlignment(JLabel.TOP);
     }
 
     @Override

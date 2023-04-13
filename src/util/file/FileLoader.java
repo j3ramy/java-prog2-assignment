@@ -1,6 +1,5 @@
 package util.file;
 
-import com.sun.jdi.AbsentInformationException;
 import mvc.AppModel;
 import util.Utils;
 import util.data.*;
@@ -16,8 +15,6 @@ import java.util.*;
 public class FileLoader {
     private final AppModel appModel;
     private final LinkedHashMap<String, Integer> loadingSkips = new LinkedHashMap<>();
-
-    private Person[] applePlusCredits;
 
     public FileLoader(AppModel appModel){
         this.appModel = appModel;
@@ -183,8 +180,8 @@ public class FileLoader {
                     medium = this.createApplePlusMedium(data, provider);
                 }
 
-                if(this.appModel.getMediums().containsKey(medium.getTitle())){
-                    this.appModel.getMediums().get(medium.getTitle()).getProviders().add(provider);
+                if(this.appModel.getMediums().containsKey(Utils.stringToKeyFormat(medium.getTitle()))){
+                    this.appModel.getMediums().get(Utils.stringToKeyFormat(medium.getTitle())).getProviders().add(provider);
                 }
                 else{
                     this.appModel.getMediums().put(Utils.stringToKeyFormat(medium.getTitle()), medium);
@@ -209,7 +206,7 @@ public class FileLoader {
                 mediumType,
                 provider,
                 this.convertObjectToString(data[2], "/"),
-                this.convertObjectToString(data[data.length - 1], ", ", false),
+                this.convertObjectToString(data[data.length - 1], ", ", false, false),
                 this.convertObjectToString(data[10], ", "),
                 mediumType == MediumType.MOVIE ? (String) data[9] : "",
                 mediumType == MediumType.SHOW ? (String) data[9] : "",
@@ -230,31 +227,29 @@ public class FileLoader {
                 mediumType,
                 provider,
                 this.convertObjectToString(data[1], "/"),
-                this.convertObjectToString(data[3], ", ", false),
+                this.convertObjectToString(data[3], ", ", false, false),
                 this.convertObjectToString(data[7], ", "),
                 (String) data[6],
-                mediumType == MediumType.SHOW ? (String) data[9] : "N/A",
+                mediumType == MediumType.SHOW ? (String) data[9] : "",
                 (String) data[4],
                 this.getApplePlusCastByMovie((String) data[0]),
                 this.convertObjectToString(data[8], ", "),
                 (String) data[5],
-                "N/A"
+                ""
         );
     }
 
     private Person[] getApplePlusCastByMovie(String movieId){
         ArrayList<Person> cast = new ArrayList<>();
-        if(this.applePlusCredits != null){
-            for(Person person : this.applePlusCredits){
-                if(person.getMovieId().equalsIgnoreCase(movieId))
-                    cast.add(person);
-            }
+        for(Person person : this.loadApplePlusCredits()){
+            if(person.getMovieId().equalsIgnoreCase(movieId))
+                cast.add(person);
         }
 
         return cast.toArray(Person[]::new);
     }
 
-    private void loadApplePlusCredits(){
+    private Person[] loadApplePlusCredits(){
         try{
             //Check if file exists
             File file = new File(FilePaths.APPLE_PLUS_CREDITS_PATH);
@@ -287,11 +282,13 @@ public class FileLoader {
             bufferedReader.close();
 
             this.loadingSkips.put("APPLE_PLUS_CREDITS", skipCounter);
-            this.applePlusCredits = credits.toArray(Person[]::new);
+            return credits.toArray(Person[]::new);
         }
         catch(Exception e){
             this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
         }
+
+        return new Person[]{};
     }
 
     private void loadReviews(){
@@ -330,11 +327,11 @@ public class FileLoader {
                 Review review;
                 if(type == ReviewType.CRITICS){
                     boolean sentiment = !data[1].equals("0");
-                    review = new CriticReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false),
+                    review = new CriticReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false, false),
                             sentiment);
                 }
                 else{
-                    review = new AudienceReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false),
+                    review = new AudienceReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false, false),
                              Float.parseFloat((String) data[1]));
                 }
 
@@ -390,7 +387,7 @@ public class FileLoader {
 
                     ImdbRating rating = new ImdbRating(
                             imdbMedium,
-                            this.convertObjectToString(data[0], ""),
+                            this.convertObjectToString(data[0], ",", false, true),
                             ((String) data[6]).isBlank() ? 0f : Float.parseFloat((String) data[6]),
                             ((String) data[8]).isBlank() ? 0 : Integer.parseInt((String) data[8]),
                             ((String) data[14]).isBlank() ? 0 : Integer.parseInt((String) data[14]),
@@ -415,10 +412,10 @@ public class FileLoader {
     }
 
     private String convertObjectToString(Object data, String separator){
-        return this.convertObjectToString(data, separator, true);
+        return this.convertObjectToString(data, separator, true, false);
     }
 
-    private String convertObjectToString(Object data, String separator, boolean uppercaseAll) {
+    private String convertObjectToString(Object data, String separator, boolean uppercaseAll, boolean isLink) {
         String string = "";
         if(data instanceof ArrayList<?>)
             string = Utils.joinList((List<?>) data, separator);
@@ -427,8 +424,10 @@ public class FileLoader {
 
         if(uppercaseAll)
             return Utils.uppercaseAll(Utils.removeForbiddenChars(string));
-        else
+        else if(!isLink)
             return Utils.removeForbiddenChars(string);
+        else
+            return string;
     }
 
     private Person[] getCast(Object directorData, Object actorData){

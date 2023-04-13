@@ -1,6 +1,5 @@
 package mvc.view.panel;
 
-import mvc.AppModel;
 import mvc.AppView;
 import util.enums.Language;
 import util.enums.Provider;
@@ -105,11 +104,9 @@ public class SettingsPanel extends JPanel implements IViewPanel {
 
     @Override
     public void setTranslations(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
-
-        this.languageLabel.setText(appModel.getTranslation("label.settings.language"));
-        this.checkboxPanel.setBorder(BorderFactory.createTitledBorder(appModel.getTranslation("label.settings.providers")));
-        this.saveButton.setText(appModel.getTranslation("button.settings.save"));
+        this.languageLabel.setText(this.appView.getAppModel().getTranslation("label.settings.language"));
+        this.checkboxPanel.setBorder(BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.settings.providers")));
+        this.saveButton.setText(this.appView.getAppModel().getTranslation("button.settings.save"));
     }
 
     public void loadSettings(CustomData data){
@@ -144,8 +141,6 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         if(!this.appView.getAppController().getAppModel().hasMediums())
             this.appView.disableTabs();
 
-        AppModel appModel = this.appView.getAppController().getAppModel();
-        this.appView.showDialog(appModel.getTranslation("dialog.title.settings.save"),
-                appModel.getTranslation("dialog.body.settings.save"), JOptionPane.INFORMATION_MESSAGE);
+        this.appView.showSaveSettingsDialog();
     }
 }

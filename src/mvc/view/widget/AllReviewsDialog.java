@@ -47,7 +47,7 @@ public class AllReviewsDialog extends JPanel implements IViewPanel {
         //Create component panel as a component inside of this panel
         JPanel componentPanel = new JPanel(new GridBagLayout());
         componentPanel.setBorder(new EmptyBorder(20, 20, 0, 20));
-        componentPanel.setBackground(Colors.BORDER);
+        componentPanel.setBackground(Colors.LIGHT_BLUE);
         this.add(componentPanel, BorderLayout.CENTER);
 
         //Describe the cell behavior in GridLayout

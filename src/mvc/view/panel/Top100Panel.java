@@ -9,11 +9,14 @@ import mvc.view.widget.ReviewViewPanel;
 import util.data.AudienceReview;
 import util.data.ImdbRating;
 import util.data.Medium;
+import util.file.FilePaths;
 import util.interfaces.IViewPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Top100Panel extends JPanel implements IViewPanel {
@@ -115,7 +118,6 @@ public class Top100Panel extends JPanel implements IViewPanel {
 
     @Override
     public void initImages() {
-
     }
 
     @Override
@@ -133,10 +135,8 @@ public class Top100Panel extends JPanel implements IViewPanel {
 
     @Override
     public void setTranslations(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
-
-        this.searchMediumButton.setText(appModel.getTranslation("button.load"));
-        this.showAllReviewsButton.setText(appModel.getTranslation("button.all_reviews"));
+        this.searchMediumButton.setText(this.appView.getAppModel().getTranslation("button.load"));
+        this.showAllReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
 
         this.imdbRatingViewPanel.setTranslations();
         this.metadataViewPanel.setTranslations();
@@ -145,12 +145,10 @@ public class Top100Panel extends JPanel implements IViewPanel {
     }
 
     public void searchMedium(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
-
         if(this.imdbRatings == null){
             this.reset();
 
-            this.imdbRatings = appModel.getTop100();
+            this.imdbRatings = this.appView.getAppModel().getTop100();
             if(this.imdbRatings.isEmpty()){
                 this.appView.showNoMediumFoundDialog();
                 return;
@@ -169,7 +167,7 @@ public class Top100Panel extends JPanel implements IViewPanel {
         this.imdbRatingViewPanel.fillDataView(this.imdbRatings.get(this.currentListIndex - 1));
         this.metadataViewPanel.fillDataView(this.medium);
 
-        AudienceReview[] reviews = appModel.getBestAndWorstReviewByTitle(this.medium.getTitle());
+        AudienceReview[] reviews = this.appView.getAppModel().getBestAndWorstReviewByTitle(this.medium.getTitle());
         this.showAllReviewsButton.setVisible(true);
         this.showAllReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null);
         this.worstReviewViewPanel.fillDataView(reviews[0]);

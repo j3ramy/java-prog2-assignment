@@ -1,12 +1,43 @@
 package util;
 
 import util.data.AudienceReview;
+import util.data.Medium;
 
+import java.time.Year;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 
 public class Algorithms {
-    public static void countingSort(ArrayList<AudienceReview> arr) {
+    public static void countingSortMediumsByReleaseYear(ArrayList<Medium> mediums) {
+        // Find the maximum release year in the list
+        int maxReleaseYear = Year.now().getValue();
+
+        // Initialize the counting array
+        int[] count = new int[maxReleaseYear + 1];
+        for (Medium medium : mediums) {
+            count[medium.getReleaseYear()]++;
+        }
+
+        // Calculate the cumulative count array
+        for (int i = 1; i <= maxReleaseYear; i++) {
+            count[i] += count[i - 1];
+        }
+
+        // Create the sorted array
+        Medium[] sorted = new Medium[mediums.size()];
+        for (int i = mediums.size() - 1; i >= 0; i--) {
+            Medium medium = mediums.get(i);
+            int index = count[medium.getReleaseYear()] - 1;
+            sorted[index] = medium;
+            count[medium.getReleaseYear()]--;
+        }
+
+        // Copy the sorted array back into the original list
+        mediums.clear();
+        mediums.addAll(Arrays.asList(sorted));
+    }
+
+    public static void countingSortAudienceReviewByRating(ArrayList<AudienceReview> arr) {
         int n = arr.size();
         float maxRating = getMaxRating(arr);
 

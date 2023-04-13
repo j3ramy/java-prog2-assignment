@@ -136,9 +136,7 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
     }
 
     @Override
-    public void initImages() {
-
-    }
+    public void initImages() {}
 
     @Override
     public void initActionListeners(){
@@ -162,26 +160,23 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         this.searchMediumButton.addActionListener((e) -> this.searchMedium());
 
         this.showAllReviewsButton.addActionListener((e) -> {
-            AppModel appModel = this.appView.getAppController().getAppModel();
             UIManager.put("OptionPane.minimumSize", new Dimension(600,400));
             JOptionPane.showMessageDialog(null, new AllReviewsDialog(this.appView, this.medium.getTitle()),
-                    appModel.getTranslation("dialog.title.all_reviews") + " " + this.medium.getTitle(), JOptionPane.PLAIN_MESSAGE);
+                    this.appView.getAppModel().getTranslation("dialog.title.all_reviews") + " " + this.medium.getTitle(), JOptionPane.PLAIN_MESSAGE);
             UIManager.put("OptionPane.minimumSize", null);
         });
     }
 
     @Override
     public void setTranslations(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
-
         this.radioButtonContainer.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0),
-                BorderFactory.createTitledBorder(appModel.getTranslation("label.search.search_by"))));
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.search.search_by"))));
 
-        this.titleRadioButton.setText(appModel.getTranslation("radio.title"));
-        this.genreRadioButton.setText(appModel.getTranslation("radio.genre"));
-        this.castRadioButton.setText(appModel.getTranslation("radio.cast"));
-        this.searchMediumButton.setText(appModel.getTranslation("button.search"));
-        this.showAllReviewsButton.setText(appModel.getTranslation("button.all_reviews"));
+        this.titleRadioButton.setText(this.appView.getAppModel().getTranslation("radio.title"));
+        this.genreRadioButton.setText(this.appView.getAppModel().getTranslation("radio.genre"));
+        this.castRadioButton.setText(this.appView.getAppModel().getTranslation("radio.cast"));
+        this.searchMediumButton.setText(this.appView.getAppModel().getTranslation("button.search"));
+        this.showAllReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
 
         this.metadataViewPanel.setTranslations();
         this.bestReviewViewPanel.setTranslations();
@@ -193,8 +188,6 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
     }
 
     public void searchMedium(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
-
         if(this.currentSearchResults == null || !this.lastSearch.equalsIgnoreCase(this.inputTextField.getText())){
             this.reset();
 
@@ -215,7 +208,7 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
 
         this.metadataViewPanel.fillDataView(this.medium);
 
-        AudienceReview[] reviews = appModel.getBestAndWorstReviewByTitle(this.medium.getTitle());
+        AudienceReview[] reviews = this.appView.getAppModel().getBestAndWorstReviewByTitle(this.medium.getTitle());
         this.showAllReviewsButton.setVisible(true);
         this.showAllReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null);
         this.worstReviewViewPanel.fillDataView(reviews[0]);
