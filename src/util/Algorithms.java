@@ -1,14 +1,44 @@
 package util;
 
+import mvc.AppModel;
 import util.data.AudienceReview;
 import util.data.Medium;
 
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Algorithms {
-    public static void countingSortMediumsByReleaseYear(ArrayList<Medium> mediums) {
+
+    public static void sortMediumsByRating(ArrayList<Medium> mediums, AppModel appModel){
+        HashMap<Integer, ArrayList<Medium>> mediumsGroupedByRelease = new HashMap<>();
+        for(Medium medium : mediums){
+            //if(appModel.getAudienceReviewsByTitle(medium.getTitle()).isEmpty())
+            //    continue;
+
+            if(!mediumsGroupedByRelease.containsKey(medium.getReleaseYear()))
+                mediumsGroupedByRelease.put(medium.getReleaseYear(), new ArrayList<>(List.of(medium)));
+            else
+                mediumsGroupedByRelease.get(medium.getReleaseYear()).add(medium);
+        }
+
+        for(Map.Entry<Integer, ArrayList<Medium>> entry : mediumsGroupedByRelease.entrySet()){
+            Comparator<Medium> comparator = (medium1, medium2) -> {
+                float bestReview1 = Algorithms.getMaxRating(appModel.getAudienceReviewsByTitle(medium1.getTitle()));
+                float bestReview2 = Algorithms.getMaxRating(appModel.getAudienceReviewsByTitle(medium2.getTitle()));
+                return Float.compare(bestReview1, bestReview2);
+            };
+
+            entry.getValue().sort(comparator);
+        }
+
+        mediums.clear();
+        for(ArrayList<Medium> list : mediumsGroupedByRelease.values()){
+            mediums.addAll(list);
+        }
+    }
+
+    //Counting sort
+    public static void sortMediumsByReleaseYear(ArrayList<Medium> mediums) {
         // Find the maximum release year in the list
         int maxReleaseYear = Year.now().getValue();
 
@@ -37,7 +67,7 @@ public class Algorithms {
         mediums.addAll(Arrays.asList(sorted));
     }
 
-    public static void countingSortAudienceReviewByRating(ArrayList<AudienceReview> arr) {
+    public static void sortAudienceReviewsByRating(ArrayList<AudienceReview> arr) {
         int n = arr.size();
         float maxRating = getMaxRating(arr);
 
@@ -71,7 +101,7 @@ public class Algorithms {
         }
     }
 
-    private static float getMaxRating(ArrayList<AudienceReview> arr){
+    public static float getMaxRating(ArrayList<AudienceReview> arr){
         float maxFloat = 0f;
 
         for(AudienceReview review : arr){

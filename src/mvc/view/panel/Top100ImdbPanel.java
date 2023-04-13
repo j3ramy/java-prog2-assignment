@@ -9,17 +9,14 @@ import mvc.view.widget.ReviewViewPanel;
 import util.data.AudienceReview;
 import util.data.ImdbRating;
 import util.data.Medium;
-import util.file.FilePaths;
 import util.interfaces.IViewPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.ArrayList;
 
-public class Top100Panel extends JPanel implements IViewPanel {
+public class Top100ImdbPanel extends JPanel implements IViewPanel {
     private final AppView appView;
 
     private JButton searchMediumButton, showAllReviewsButton;
@@ -30,7 +27,7 @@ public class Top100Panel extends JPanel implements IViewPanel {
     private ArrayList<ImdbRating> imdbRatings;
     private int currentListIndex = 0;
 
-    public Top100Panel(AppView appView){
+    public Top100ImdbPanel(AppView appView){
         this.appView = appView;
     }
 
@@ -148,7 +145,7 @@ public class Top100Panel extends JPanel implements IViewPanel {
         if(this.imdbRatings == null){
             this.reset();
 
-            this.imdbRatings = this.appView.getAppModel().getTop100();
+            this.imdbRatings = this.appView.getAppModel().getTop100Imdb();
             if(this.imdbRatings.isEmpty()){
                 this.appView.showNoMediumFoundDialog();
                 return;

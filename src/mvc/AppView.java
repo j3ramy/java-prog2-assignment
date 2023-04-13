@@ -3,7 +3,7 @@ package mvc;
 import mvc.view.panel.RandomMediumPanel;
 import mvc.view.panel.SearchMediumPanel;
 import mvc.view.panel.SettingsPanel;
-import mvc.view.panel.Top100Panel;
+import mvc.view.panel.Top100ImdbPanel;
 import util.enums.AppState;
 import util.file.FilePaths;
 import util.interfaces.IViewPanel;
@@ -20,7 +20,7 @@ public class AppView extends JFrame implements IViewPanel {
 
     private RandomMediumPanel randomMediumPanel;
     private SearchMediumPanel searchMediumPanel;
-    private Top100Panel top100Panel;
+    private Top100ImdbPanel top100ImdbPanel;
     private SettingsPanel settingsPanel;
 
     private JTabbedPane tabbedPanel;
@@ -53,8 +53,8 @@ public class AppView extends JFrame implements IViewPanel {
         this.searchMediumPanel = new SearchMediumPanel(this);
         this.searchMediumPanel.init();
 
-        this.top100Panel = new Top100Panel(this);
-        this.top100Panel.init();
+        this.top100ImdbPanel = new Top100ImdbPanel(this);
+        this.top100ImdbPanel.init();
 
         this.settingsPanel = new SettingsPanel(this);
         this.settingsPanel.init();
@@ -105,7 +105,7 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.search_medium"), this.searchMediumPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100"), this.top100Panel);
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100"), this.top100ImdbPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
 
         this.disableTabs();
@@ -127,7 +127,7 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.randomMediumPanel.setTranslations();
         this.searchMediumPanel.setTranslations();
-        this.top100Panel.setTranslations();
+        this.top100ImdbPanel.setTranslations();
         this.settingsPanel.setTranslations();
     }
 

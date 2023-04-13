@@ -72,12 +72,15 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
 
         this.titleRadioButton = new JRadioButton();
         this.titleRadioButton.setSelected(true);
+        this.titleRadioButton.addItemListener((e) -> this.reset());
         this.radioButtonContainer.add(this.titleRadioButton);
 
         this.genreRadioButton = new JRadioButton();
+        this.titleRadioButton.addItemListener((e) -> this.reset());
         this.radioButtonContainer.add(this.genreRadioButton);
 
         this.castRadioButton = new JRadioButton();
+        this.titleRadioButton.addItemListener((e) -> this.reset());
         this.radioButtonContainer.add(this.castRadioButton);
 
         ButtonGroup radioButtonGroup = new ButtonGroup();
@@ -219,6 +222,8 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
     }
 
     private boolean getMediums(){
+        this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
         AppModel appModel = this.appView.getAppController().getAppModel();
         this.lastSearch = this.inputTextField.getText();
 
@@ -231,6 +236,8 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         else{
             this.currentSearchResults = appModel.getMediumsByCast(this.inputTextField.getText().split(","));
         }
+
+        this.appView.setCursor(Cursor.getDefaultCursor());
 
         return !this.currentSearchResults.isEmpty();
     }

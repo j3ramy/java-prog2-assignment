@@ -85,10 +85,13 @@ public class AppModel {
                 mediums.add(this.mediums.get(keys));
         }
 
+        Algorithms.sortMediumsByRating(mediums, this);
+        Algorithms.sortMediumsByReleaseYear(mediums);
+        Collections.reverse(mediums);
+
         return mediums;
     }
 
-    //TODO: Sort list by ratings in the end
     public ArrayList<Medium> getMediumsByGenres(String[] genres){
         ArrayList<Medium> mediums = new ArrayList<>();
         for(Medium medium : this.mediums.values()){
@@ -103,13 +106,13 @@ public class AppModel {
                 mediums.add(medium);
         }
 
-        Algorithms.countingSortMediumsByReleaseYear(mediums);
+        Algorithms.sortMediumsByRating(mediums, this);
+        Algorithms.sortMediumsByReleaseYear(mediums);
         Collections.reverse(mediums);
 
         return mediums;
     }
 
-    //TODO: Sort list by ratings in the end
     public ArrayList<Medium> getMediumsByCast(String[] cast){
         ArrayList<Medium> mediums = new ArrayList<>();
         for(Medium medium : this.mediums.values()){
@@ -126,13 +129,14 @@ public class AppModel {
                 mediums.add(medium);
         }
 
-        Algorithms.countingSortMediumsByReleaseYear(mediums);
+        Algorithms.sortMediumsByRating(mediums, this);
+        Algorithms.sortMediumsByReleaseYear(mediums);
         Collections.reverse(mediums);
 
         return mediums;
     }
 
-    public ArrayList<ImdbRating> getTop100(){
+    public ArrayList<ImdbRating> getTop100Imdb(){
         ArrayList<ImdbRating> ratings = new ArrayList<>();
         for(int i = 0; i < 100; i++){
             if(i < this.imdbRatings.size() - 1)
@@ -172,7 +176,8 @@ public class AppModel {
             }
 
             ArrayList<AudienceReview> audienceReviews = this.getAudienceReviewsOnly(reviews);
-            this.sortAudienceReviewsByRatingDesc(audienceReviews);
+            Algorithms.sortAudienceReviewsByRating(audienceReviews);
+            Collections.reverse(reviews);
             ArrayList<CriticReview> criticReviews = this.getCriticsReviewsOnly(reviews);
 
             reviews.clear();
@@ -216,11 +221,6 @@ public class AppModel {
         }
 
         return audienceReviews;
-    }
-
-    private void sortAudienceReviewsByRatingDesc(ArrayList<AudienceReview> reviews){
-        Algorithms.countingSortAudienceReviewByRating(reviews);
-        Collections.reverse(reviews);
     }
 
     public boolean hasMediums(){
