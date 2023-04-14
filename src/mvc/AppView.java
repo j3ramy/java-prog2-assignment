@@ -1,10 +1,7 @@
 package mvc;
 
-import mvc.view.panel.RandomMediumPanel;
-import mvc.view.panel.SearchMediumPanel;
-import mvc.view.panel.SettingsPanel;
-import mvc.view.panel.Top100ImdbPanel;
-import util.enums.AppState;
+import mvc.view.panel.*;
+import util.enums.LoadingState;
 import util.file.FilePaths;
 import util.interfaces.IViewPanel;
 
@@ -21,6 +18,7 @@ public class AppView extends JFrame implements IViewPanel {
     private RandomMediumPanel randomMediumPanel;
     private SearchMediumPanel searchMediumPanel;
     private Top100ImdbPanel top100ImdbPanel;
+    private Top100RatingPanel top100RatingPanel;
     private SettingsPanel settingsPanel;
 
     private JTabbedPane tabbedPanel;
@@ -40,7 +38,7 @@ public class AppView extends JFrame implements IViewPanel {
         this.initComponents();
         this.initStyles();
         this.initImages();
-        this.initActionListeners();
+        this.initListeners();
     }
 
     @Override
@@ -55,6 +53,9 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.top100ImdbPanel = new Top100ImdbPanel(this);
         this.top100ImdbPanel.init();
+
+        this.top100RatingPanel = new Top100RatingPanel(this);
+        this.top100RatingPanel.init();
 
         this.settingsPanel = new SettingsPanel(this);
         this.settingsPanel.init();
@@ -74,12 +75,11 @@ public class AppView extends JFrame implements IViewPanel {
         this.statusBarPanel.setBorder(new EmptyBorder(0, 5, 0, 0));
     }
 
-    @Override
     public void initImages(){
         try {
             ImageIcon imageIcon = new ImageIcon(FilePaths.MENU_IMAGE_PATH);
 
-            Image image = imageIcon.getImage().getScaledInstance(200, 266,  Image.SCALE_SMOOTH);
+            Image image = imageIcon.getImage().getScaledInstance(200, this.getHeight(),  Image.SCALE_SMOOTH);
             this.menuImage.setIcon(new ImageIcon(image));
         }
         catch (Exception e){
@@ -88,7 +88,7 @@ public class AppView extends JFrame implements IViewPanel {
     }
 
     @Override
-    public void initActionListeners(){
+    public void initListeners(){
         this.tabbedPanel.addChangeListener(e -> {
             if(this.tabbedPanel.getSelectedIndex() == 1)
             {
@@ -105,13 +105,15 @@ public class AppView extends JFrame implements IViewPanel {
 
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.search_medium"), this.searchMediumPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100"), this.top100ImdbPanel);
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100_imdb"), this.top100ImdbPanel);
+        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100_rating"), this.top100RatingPanel);
         this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
 
         this.disableTabs();
+        this.tabbedPanel.setSelectedIndex(this.tabbedPanel.getTabCount() - 1);
 
         this.setUserFeedbackText("label.user.welcome");
-        this.setStatusBarText(AppState.READY);
+        this.setStatusBarText(LoadingState.READY);
     }
 
     public AppModel getAppModel(){
@@ -128,13 +130,14 @@ public class AppView extends JFrame implements IViewPanel {
         this.randomMediumPanel.setTranslations();
         this.searchMediumPanel.setTranslations();
         this.top100ImdbPanel.setTranslations();
+        this.top100RatingPanel.setTranslations();
         this.settingsPanel.setTranslations();
     }
 
-    public void setStatusBarText(AppState appState){
+    public void setStatusBarText(LoadingState loadingState){
         JLabel statusBarLabel = (JLabel) this.statusBarPanel.getComponents()[0];
 
-        switch (appState){
+        switch (loadingState){
             case LOAD_MEDIUMS -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.load_mediums"));
             case LOAD_REVIEWS -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.load_reviews"));
             case LOAD_IMDB_RATING -> statusBarLabel.setText(this.getAppController().getAppModel().getTranslation("label.status.load_imdb_rating"));
@@ -195,8 +198,12 @@ public class AppView extends JFrame implements IViewPanel {
     }
 
     public void showAcceptRecommendationDialog(ActionListener confirmAction, ActionListener rejectAction, int currentIndex, int mediumCount){
+        this.showAcceptRecommendationDialog(confirmAction, rejectAction, currentIndex, mediumCount, "");
+    }
+
+    public void showAcceptRecommendationDialog(ActionListener confirmAction, ActionListener rejectAction, int currentIndex, int mediumCount, String addable){
         String title = this.getAppController().getAppModel().getTranslation("dialog.title.recommendation").
-                replace("#", Integer.toString(currentIndex)).replace("+", Integer.toString(mediumCount));
+                replace("#", Integer.toString(currentIndex)).replace("+", Integer.toString(mediumCount)) + addable;
 
         int input = JOptionPane.showConfirmDialog(this, this.getAppController().getAppModel().getTranslation("dialog.body.recommendation"),
                 title, JOptionPane.YES_NO_CANCEL_OPTION);

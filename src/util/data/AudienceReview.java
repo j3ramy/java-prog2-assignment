@@ -23,9 +23,4 @@ public class AudienceReview extends Review {
 
         this.rating = rating;
     }
-
-    @Override
-    public String toString() {
-        return "Title: " + this.mediumTitle + ", Rating: " + this.rating + ", Comment: " + this.comment;
-    }
 }

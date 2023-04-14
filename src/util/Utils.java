@@ -83,21 +83,6 @@ public class Utils {
         return counter;
     }
 
-    public static boolean containsEnumValue(String value, Class<?> enumeration){
-        boolean contains = false;
-
-        for(Object s : enumeration.getEnumConstants()){
-            if(value.toLowerCase().contains(s.toString().toLowerCase()))
-                contains = true;
-        }
-
-        return contains;
-    }
-
-    public static String joinArray(Object[] array){
-        return joinArray(array, "");
-    }
-
     public static String joinArray(Object[] array, String separator){
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -109,10 +94,6 @@ public class Utils {
         }
 
         return stringBuilder.toString();
-    }
-
-    public static String joinList(List<?> array){
-        return joinList(array, "");
     }
 
     public static String joinList(List<?> list, String separator){
@@ -128,16 +109,11 @@ public class Utils {
         return stringBuilder.toString();
     }
 
-    private static final Pattern pattern1 = Pattern.compile("-?\\d+(\\.\\d+)?");
-    public static boolean isNumeric(String s){
-        return pattern1.matcher(s).matches();
-    }
-
     public static String stringToKeyFormat(String key){
         return key.toLowerCase().replace(" ", "_");
     }
 
-    private static Pattern pattern2 = Pattern.compile("[^a-zA-Z0-9 ,_]");
+    private static final Pattern pattern2 = Pattern.compile("[^a-zA-Z0-9 ,_]");
     public static String removeForbiddenChars(String s){
         return s.replaceAll(pattern2.pattern(), "");
     }
@@ -160,5 +136,21 @@ public class Utils {
         }
 
         return sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1).toLowerCase()).toString().trim();
+    }
+
+    public static boolean containsEnumValue(String value, Class<?> enumeration){
+        boolean contains = false;
+
+        for(Object s : enumeration.getEnumConstants()){
+            if(value.toLowerCase().contains(s.toString().toLowerCase()))
+                contains = true;
+        }
+
+        return contains;
+    }
+
+    private static final Pattern pattern1 = Pattern.compile("-?\\d+(\\.\\d+)?");
+    public static boolean isNumeric(String s){
+        return pattern1.matcher(s).matches();
     }
 }

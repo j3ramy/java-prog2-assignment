@@ -15,6 +15,8 @@ public class Medium {
     private final int releaseYear;
     private final Person[] cast;
 
+    private float averageRating = 0f;
+
     public String getId() {
         return id;
     }
@@ -67,6 +69,14 @@ public class Medium {
         return seasons;
     }
 
+    public float getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(float averageRating) {
+        this.averageRating = averageRating;
+    }
+
     public Medium(String id, MediumType type, Provider provider, String title, String description, String genres, String duration, String seasons,
                   String releaseYear, Person[] cast, String countries, String ageRating, String addedAt){
         this.id = id;
@@ -83,22 +93,5 @@ public class Medium {
         this.ageRating = ageRating.isEmpty() ? "N/A" : ageRating;
         this.addedAt = addedAt.isEmpty() ? "N/A" : addedAt;
 
-    }
-
-    @Override
-    public String toString() {
-        return "Medium{" +
-                "type=" + type +
-                ", providers=" + providers +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", ageRating='" + ageRating + '\'' +
-                ", duration='" + duration + '\'' +
-                ", releaseYear='" + releaseYear + '\'' +
-                ", addedAt='" + addedAt + '\'' +
-                ", genres='" + genres + '\'' +
-                ", countries='" + countries + '\'' +
-                ", cast=" + Arrays.toString(cast) +
-                '}';
     }
 }

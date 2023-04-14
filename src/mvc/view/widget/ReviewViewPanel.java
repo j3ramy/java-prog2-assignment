@@ -2,7 +2,7 @@ package mvc.view.widget;
 
 import mvc.AppModel;
 import mvc.AppView;
-import util.Colors;
+import util.CustomColors;
 import util.data.AudienceReview;
 import util.data.CriticReview;
 import util.data.Review;
@@ -14,11 +14,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class ReviewViewPanel extends JPanel implements IViewPanel {
-    private final AppView appView;
+    private final AppView appView; //AppView reference
 
-    private JLabel headingLabel, mediumTitleLabel, ratingLabel;
-    private JScrollPane commentScrollPane;
-    private JTextArea commentTextArea;
+    private JLabel headingLabel, mediumTitleLabel, ratingLabel; //Labels for displaying the content
+    private JTextArea commentTextArea; //Text area for longer review comments
+    private JScrollPane commentScrollPane; //Scroll pane to make scrolling in upper text area possible
+
 
     public ReviewViewPanel(AppView appView){
         this.appView = appView;
@@ -29,25 +30,24 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
     public void init(){
         this.initComponents();
         this.initStyles();
-        this.initImages();
-        this.initActionListeners();
     }
 
     @Override
     public void initComponents() {
-        //Set layout
+        //Set layout of this panel
         this.setLayout(new GridBagLayout());
 
         //Describe the cell behavior in GridLayout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.weightx = 1f;
         constraints.weighty = 1f;
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.NORTH; //Position all components to the top
+        constraints.fill = GridBagConstraints.HORIZONTAL; //Stretch content horizontal
 
-        this.headingLabel = new JLabel("", SwingConstants.CENTER);
-        constraints.gridx = 0;
-        constraints.gridy = 0;
+        //Add labels
+        this.headingLabel = new JLabel("", SwingConstants.CENTER); //Initialize and center
+        constraints.gridx = 0; //Grid x index
+        constraints.gridy = 0; //Grid y index
         this.add(this.headingLabel, constraints);
 
         this.mediumTitleLabel = new JLabel("");
@@ -58,14 +58,15 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
         constraints.gridy = 2;
         this.add(this.ratingLabel, constraints);
 
-        this.commentTextArea = new JTextArea();
-        this.commentTextArea.setEditable(false);
-        this.commentTextArea.setFocusable(false);
-        this.commentTextArea.setLineWrap(true);
-        this.commentTextArea.setWrapStyleWord(true);
-        this.commentTextArea.setBackground(null);
+        this.commentTextArea = new JTextArea(3, 1); //Width and height
+        this.commentTextArea.setEditable(false); //Set editable to false so the user cannot edit it
+        this.commentTextArea.setFocusable(false); //Set focusable to false so the user cannot focus it
+        this.commentTextArea.setLineWrap(true); //Create line breaks
+        this.commentTextArea.setWrapStyleWord(true); //Words that does not fit in the line anymore will be moved to the next line
+        this.commentTextArea.setBackground(null); //Remove background
         constraints.gridy = 3;
 
+        //Initialize scroll panes for the text areas where the horizontal scroll bar is hidden and the vertical scroll bar is only shown when needed
         this.commentScrollPane = new JScrollPane(this.commentTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.commentScrollPane.setMinimumSize(new Dimension(0, 100));
         this.commentScrollPane.setMaximumSize(new Dimension(0, 150));
@@ -74,15 +75,18 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
 
     @Override
     public void initStyles() {
-        this.setVisible(false);
+        this.setVisible(false); //Hide by default
 
-        this.headingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(Colors.LIGHT_BLUE)));
+        //Create titled border for title label and add margin
+        this.headingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(CustomColors.LIGHT_BLUE)));
 
+        //Set labels font to Java default font
         this.headingLabel.setFont(new Font(null, Font.BOLD, 14));
         this.mediumTitleLabel.setFont(new Font(null, Font.PLAIN, 12));
         this.ratingLabel.setFont(new Font(null, Font.PLAIN, 12));
         this.commentTextArea.setFont(new Font(null, Font.PLAIN, 12));
 
+        //Set vertical alignment to top to display it in the upper-left
         this.mediumTitleLabel.setVerticalTextPosition(JLabel.TOP);
         this.mediumTitleLabel.setVerticalAlignment(JLabel.TOP);
         this.ratingLabel.setVerticalTextPosition(JLabel.TOP);
@@ -90,59 +94,69 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
     }
 
     @Override
-    public void initImages() {}
-
-    @Override
-    public void initActionListeners(){}
+    public void initListeners(){}
 
     @Override
     public void setTranslations(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
+        //Create titled border around all labels and set the text to the correct translation and add margin
+        this.mediumTitleLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.reviewdata.medium_title"))));
 
-        this.mediumTitleLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.reviewdata.medium_title"))));
-        this.commentScrollPane.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.reviewdata.comment"))));
+        this.commentScrollPane.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.reviewdata.comment"))));
     }
 
     public void fillDataView(Review review){
-        AppModel appModel = this.appView.getAppController().getAppModel();
+        AppModel appModel = this.appView.getAppController().getAppModel(); //Get app model as cached variable
 
+        //If review is null then inform the user that there is no review and clear this panel.
         if(review == null){
             this.headingLabel.setText(appModel.getTranslation("label.reviewdata.no_comment"));
             this.clear();
         }
         else{
+            //Check if review is a critics review or an audience review
             if(review instanceof CriticReview){
+                //Set heading
                 this.headingLabel.setText(appModel.getTranslation("label.reviewdata.critics"));
 
+                //Add titled border to the rating label and add margin
                 this.ratingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
                         BorderFactory.createTitledBorder(appModel.getTranslation("label.reviewdata.sentiment"))));
 
+                //Check for the sentiment and display yes or no
                 String sentiment = ((CriticReview) review).getSentiment() ? appModel.getTranslation("label.yes") : appModel.getTranslation("label.no");
                 this.ratingLabel.setText(sentiment);
             }
             else if(review instanceof AudienceReview){
+                //Set heading containing the information if it is the best or worst review by the review classification
                 this.headingLabel.setText(appModel.getTranslation("label.reviewdata.audience"));
                 switch (((AudienceReview) review).getClassification()){
                     case BEST -> this.headingLabel.setText(this.headingLabel.getText() + " (" + appModel.getTranslation("label.reviewdata.best") + ")");
                     case WORST -> this.headingLabel.setText(this.headingLabel.getText() + " (" + appModel.getTranslation("label.reviewdata.worst") + ")");
                 }
 
+                //Add titled border to the rating label and add margin
                 this.ratingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
                         BorderFactory.createTitledBorder(appModel.getTranslation("label.reviewdata.rating"))));
 
                 this.ratingLabel.setText(Float.toString(((AudienceReview) review).getRating()));
             }
 
+            //Set title and comment
             this.mediumTitleLabel.setText(review.getMediumTitle());
             this.commentTextArea.setText(review.getComment());
 
+            //Move the scroll pane scroll bar to top
             this.commentTextArea.setCaretPosition(0);
         }
 
+        //Show this panel
         this.setVisible(true);
     }
 
     private void clear(){
+        //Clear all content
         this.mediumTitleLabel.setText("");
         this.ratingLabel.setText("");
         this.commentTextArea.setText("");

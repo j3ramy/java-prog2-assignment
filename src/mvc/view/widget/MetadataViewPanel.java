@@ -1,8 +1,7 @@
 package mvc.view.widget;
 
-import mvc.AppModel;
 import mvc.AppView;
-import util.Colors;
+import util.CustomColors;
 import util.Utils;
 import util.data.Medium;
 import util.interfaces.IViewPanel;
@@ -13,12 +12,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class MetadataViewPanel extends JPanel implements IViewPanel {
-    private final AppView appView;
+    private final AppView appView; //AppView reference
 
+    //Labels for displaying the content
     private JLabel titleLabel, typeLabel, providerLabel, durationLabel, seasonLabel, ageRatingLabel, addedAtLabel;
-    private JTextArea genreTextArea, descriptionTextArea, castTextArea, countryTextArea;
-    private JScrollPane descriptionScrollPane, castScrollPane;
+    private JTextArea genreTextArea, descriptionTextArea, castTextArea, countryTextArea; //Text areas for longer texts
+    private JScrollPane descriptionScrollPane, castScrollPane; //Scroll panes to make scrolling in upper text areas possible
 
+    //Constructor
     public MetadataViewPanel(AppView appView){
         this.appView = appView;
     }
@@ -28,29 +29,27 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
     public void init(){
         this.initComponents();
         this.initStyles();
-        this.initImages();
-        this.initActionListeners();
     }
 
     @Override
     public void initComponents() {
-        //Set layout
+        //Set layout of this panel
         this.setLayout(new GridBagLayout());
 
         //Describe the cell behavior in GridLayout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.weightx = 1f;
         constraints.weighty = 1f;
-        constraints.fill = GridBagConstraints.BOTH;
+        constraints.fill = GridBagConstraints.BOTH; //Stretch content horizontal and vertical
 
-        this.titleLabel = new JLabel("", SwingConstants.CENTER);
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
+        //Initialize labels,  text areas and scroll panes
+        this.titleLabel = new JLabel("", SwingConstants.CENTER); //Center
+        constraints.gridx = 0; //Grid x index
+        constraints.gridy = 0; //Grid y index
+        constraints.gridwidth = 2; //Cell width
         this.add(this.titleLabel, constraints);
 
         this.typeLabel = new JLabel("");
-        this.typeLabel.setVerticalAlignment(SwingConstants.TOP);
         constraints.gridy = 1;
         constraints.gridwidth = 1;
         this.add(this.typeLabel, constraints);
@@ -59,12 +58,12 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
         constraints.gridy = 2;
         this.add(this.providerLabel, constraints);
 
-        this.genreTextArea = new JTextArea(50, 100);
-        this.genreTextArea.setEditable(false);
-        this.genreTextArea.setFocusable(false);
-        this.genreTextArea.setLineWrap(true);
-        this.genreTextArea.setWrapStyleWord(true);
-        this.genreTextArea.setBackground(null);
+        this.genreTextArea = new JTextArea(3, 1);
+        this.genreTextArea.setEditable(false); //Set editable to false so the user cannot edit it
+        this.genreTextArea.setFocusable(false); //Set focusable to false so the user cannot focus it
+        this.genreTextArea.setLineWrap(true); //Create line breaks
+        this.genreTextArea.setWrapStyleWord(true); //Words that does not fit in the line anymore will be moved to the next line
+        this.genreTextArea.setBackground(null); //Remove background
         constraints.gridy = 3;
         this.add(this.genreTextArea, constraints);
 
@@ -76,7 +75,7 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
         constraints.gridy = 5;
         this.add(this.seasonLabel, constraints);
 
-        this.descriptionTextArea = new JTextArea();
+        this.descriptionTextArea = new JTextArea(3, 1);
         this.descriptionTextArea.setEditable(false);
         this.descriptionTextArea.setFocusable(false);
         this.descriptionTextArea.setLineWrap(true);
@@ -85,16 +84,17 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
         constraints.gridx = 1;
         constraints.gridy = 1;
 
+        //Initialize scroll panes for the text areas where the horizontal scroll bar is hidden and the vertical scroll bar is only shown when needed
         this.descriptionScrollPane = new JScrollPane(this.descriptionTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        this.descriptionScrollPane.setMinimumSize(new Dimension(0, 100));
-        this.descriptionScrollPane.setMaximumSize(new Dimension(0, 150));
+        this.descriptionScrollPane.setMinimumSize(new Dimension(0, 100)); //Set minimum size
+        this.descriptionScrollPane.setMaximumSize(new Dimension(0, 150)); //Set maximum size
         this.add(this.descriptionScrollPane, constraints);
 
         this.ageRatingLabel = new JLabel("");
         constraints.gridy = 2;
         this.add(this.ageRatingLabel, constraints);
 
-        this.castTextArea = new JTextArea(50, 100);
+        this.castTextArea = new JTextArea(3, 1);
         this.castTextArea.setEditable(false);
         this.castTextArea.setFocusable(false);
         this.castTextArea.setLineWrap(true);
@@ -102,13 +102,12 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
         this.castTextArea.setBackground(null);
         constraints.gridy = 3;
 
-        //TODO: Bugfix cast textarea white lines in the end
         this.castScrollPane = new JScrollPane(this.castTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.castScrollPane.setMinimumSize(new Dimension(0, 100));
         this.castScrollPane.setMaximumSize(new Dimension(0, 150));
         this.add(this.castScrollPane, constraints);
 
-        this.countryTextArea = new JTextArea(50, 100);
+        this.countryTextArea = new JTextArea(3, 1);
         this.countryTextArea.setEditable(false);
         this.countryTextArea.setFocusable(false);
         this.countryTextArea.setLineWrap(true);
@@ -124,12 +123,14 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
 
     @Override
     public void initStyles() {
-        this.setVisible(false);
+        this.setVisible(false); //Hide by default
 
-        this.setBorder(new EmptyBorder(0, 20, 20, 0));
+        this.setBorder(new EmptyBorder(0, 20, 20, 0)); //Set margin
 
-        this.titleLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(Colors.LIGHT_BLUE)));
+        //Create titled border for title label and add margin
+        this.titleLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 20, 0), BorderFactory.createLineBorder(CustomColors.LIGHT_BLUE)));
 
+        //Set labels font to Java default font
         this.titleLabel.setFont(new Font(null, Font.BOLD, 14));
         this.typeLabel.setFont(new Font(null, Font.PLAIN, 12));
         this.providerLabel.setFont(new Font(null, Font.PLAIN, 12));
@@ -142,6 +143,9 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
         this.countryTextArea.setFont(new Font(null, Font.PLAIN, 12));
         this.addedAtLabel.setFont(new Font(null, Font.PLAIN, 12));
 
+        //Set vertical alignment to top to display it in the upper-left
+        this.typeLabel.setVerticalTextPosition(JLabel.TOP);
+        this.typeLabel.setVerticalAlignment(JLabel.TOP);
         this.providerLabel.setVerticalTextPosition(JLabel.TOP);
         this.providerLabel.setVerticalAlignment(JLabel.TOP);
         this.ageRatingLabel.setVerticalTextPosition(JLabel.TOP);
@@ -155,35 +159,54 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
     }
 
     @Override
-    public void initImages() {}
-
-    @Override
-    public void initActionListeners(){}
+    public void initListeners(){}
 
     @Override
     public void setTranslations(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
+        //Create titled border around all labels and set the text to the correct translation and add margin
+        this.typeLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.type"))));
 
-        this.typeLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.type"))));
-        this.providerLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.provider"))));
-        this.genreTextArea.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.genre"))));
-        this.durationLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.duration"))));
-        this.seasonLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.season"))));
-        this.descriptionScrollPane.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.description"))));
-        this.ageRatingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.age"))));
-        this.castScrollPane.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.cast"))));
-        this.countryTextArea.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.country"))));
-        this.addedAtLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.metadata.added_at"))));
+        this.providerLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.provider"))));
+
+        this.genreTextArea.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.genre"))));
+
+        this.durationLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.duration"))));
+
+        this.seasonLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.season"))));
+
+        this.descriptionScrollPane.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.description"))));
+
+        this.ageRatingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.age"))));
+
+        this.castScrollPane.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.cast"))));
+
+        this.countryTextArea.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.country"))));
+
+        this.addedAtLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.added_at"))));
     }
 
     public void fillDataView(Medium medium){
+        //Set title label with title and release year. If release year is 0 then replace it by N/A because then it cannot be loaded
         this.titleLabel.setText(medium.getTitle() + " (" + (medium.getReleaseYear() == 0 ? "N/A" : medium.getReleaseYear()) + ")");
 
+        //Set medium type and format it to correct uppercase
         this.typeLabel.setText(Utils.uppercaseAll(medium.getType().name()));
 
+        //Format providers text and set the label
         String formattedKey = Utils.uppercaseAll(Utils.joinArray(Utils.joinList(medium.getProviders(), ", ").split("_"), " "));
         this.providerLabel.setText(formattedKey);
 
+        //Set the label texts depending on the passed medium
         this.genreTextArea.setText(medium.getGenres());
         this.durationLabel.setText(medium.getDuration());
         this.seasonLabel.setText(medium.getSeasons());
@@ -193,9 +216,11 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
         this.countryTextArea.setText(medium.getCountries());
         this.addedAtLabel.setText(medium.getAddedAt());
 
+        //Move the scroll pane scroll bar to top
         this.descriptionTextArea.setCaretPosition(0);
         this.castTextArea.setCaretPosition(0);
 
+        //Show this panel
         this.setVisible(true);
     }
 }

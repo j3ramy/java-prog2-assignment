@@ -11,17 +11,20 @@ import util.interfaces.IViewPanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class RandomMediumPanel extends JPanel implements IViewPanel {
+public class Top100RatingPanel extends JPanel implements IViewPanel {
     private final AppView appView; //AppView reference
 
     private JButton searchMediumButton, showAllReviewsButton;
     private MetadataViewPanel metadataViewPanel; //Shows the metadata of the current medium
     private ReviewViewPanel bestReviewViewPanel, worstReviewViewPanel; //Shows the worst and best audience review
     private Medium currentMedium; //Represents the current visible medium
+    private ArrayList<Medium> mediums; //List of current search
+    private int currentIndex; //Current index of rating list
 
     //Constructor
-    public RandomMediumPanel(AppView appView){
+    public Top100RatingPanel(AppView appView){
         this.appView = appView;
     }
 
@@ -136,10 +139,29 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
     }
 
     public void searchMedium(){
-        this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); //Set cursor to loading cursor
+        //If current search list is null or the last search does not match the new search then reset and do a new search
+        if(this.mediums == null){
+            this.reset();
 
-        //Load random medium from AppModel
-        this.currentMedium = this.appView.getAppModel().getRandomMedium();
+            this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); //Set cursor to loading cursor
+            this.mediums = this.appView.getAppModel().getTop100ByReviews(); //Get top 100 mediums by rating by AppModel
+
+            //If search has no mediums found then open a new no medium found JDialog
+            if(this.mediums.isEmpty()){
+                this.appView.showNoMediumFoundDialog();
+                return;
+            }
+        }
+
+        //If the current medium is not at the end set the current medium to the next one in the search results and increase the index. Otherwise reset the search
+        if(!this.isAtEndOfResults()){
+            this.currentMedium = this.mediums.get(this.currentIndex);
+            this.currentIndex++;
+        }
+        else{
+            this.reset();
+            return;
+        }
 
         this.metadataViewPanel.fillDataView(this.currentMedium); //Fill metadata view with the current medium data
 
@@ -153,6 +175,26 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
 
         //Show the user the accept medium dialog where the user can decide to choose, skip or abort the current medium
-        this.appView.showAcceptRecommendationDialog((e) -> this.appView.showCloseAppDialog(), (e) -> this.searchMedium(), 1, 1);
+        this.appView.showAcceptRecommendationDialog((e) -> this.appView.showCloseAppDialog(), (e) -> this.searchMedium(),
+                this.currentIndex, this.mediums.size(),
+                " " + this.appView.getAppModel().getTranslation("dialog.title.average_rating").replace("#", Float.toString(this.currentMedium.getAverageRating())));
+    }
+
+    private void reset(){
+        //Clear top 100 and reset current index
+        this.mediums = null;
+        this.currentIndex = 0;
+
+        //Hide all panels
+        this.showAllReviewsButton.setVisible(false);
+        this.metadataViewPanel.setVisible(false);
+        this.bestReviewViewPanel.setVisible(false);
+        this.worstReviewViewPanel.setVisible(false);
+
+        this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
+    }
+
+    private boolean isAtEndOfResults(){
+        return this.currentIndex == this.mediums.size();
     }
 }

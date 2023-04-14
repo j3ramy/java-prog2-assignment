@@ -1,13 +1,7 @@
 package mvc.view.widget;
 
-import mvc.AppModel;
 import mvc.AppView;
-import util.Colors;
-import util.data.AudienceReview;
-import util.data.CriticReview;
 import util.data.ImdbRating;
-import util.data.Review;
-import util.file.FilePaths;
 import util.interfaces.IViewPanel;
 
 import javax.imageio.ImageIO;
@@ -19,10 +13,12 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 
 public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
-    private final AppView appView;
+    private final AppView appView; //AppView reference
 
+    //Labels for displaying the imdb rating content
     private JLabel imdbRatingLabel, metaScoreLabel, voteAmountLabel, /*grossLabel,*/ star1Label, star2Label, star3Label, star4Label, posterImage;
 
+    //Constructor
     public ImdbRatingViewPanel(AppView appView){
         this.appView = appView;
     }
@@ -32,24 +28,23 @@ public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
     public void init(){
         this.initComponents();
         this.initStyles();
-        this.initImages();
-        this.initActionListeners();
     }
 
     @Override
     public void initComponents() {
-        //Set layout
+        //Set layout of this panel
         this.setLayout(new GridBagLayout());
 
         //Describe the cell behavior in GridLayout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.weightx = 1f;
         constraints.weighty = 1f;
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.NORTH; //Alignment of components
+        constraints.fill = GridBagConstraints.HORIZONTAL; //Stretch content horizontal
 
+        //Initialize all labels and add them
         this.imdbRatingLabel = new JLabel("");
-        constraints.gridy = 0;
+        constraints.gridy = 0; //Grid y index
         this.add(this.imdbRatingLabel, constraints);
 
         this.metaScoreLabel = new JLabel("");
@@ -86,17 +81,20 @@ public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
         constraints.gridy = 6;
         this.add(this.star4Label, constraints);
 
+        //Initialize the poster image which displays the medium poster
         this.posterImage = new JLabel();
-        this.posterImage.setHorizontalAlignment(JButton.CENTER);
-        this.posterImage.setAlignmentX(CENTER_ALIGNMENT);
+        this.posterImage.setHorizontalAlignment(JButton.CENTER); //Center
+        this.posterImage.setAlignmentX(CENTER_ALIGNMENT); //Center
         constraints.gridy = 7;
         this.add(this.posterImage, constraints);
     }
 
     @Override
     public void initStyles() {
+        //Hide by default
         this.setVisible(false);
 
+        //Set labels font to Java default font
         this.imdbRatingLabel.setFont(new Font(null, Font.PLAIN, 12));
         this.metaScoreLabel.setFont(new Font(null, Font.PLAIN, 12));
         this.voteAmountLabel.setFont(new Font(null, Font.PLAIN, 12));
@@ -108,27 +106,40 @@ public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
     }
 
     @Override
-    public void initImages() {}
-
-    @Override
-    public void initActionListeners(){}
+    public void initListeners(){}
 
     @Override
     public void setTranslations(){
-        AppModel appModel = this.appView.getAppController().getAppModel();
+        //Create titled border around all labels and set the text to the correct translation and add margin
+        this.imdbRatingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.rating"))));
 
-        this.imdbRatingLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.rating"))));
-        this.metaScoreLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.meta_score"))));
-        this.voteAmountLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.votes"))));
-        //this.grossLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.gross"))));
-        this.star1Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.star1"))));
-        this.star2Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.star2"))));
-        this.star3Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.star3"))));
-        this.star4Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0), BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.star4"))));
+        this.metaScoreLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.meta_score"))));
+
+        this.voteAmountLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.votes"))));
+
+        //this.grossLabel.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+        // BorderFactory.createTitledBorder(appModel.getTranslation("label.imdb.gross"))));
+
+        this.star1Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.star1"))));
+
+        this.star2Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.star2"))));
+
+        this.star3Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.star3"))));
+
+        this.star4Label.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 10, 0),
+                BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.star4"))));
     }
 
     public void fillDataView(ImdbRating rating){
+        //If rating is null the reset this panel otherwise fill it
         if(rating != null){
+            //Set the label texts depending on the passed imdb rating
             this.imdbRatingLabel.setText(Float.toString(rating.getImdbRating()));
             this.metaScoreLabel.setText(Float.toString(rating.getMetaScore()));
             this.voteAmountLabel.setText(Integer.toString(rating.getVoteAmount()));
@@ -138,8 +149,10 @@ public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
             this.star3Label.setText(rating.getStars()[2].getName());
             this.star4Label.setText(rating.getStars()[3].getName());
 
+            //Load the medium poster in a new thread
             new Thread(() -> this.setMediumPoster(rating.getPosterLink())).start();
 
+            //Show this panel
             this.setVisible(true);
         }
         else{
@@ -149,6 +162,7 @@ public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
 
     private void setMediumPoster(String url){
         try{
+            //Get image from url and set the image/icon of the poster image container
             BufferedImage bufferedImage = ImageIO.read(new URL(url));
             this.posterImage.setIcon(new ImageIcon(bufferedImage));
         }
@@ -156,6 +170,7 @@ public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
     }
 
     private void clear(){
+        //Clear all labels and remove the poster
         this.imdbRatingLabel.setText("");
         this.metaScoreLabel.setText("");
         this.voteAmountLabel.setText("");

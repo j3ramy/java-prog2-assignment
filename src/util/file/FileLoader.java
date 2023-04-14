@@ -27,16 +27,16 @@ public class FileLoader {
             try {
                 Thread.sleep(500);
 
-                this.appModel.getAppView().setStatusBarText(AppState.LOAD_MEDIUMS);
+                this.appModel.getAppView().setStatusBarText(LoadingState.LOAD_MEDIUMS);
                 this.loadMediums();
 
                 if(this.appModel.hasMediums()){
-                    this.appModel.getAppView().setStatusBarText(AppState.LOAD_REVIEWS);
+                    this.appModel.getAppView().setStatusBarText(LoadingState.LOAD_REVIEWS);
                     this.loadReviews();
-                    this.appModel.getAppView().setStatusBarText(AppState.LOAD_IMDB_RATING);
+                    this.appModel.getAppView().setStatusBarText(LoadingState.LOAD_IMDB_RATING);
                     this.loadImdbRatings();
 
-                    this.appModel.getAppView().setStatusBarText(AppState.READY);
+                    this.appModel.getAppView().setStatusBarText(LoadingState.READY);
                     this.appModel.getAppView().enableTabs();
 
                     this.showSkipStats();
@@ -45,7 +45,7 @@ public class FileLoader {
                     this.appModel.getAppView().showNoMediumFoundDialog();
                 }
 
-                this.appModel.getAppView().setStatusBarText(AppState.READY);
+                this.appModel.getAppView().setStatusBarText(LoadingState.READY);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

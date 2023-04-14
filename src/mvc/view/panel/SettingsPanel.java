@@ -14,12 +14,13 @@ import java.util.ArrayList;
 public class SettingsPanel extends JPanel implements IViewPanel {
     private final AppView appView;
 
-    private JComboBox languageComboBox;
+    private JComboBox languageComboBox; //Dropdown for choosing the language
     private JLabel languageLabel;
-    private JPanel checkboxPanel;
-    private JCheckBox netflixCheckbox, disneyPlusCheckbox, amazonPrimeCheckbox, applePlusCheckbox;
+    private JPanel checkboxContainer; //Container for the provider checkboxes
+    private JCheckBox netflixCheckbox, disneyPlusCheckbox, amazonPrimeCheckbox, applePlusCheckbox; //Checkboxes for the providers
     private JButton saveButton;
 
+    //Constructor
     public SettingsPanel(AppView appView){
         this.appView = appView;
     }
@@ -28,9 +29,7 @@ public class SettingsPanel extends JPanel implements IViewPanel {
     @Override
     public void init(){
         this.initComponents();
-        this.initStyles();
-        this.initImages();
-        this.initActionListeners();
+        this.initListeners();
     }
 
     @Override
@@ -49,35 +48,39 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         constraints.weighty = 1f;
         constraints.fill = GridBagConstraints.HORIZONTAL; //Only stretch elements horizontal in cell
 
+        //Initialize language label
         this.languageLabel = new JLabel("");
         constraints.gridx = 0; //Set cell x
         constraints.gridy = 0; //Set cell y
         componentPanel.add(this.languageLabel, constraints); //Add component with constraints
 
+        //Initialize language dropdown
         this.languageComboBox = new JComboBox(Language.values());
         constraints.gridx = 1;
         componentPanel.add(this.languageComboBox, constraints);
 
-        //Panel for checkboxes to stack them on each other
-        this.checkboxPanel = new JPanel();
-        checkboxPanel.setLayout(new BoxLayout(this.checkboxPanel, BoxLayout.Y_AXIS)); //Stack vertically
+        //Container for checkboxes to stack them above each other
+        this.checkboxContainer = new JPanel();
+        checkboxContainer.setLayout(new BoxLayout(this.checkboxContainer, BoxLayout.Y_AXIS)); //Stack vertically
         constraints.gridx = 0;
         constraints.gridy = 1;
-        constraints.gridwidth = 2;
-        componentPanel.add(this.checkboxPanel, constraints);
+        constraints.gridwidth = 2; //Cell width
+        componentPanel.add(this.checkboxContainer, constraints);
 
+        //Initialize the checkboxes
         this.netflixCheckbox = new JCheckBox("Netflix");
-        this.checkboxPanel.add(this.netflixCheckbox);
+        this.checkboxContainer.add(this.netflixCheckbox);
 
         this.disneyPlusCheckbox = new JCheckBox("Disney Plus");
-        this.checkboxPanel.add(this.disneyPlusCheckbox);
+        this.checkboxContainer.add(this.disneyPlusCheckbox);
 
         this.amazonPrimeCheckbox = new JCheckBox("Amazon Prime");
-        this.checkboxPanel.add(this.amazonPrimeCheckbox);
+        this.checkboxContainer.add(this.amazonPrimeCheckbox);
 
         this.applePlusCheckbox = new JCheckBox("Apple Plus");
-        this.checkboxPanel.add(this.applePlusCheckbox);
+        this.checkboxContainer.add(this.applePlusCheckbox);
 
+        //Initialize save button
         this.saveButton = new JButton("");
         constraints.gridx = 0;
         constraints.gridy = 2;
@@ -86,30 +89,25 @@ public class SettingsPanel extends JPanel implements IViewPanel {
     }
 
     @Override
-    public void initStyles() {
-
-    }
+    public void initStyles() {}
 
     @Override
-    public void initImages() {
-
-    }
-
-    @Override
-    public void initActionListeners(){
-        this.saveButton.addActionListener(e -> {
-            this.saveSettings();
-        });
+    public void initListeners(){
+        //Initialize action listener to save the settings when save button is clicked
+        this.saveButton.addActionListener(e -> this.saveSettings());
     }
 
     @Override
     public void setTranslations(){
         this.languageLabel.setText(this.appView.getAppModel().getTranslation("label.settings.language"));
-        this.checkboxPanel.setBorder(BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.settings.providers")));
+
+        this.checkboxContainer.setBorder(BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.settings.providers")));
+
         this.saveButton.setText(this.appView.getAppModel().getTranslation("button.settings.save"));
     }
 
     public void loadSettings(CustomData data){
+        //Set the checkboxes selected when provider is saved in custom data
         for(Provider provider : data.getProviders()){
             if(provider == Provider.NETFLIX) this.netflixCheckbox.setSelected(true);
             if(provider == Provider.DISNEY_PLUS) this.disneyPlusCheckbox.setSelected(true);
@@ -117,16 +115,19 @@ public class SettingsPanel extends JPanel implements IViewPanel {
             if(provider == Provider.APPLE_PLUS) this.applePlusCheckbox.setSelected(true);
         }
 
+        //Set selected language from saved data
         this.languageComboBox.setSelectedItem(data.getLanguage());
     }
 
     private void saveSettings(){
+        //Get all selected providers from checkboxes
         ArrayList<Provider> providers = new ArrayList<>();
         if(this.netflixCheckbox.isSelected()) providers.add(Provider.NETFLIX);
         if(this.disneyPlusCheckbox.isSelected()) providers.add(Provider.DISNEY_PLUS);
         if(this.amazonPrimeCheckbox.isSelected()) providers.add(Provider.AMAZON_PRIME);
         if(this.applePlusCheckbox.isSelected()) providers.add(Provider.APPLE_PLUS);
 
+        //Create new custom data with the new language and selected providers
         CustomData customData = new CustomData(
                 Language.valueOf(this.languageComboBox.getSelectedItem().toString()),
                 providers.toArray(Provider[]::new)
@@ -135,12 +136,13 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         //Set and save custom data
         this.appView.getAppController().getAppModel().setCustomData(customData);
 
-        //Set translations again in real time
+        //Set translations again at runtime
         this.appView.setAllTranslations();
 
-        if(!this.appView.getAppController().getAppModel().hasMediums())
-            this.appView.disableTabs();
+        //Disable tabs to force the user to restart the app
+        this.appView.disableTabs();
 
+        //Show save settings dialog where the user can restart the app
         this.appView.showSaveSettingsDialog();
     }
 }

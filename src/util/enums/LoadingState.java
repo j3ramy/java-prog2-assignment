@@ -1,6 +1,6 @@
 package util.enums;
 
-public enum AppState {
+public enum LoadingState {
     READY,
     SEARCH,
     LOAD_MEDIUMS,

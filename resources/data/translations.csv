@@ -3,7 +3,8 @@ label.settings.providers,Deine Anbieter:,Your Providers:
 label.main.settings,Einstellungen,Settings
 label.main.random_medium,Zufälliges Medium,Random Medium
 label.main.search_medium,Medium suchen,Search Medium
-label.main.top_100,Top 100,Top 100
+label.main.top_100_imdb,Top 100 nach IMDB,Top 100 by IMDB
+label.main.top_100_rating,Top 100 nach Bewertungen,Top 100 by Reviews
 label.user.welcome,Willkommen! Navigiere durch die Tabs um die verschiedenen Funktionen zu nutzen:,Welcome! Navigate through the tabs below to use all different features:
 label.status.ready,Bereit,Ready
 label.status.searching,Suche...,Search...
@@ -46,7 +47,6 @@ label.no,Nein,No
 label.outof,von,out of
 button.settings.save,Speichern,Save
 button.main.close,Beenden,Close
-button.random_medium,Zufällige Suche,Search Randomly
 button.all_reviews,Alle Bewertungen,All Reviews
 button.previous,Zurück,Back
 button.next,Nächste,Next
@@ -62,6 +62,7 @@ dialog.title.init.dataloading,Hinweis,Hint
 dialog.title.main.no_result,Kein Ergebnis,No Result
 dialog.title.all_reviews,Alle Bewertungen von,All Reviews of
 dialog.title.recommendation,Empfehlung # von +,Recommendation # out of +
+dialog.title.average_rating,| Bewertung: #,| Rating: #
 dialog.body.settings.save,Deine Einstellungen wurden gespeichert. Um die geänderten Anbieter zu laden starte die App neu. App beenden?,Your changes have been saved. To load the new providers restart the App. Close App?
 dialog.body.main.close,Vielen Dank für die Nutzung der App! Bis bald :),Thanks for using this app. See you soon!
 dialog.body.main.no_settings,Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Anbieter fest (Dies kannst du nachträglich anpassen),Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)

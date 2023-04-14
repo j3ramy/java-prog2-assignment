@@ -12,9 +12,4 @@ public class CriticReview extends Review {
 
         this.sentiment = sentiment;
     }
-
-    @Override
-    public String toString() {
-        return "Title: " + this.mediumTitle + ", Sentiment: " + this.sentiment + ", Comment: " + this.comment;
-    }
 }

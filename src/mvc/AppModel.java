@@ -17,7 +17,7 @@ public class AppModel {
     private final FileSaver fileSaver = new FileSaver(this);
     private final FileLoader fileLoader = new FileLoader(this);
     private final HashMap<String, Translation> translations = new HashMap<>();
-    private final HashMap<String, Medium> mediums = new HashMap<>(); //Use ArrayList instead of HashMap because some titles are available at multiple providers and storing the movie id wouldn't be as helpful
+    private final HashMap<String, Medium> mediums = new HashMap<>();
     private final ArrayList<Review> reviews = new ArrayList<>();
     private final LinkedList<ImdbRating> imdbRatings = new LinkedList<>();
 
@@ -144,6 +144,37 @@ public class AppModel {
         }
 
         return ratings;
+    }
+
+    public ArrayList<Medium> getTop100ByReviews(){
+        HashMap<Float, ArrayList<Medium>> mediums = new HashMap<>();
+        for(Medium medium : this.mediums.values()){
+            ArrayList<AudienceReview> reviews = this.getAudienceReviewsByTitle(medium.getTitle());
+            if(!reviews.isEmpty()){
+                float average = Algorithms.getAverageRating(reviews);
+                if(mediums.containsKey(average)){
+                    mediums.get(average).add(medium);
+                }
+                else{
+                    mediums.put(average, new ArrayList<>(List.of(medium)));
+                }
+            }
+        }
+
+        TreeMap<Float, ArrayList<Medium>> map = new TreeMap<>(mediums);
+        ArrayList<Medium> sortedMediums = new ArrayList<>();
+        for(Map.Entry<Float, ArrayList<Medium>> entry : map.descendingMap().entrySet()){
+            for(Medium medium : entry.getValue()){
+                medium.setAverageRating(entry.getKey());
+            }
+
+            if(sortedMediums.size() >= 100)
+                return sortedMediums;
+
+            sortedMediums.addAll(entry.getValue());
+        }
+
+        return sortedMediums;
     }
 
     //Returns array of AudienceReview only, because CriticsReview does not have a rating as a number

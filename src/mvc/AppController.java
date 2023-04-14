@@ -4,9 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AppController {
-    private AppView appView;
-    private AppModel appModel;
+    private AppView appView; //AppView reference
+    private AppModel appModel; //AppModel reference
 
+    //Getter methods
     public AppView getAppView() {
         return appView;
     }
@@ -31,11 +32,9 @@ public class AppController {
         //Init AppModel
         this.appModel.init();
     }
-    public void run(){
-
-    }
 
     public void close(){
+        //Close application
         System.exit(0);
     }
 }

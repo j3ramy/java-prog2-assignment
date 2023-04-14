@@ -2,7 +2,7 @@ package mvc.view.widget;
 
 import mvc.AppModel;
 import mvc.AppView;
-import util.Colors;
+import util.CustomColors;
 import util.data.Review;
 import util.interfaces.IViewPanel;
 
@@ -12,22 +12,20 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class AllReviewsDialog extends JPanel implements IViewPanel {
-    private final AppView appView;
-    private final ArrayList<Review> reviews;
+    private final AppView appView; //AppView reference
+    private final ArrayList<Review> reviews; //Current reviews of passed title
 
-    private ReviewViewPanel reviewViewPanel;
-    private JLabel indexFeedbackLabel;
-    private JButton previousButton, nextButton;
-    private int currentIndex = 0;
+    private ReviewViewPanel reviewViewPanel; //Panel for showing the reviews
+    private JLabel indexFeedbackLabel; //Label for showing the user on which review it is
+    private JButton previousButton, nextButton; //Buttons to go through the review list
+    private int currentIndex; //Current index of review list
 
+    //Constructor
     public AllReviewsDialog(AppView appView, String title){
         this.appView = appView;
-        this.reviews = this.appView.getAppController().getAppModel().getAllReviewsByTitle(title);
+        this.reviews = this.appView.getAppController().getAppModel().getAllReviewsByTitle(title); //Get all reviews by title by AppModel
 
-        this.init();
-        this.setTranslations();
-
-        this.reviewViewPanel.fillDataView(this.reviews.get(this.currentIndex));
+        this.init(); //Initialize components depending on the loaded reviews
     }
 
     //Initialize all class components inside this panel
@@ -35,41 +33,47 @@ public class AllReviewsDialog extends JPanel implements IViewPanel {
     public void init(){
         this.initComponents();
         this.initStyles();
-        this.initImages();
-        this.initActionListeners();
+        this.initListeners();
+
+        this.setTranslations();
+
+        this.reviewViewPanel.fillDataView(this.reviews.get(this.currentIndex)); //Fill review panel
     }
 
     @Override
     public void initComponents() {
-        //Set layout
+        //Set layout of this panel
         this.setLayout(new BorderLayout());
 
-        //Create component panel as a component inside of this panel
+        //Create component panel as a component inside of this panel for holding the following components
         JPanel componentPanel = new JPanel(new GridBagLayout());
-        componentPanel.setBorder(new EmptyBorder(20, 20, 0, 20));
-        componentPanel.setBackground(Colors.LIGHT_BLUE);
-        this.add(componentPanel, BorderLayout.CENTER);
+        componentPanel.setBorder(new EmptyBorder(20, 20, 0, 20)); //Set margin
+        componentPanel.setBackground(CustomColors.LIGHT_BLUE); //Set background color
+        this.add(componentPanel, BorderLayout.CENTER); //Add component panel to the center of the view
 
         //Describe the cell behavior in GridLayout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.weightx = 1f;
         constraints.weighty = 1f;
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.NORTH; //Alignment of components
+        constraints.fill = GridBagConstraints.HORIZONTAL; //Stretch content horizontal
 
+        //Initialize review panel
         this.reviewViewPanel = new ReviewViewPanel(this.appView);
         this.reviewViewPanel.init();
-        this.reviewViewPanel.setPreferredSize(new Dimension(0, 250));
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
+        this.reviewViewPanel.setPreferredSize(new Dimension(0, 250)); //Set preferred display size
+        constraints.gridx = 0; //Grid x index
+        constraints.gridy = 0; //Grid y index
+        constraints.gridwidth = 2; //Set cell width
         componentPanel.add(this.reviewViewPanel, constraints);
 
+        //Initialize feedback label adn center it
         this.indexFeedbackLabel = new JLabel("", JLabel.CENTER);
         constraints.gridx = 0;
         constraints.gridy = 1;
         componentPanel.add(this.indexFeedbackLabel, constraints);
 
+        //Initialize buttons
         this.previousButton = new JButton();
         constraints.gridx = 0;
         constraints.gridy = 2;
@@ -84,29 +88,28 @@ public class AllReviewsDialog extends JPanel implements IViewPanel {
 
     @Override
     public void initStyles() {
+        //Set margin
         this.indexFeedbackLabel.setBorder(new EmptyBorder(5, 0 ,5, 0));
     }
 
     @Override
-    public void initImages() {
-
-    }
-
-    @Override
-    public void initActionListeners(){
+    public void initListeners(){
+        //Initialize action listener to go back and forth through all the reviews
         this.previousButton.addActionListener((e) -> {
+            //If current index is bigger than 0 then go back
             if(this.currentIndex > 0){
-                this.currentIndex--;
-                this.reviewViewPanel.fillDataView(this.reviews.get(this.currentIndex));
-                this.setTranslations();
+                this.currentIndex--; //Decrease current index
+                this.reviewViewPanel.fillDataView(this.reviews.get(this.currentIndex)); //Load previous review
+                this.setTranslations(); //Reload text
             }
         });
 
         this.nextButton.addActionListener((e) -> {
+            //If current index is smaller than the list size then go forth
             if(this.currentIndex < this.reviews.size() - 1){
-                this.currentIndex++;
-                this.reviewViewPanel.fillDataView(this.reviews.get(this.currentIndex));
-                this.setTranslations();
+                this.currentIndex++; //Increase current index
+                this.reviewViewPanel.fillDataView(this.reviews.get(this.currentIndex)); //Load next review
+                this.setTranslations(); //Reload text
             }
         });
     }

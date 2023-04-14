@@ -5,6 +5,5 @@ public class Main {
         AppController appController = new AppController();
 
         appController.init();
-        appController.run();
     }
 }

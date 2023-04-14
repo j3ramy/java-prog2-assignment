@@ -4,6 +4,7 @@ import mvc.AppModel;
 import util.data.AudienceReview;
 import util.data.Medium;
 
+import java.text.DecimalFormat;
 import java.time.Year;
 import java.util.*;
 
@@ -110,5 +111,16 @@ public class Algorithms {
         }
 
         return maxFloat;
+    }
+
+    public static float getAverageRating(ArrayList<AudienceReview> arr){
+        float sum = 0f;
+
+        for(AudienceReview review : arr){
+            sum += review.getRating();
+        }
+
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return Float.parseFloat(decimalFormat.format(sum / arr.size()).replace(",", "."));
     }
 }

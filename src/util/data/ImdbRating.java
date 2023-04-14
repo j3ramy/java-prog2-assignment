@@ -46,17 +46,4 @@ public class ImdbRating {
         this.gross = gross;
         this.stars = stars;
     }
-
-    @Override
-    public String toString() {
-        return "ImdbRating{" +
-                "medium=" + medium +
-                ", posterLink='" + posterLink + '\'' +
-                ", imdbRating=" + imdbRating +
-                ", metaScore=" + metaScore +
-                ", voteAmount=" + voteAmount +
-                ", gross=" + gross +
-                ", stars=" + Arrays.toString(stars) +
-                '}';
-    }
 }
