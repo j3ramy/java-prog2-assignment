@@ -208,7 +208,7 @@ public class AppModel {
 
             ArrayList<AudienceReview> audienceReviews = this.getAudienceReviewsOnly(reviews);
             Algorithms.sortAudienceReviewsByRating(audienceReviews);
-            Collections.reverse(reviews);
+            Collections.reverse(audienceReviews);
             ArrayList<CriticReview> criticReviews = this.getCriticsReviewsOnly(reviews);
 
             reviews.clear();

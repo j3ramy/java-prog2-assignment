@@ -56,14 +56,14 @@ radio.title,Titel,Title
 radio.genre,Genre(s) (Mehrere mit Komma trennen),Genre(s) (Seperate multiple with a comma)
 radio.cast,Cast (Mehrere mit Komma trennen),Cast (Seperate multiple with a comma)
 dialog.title.settings.save,Einstellungen gespeichert,Changes Saved
-dialog.title.main.close,Bye Bye!,Bye Bye!
+dialog.title.main.close,Aufwiedersehen!,Bye Bye!
 dialog.title.main.no_settings,Willkommen!,Welcome!
 dialog.title.init.dataloading,Hinweis,Hint
 dialog.title.main.no_result,Kein Ergebnis,No Result
 dialog.title.all_reviews,Alle Bewertungen von,All Reviews of
 dialog.title.recommendation,Empfehlung # von +,Recommendation # out of +
 dialog.title.average_rating,| Bewertung: #,| Rating: #
-dialog.body.settings.save,Deine Einstellungen wurden gespeichert. Um die geänderten Anbieter zu laden starte die App neu. App beenden?,Your changes have been saved. To load the new providers restart the App. Close App?
+dialog.body.settings.save,Deine Einstellungen wurden gespeichert. Um die geänderten Einstellungen zu laden starte die App neu. App beenden?,Your changes have been saved. To load the new settings restart the App. Close App?
 dialog.body.main.close,Vielen Dank für die Nutzung der App! Bis bald :),Thanks for using this app. See you soon!
 dialog.body.main.no_settings,Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Anbieter fest (Dies kannst du nachträglich anpassen),Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)
 dialog.body.init.dataloading,# Einträge konnten aufgrund von fehlerhaften Formatierungen innerhalb der Datenquellen nicht geladen werden:,# records could not have been loaded due to wrong data formatting:

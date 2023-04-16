@@ -219,6 +219,7 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
 
             //If search has no mediums found then open a new no medium found JDialog
             if(!this.getMediums()){
+                this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
                 this.appView.showNoMediumFoundDialog();
                 return;
             }

@@ -307,7 +307,7 @@ public class FileLoader {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
             String line;
-            int skipCounter = 0, test = 0;
+            int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
                 Object[] data = Utils.splitCsvLine(line, false);
@@ -320,7 +320,6 @@ public class FileLoader {
 
                 String title = data[0] instanceof ArrayList<?> ? Utils.joinList((List<?>) data[0], ", ") : (String) data[0];
                 if(!this.appModel.isTitleInMediums(title)){
-                    test++;
                     continue;
                 }
 
@@ -359,7 +358,7 @@ public class FileLoader {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
             String line;
-            int skipCounter = 0, test = 0;
+            int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
                 Object[] data = Utils.splitCsvLine(line, false);
@@ -373,7 +372,6 @@ public class FileLoader {
 
                 String title = data[1] instanceof ArrayList<?> ? Utils.joinList((List<?>) data[1], ", ") : (String) data[1];
                 if(!this.appModel.isTitleInMediums(title)){
-                    test++;
                     continue;
                 }
 
@@ -470,7 +468,7 @@ public class FileLoader {
 
         this.appModel.getAppView().showDialog(this.appModel.getTranslation("dialog.title.init.dataloading"),
                 this.appModel.getTranslation("dialog.body.init.dataloading").replace("#", Integer.toString(totalSkips)) + "\n\n" + skippedStats,
-                JOptionPane.ERROR_MESSAGE);
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     //NDA = Netflix, Disney Plus, Amazon Prime
