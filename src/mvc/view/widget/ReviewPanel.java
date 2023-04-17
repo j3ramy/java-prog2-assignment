@@ -6,14 +6,14 @@ import util.CustomColors;
 import util.data.AudienceReview;
 import util.data.CriticReview;
 import util.data.Review;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class ReviewViewPanel extends JPanel implements IViewPanel {
+public class ReviewPanel extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
 
     private JLabel headingLabel, mediumTitleLabel, ratingLabel; //Labels for displaying the content
@@ -21,7 +21,7 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
     private JScrollPane commentScrollPane; //Scroll pane to make scrolling in upper text area possible
 
 
-    public ReviewViewPanel(AppView appView){
+    public ReviewPanel(AppView appView){
         this.appView = appView;
     }
 
@@ -131,7 +131,7 @@ public class ReviewViewPanel extends JPanel implements IViewPanel {
             else if(review instanceof AudienceReview){
                 //Set heading containing the information if it is the best or worst review by the review classification
                 this.headingLabel.setText(appModel.getTranslation("label.reviewdata.audience"));
-                switch (((AudienceReview) review).getClassification()){
+                switch (((AudienceReview) review).getAudienceReviewType()){
                     case BEST -> this.headingLabel.setText(this.headingLabel.getText() + " (" + appModel.getTranslation("label.reviewdata.best") + ")");
                     case WORST -> this.headingLabel.setText(this.headingLabel.getText() + " (" + appModel.getTranslation("label.reviewdata.worst") + ")");
                 }

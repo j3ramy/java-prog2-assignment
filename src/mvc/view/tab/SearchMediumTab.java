@@ -1,13 +1,13 @@
-package mvc.view.panel;
+package mvc.view.tab;
 
 import mvc.AppModel;
 import mvc.AppView;
 import mvc.view.widget.AllReviewsDialog;
-import mvc.view.widget.MetadataViewPanel;
-import mvc.view.widget.ReviewViewPanel;
+import mvc.view.widget.MetadataPanel;
+import mvc.view.widget.ReviewPanel;
 import util.data.AudienceReview;
 import util.data.Medium;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -17,22 +17,22 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class SearchMediumPanel extends JPanel implements IViewPanel {
+public class SearchMediumTab extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
 
     private JPanel radioButtonContainer; //Container for the radio buttons
     private JRadioButton titleRadioButton, genreRadioButton, castRadioButton; //Radio buttons for different search types
     private JTextField inputTextField; //Input text field for searching by type
-    private JButton searchMediumButton, showAllReviewsButton;
-    private MetadataViewPanel metadataViewPanel; //Shows the metadata of the current medium
-    private ReviewViewPanel bestReviewViewPanel, worstReviewViewPanel; //Shows the worst and best audience review
+    private JButton getMediumsButton, allReviewsButton;
+    private MetadataPanel metadataPanel; //Shows the metadata of the current medium
+    private ReviewPanel bestReviewPanel, worstReviewPanel; //Shows the worst and best audience review
     private Medium currentMedium; //Represents the current visible medium
     private ArrayList<Medium> mediums; //List of all mediums that were searched for
     private int currentIndex = 0; //Current index of medium list
     private String lastSearch; //Last search string for checking if it is the same search
 
     //Constructor
-    public SearchMediumPanel(AppView appView){
+    public SearchMediumTab(AppView appView){
         this.appView = appView;
     }
 
@@ -98,20 +98,20 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         widgetContainer.add(Box.createRigidArea(new Dimension(0, 10)));
 
         //Add search medium button
-        this.searchMediumButton = new JButton();
-        this.searchMediumButton.setEnabled(false);
-        searchMediumButton.setHorizontalAlignment(JButton.CENTER); // Center button, the following line is needed to actually center it
-        searchMediumButton.setAlignmentX(CENTER_ALIGNMENT); // Center button
-        widgetContainer.add(this.searchMediumButton);
+        this.getMediumsButton = new JButton();
+        this.getMediumsButton.setEnabled(false);
+        getMediumsButton.setHorizontalAlignment(JButton.CENTER); // Center button, the following line is needed to actually center it
+        getMediumsButton.setAlignmentX(CENTER_ALIGNMENT); // Center button
+        widgetContainer.add(this.getMediumsButton);
 
         //Initialize metadata view panel
-        this.metadataViewPanel = new MetadataViewPanel(this.appView);
-        this.metadataViewPanel.init();
+        this.metadataPanel = new MetadataPanel(this.appView);
+        this.metadataPanel.init();
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.gridwidth = 2; //Cell width
         constraints.fill = GridBagConstraints.BOTH; //Stretch content horizontal and vertical
-        componentPanel.add(this.metadataViewPanel, constraints);
+        componentPanel.add(this.metadataPanel, constraints);
 
         //Overwrite widget container to hold the show all reviews button
         widgetContainer = new JPanel();
@@ -123,30 +123,30 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         componentPanel.add(widgetContainer, constraints);
 
         //Initialize show all reviews button
-        this.showAllReviewsButton = new JButton();
-        this.showAllReviewsButton.setVisible(false); //Set visible when review is found
-        widgetContainer.add(this.showAllReviewsButton);
+        this.allReviewsButton = new JButton();
+        this.allReviewsButton.setVisible(false); //Set visible when review is found
+        widgetContainer.add(this.allReviewsButton);
 
         //Initialize best review panel
-        this.bestReviewViewPanel = new ReviewViewPanel(this.appView);
-        this.bestReviewViewPanel.init();
+        this.bestReviewPanel = new ReviewPanel(this.appView);
+        this.bestReviewPanel.init();
         constraints.gridx = 1;
         constraints.gridy = 2;
-        componentPanel.add(this.bestReviewViewPanel, constraints);
+        componentPanel.add(this.bestReviewPanel, constraints);
 
         //Initialize worst review button
-        this.worstReviewViewPanel = new ReviewViewPanel(this.appView);
-        this.worstReviewViewPanel.init();
+        this.worstReviewPanel = new ReviewPanel(this.appView);
+        this.worstReviewPanel.init();
         constraints.gridx = 2;
         constraints.gridy = 2;
-        componentPanel.add(this.worstReviewViewPanel, constraints);
+        componentPanel.add(this.worstReviewPanel, constraints);
     }
 
     @Override
     public void initStyles() {
         //Set margin of the review view panels
-        this.bestReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
-        this.worstReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
+        this.bestReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        this.worstReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
     }
 
     @Override
@@ -170,15 +170,15 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                searchMediumButton.setEnabled(!inputTextField.getText().isEmpty());
+                getMediumsButton.setEnabled(!inputTextField.getText().isEmpty());
             }
         });
 
         //Init action listener for load medium button to search for a random medium
-        this.searchMediumButton.addActionListener((e) -> this.searchMedium());
+        this.getMediumsButton.addActionListener((e) -> this.searchMedium());
 
         //Init action listener for show all reviews button
-        this.showAllReviewsButton.addActionListener((e) -> {
+        this.allReviewsButton.addActionListener((e) -> {
             UIManager.put("OptionPane.minimumSize", new Dimension(600,400)); //Set size of following JDialog
 
             //Open message JDialog to show all reviews in a new window
@@ -198,12 +198,12 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         this.titleRadioButton.setText(this.appView.getAppModel().getTranslation("radio.title"));
         this.genreRadioButton.setText(this.appView.getAppModel().getTranslation("radio.genre"));
         this.castRadioButton.setText(this.appView.getAppModel().getTranslation("radio.cast"));
-        this.searchMediumButton.setText(this.appView.getAppModel().getTranslation("button.search"));
-        this.showAllReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
+        this.getMediumsButton.setText(this.appView.getAppModel().getTranslation("button.search"));
+        this.allReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
 
-        this.metadataViewPanel.setTranslations();
-        this.bestReviewViewPanel.setTranslations();
-        this.worstReviewViewPanel.setTranslations();
+        this.metadataPanel.setTranslations();
+        this.bestReviewPanel.setTranslations();
+        this.worstReviewPanel.setTranslations();
     }
 
     public void focusInputTextField(){
@@ -220,7 +220,7 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
             //If search has no mediums found then open a new no medium found JDialog
             if(!this.getMediums()){
                 this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
-                this.appView.showNoMediumFoundDialog();
+                this.appView.getDialogHandler().showNoMediumFoundDialog();
                 return;
             }
         }
@@ -235,19 +235,19 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
             return;
         }
 
-        this.metadataViewPanel.fillDataView(this.currentMedium); //Fill metadata view with the current medium data
+        this.metadataPanel.fillDataView(this.currentMedium); //Fill metadata view with the current medium data
 
         //Load reviews
         AudienceReview[] reviews = this.appView.getAppModel().getBestAndWorstReviewByTitle(this.currentMedium.getTitle());
-        this.showAllReviewsButton.setVisible(true);
-        this.showAllReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null); //Enable show all reviews button when best and worst review exists
-        this.worstReviewViewPanel.fillDataView(reviews[0]); //Fill worst review view panel
-        this.bestReviewViewPanel.fillDataView(reviews[1]); //Fill best review view panel
+        this.allReviewsButton.setVisible(true);
+        this.allReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null); //Enable show all reviews button when best and worst review exists
+        this.worstReviewPanel.fillDataView(reviews[0]); //Fill worst review view panel
+        this.bestReviewPanel.fillDataView(reviews[1]); //Fill best review view panel
 
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
 
         //Show the user the accept medium dialog where the user can decide to choose, skip or abort the current medium
-        this.appView.showAcceptRecommendationDialog((e) -> this.appView.showCloseAppDialog(), (e) -> this.searchMedium(),
+        this.appView.getDialogHandler().showAcceptRecommendationDialog((e) -> this.appView.getDialogHandler().showCloseAppDialog(), (e) -> this.searchMedium(),
                 this.currentIndex, this.mediums.size());
     }
 
@@ -280,10 +280,10 @@ public class SearchMediumPanel extends JPanel implements IViewPanel {
         this.currentIndex = 0;
 
         //Hide all panels
-        this.showAllReviewsButton.setVisible(false);
-        this.metadataViewPanel.setVisible(false);
-        this.bestReviewViewPanel.setVisible(false);
-        this.worstReviewViewPanel.setVisible(false);
+        this.allReviewsButton.setVisible(false);
+        this.metadataPanel.setVisible(false);
+        this.bestReviewPanel.setVisible(false);
+        this.worstReviewPanel.setVisible(false);
 
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
     }

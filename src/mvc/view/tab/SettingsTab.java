@@ -1,17 +1,17 @@
-package mvc.view.panel;
+package mvc.view.tab;
 
 import mvc.AppView;
 import util.enums.Language;
 import util.enums.Provider;
 import util.file.CustomData;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class SettingsPanel extends JPanel implements IViewPanel {
+public class SettingsTab extends JPanel implements IViewInit {
     private final AppView appView;
 
     private JComboBox languageComboBox; //Dropdown for choosing the language
@@ -21,7 +21,7 @@ public class SettingsPanel extends JPanel implements IViewPanel {
     private JButton saveButton;
 
     //Constructor
-    public SettingsPanel(AppView appView){
+    public SettingsTab(AppView appView){
         this.appView = appView;
     }
 
@@ -106,7 +106,7 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         this.saveButton.setText(this.appView.getAppModel().getTranslation("button.settings.save"));
     }
 
-    public void loadSettings(CustomData data){
+    public void fillSettings(CustomData data){
         //Set the checkboxes selected when provider is saved in custom data
         for(Provider provider : data.getProviders()){
             if(provider == Provider.NETFLIX) this.netflixCheckbox.setSelected(true);
@@ -143,6 +143,6 @@ public class SettingsPanel extends JPanel implements IViewPanel {
         this.appView.disableTabs();
 
         //Show save settings dialog where the user can restart the app
-        this.appView.showSaveSettingsDialog();
+        this.appView.getDialogHandler().showSaveSettingsDialog();
     }
 }

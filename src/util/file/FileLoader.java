@@ -42,7 +42,7 @@ public class FileLoader {
                     this.showSkipStats();
                 }
                 else{
-                    this.appModel.getAppView().showNoMediumFoundDialog();
+                    this.appModel.getAppView().getDialogHandler().showNoMediumFoundDialog();
                 }
 
                 this.appModel.getAppView().setStatusBarText(LoadingState.READY);
@@ -67,7 +67,7 @@ public class FileLoader {
             if(file.length() == 0){
                 this.createDefaultCustomData();
                 this.loadTranslations();
-                this.appModel.getAppView().showFirstAppStartDialog();
+                this.appModel.getAppView().getDialogHandler().showFirstAppStartDialog();
             }
             else{
                 //Split line and normalize it
@@ -94,7 +94,7 @@ public class FileLoader {
             this.appModel.getAppView().setSettings();
         }
         catch(Exception e){
-            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
+            this.appModel.getAppView().getDialogHandler().showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -126,7 +126,7 @@ public class FileLoader {
             this.appModel.getAppView().setAllTranslations();
         }
         catch(Exception e){
-            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
+            this.appModel.getAppView().getDialogHandler().showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -192,7 +192,7 @@ public class FileLoader {
             bufferedReader.close();
         }
         catch(Exception e){
-            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
+            this.appModel.getAppView().getDialogHandler().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -285,7 +285,7 @@ public class FileLoader {
             return credits.toArray(Person[]::new);
         }
         catch(Exception e){
-            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
+            this.appModel.getAppView().getDialogHandler().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
         }
 
         return new Person[]{};
@@ -341,7 +341,7 @@ public class FileLoader {
             bufferedReader.close();
         }
         catch(Exception e){
-            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
+            this.appModel.getAppView().getDialogHandler().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -401,7 +401,7 @@ public class FileLoader {
             bufferedReader.close();
         }
         catch(Exception e){
-            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
+            this.appModel.getAppView().getDialogHandler().showDialog("Error", "An error occurred:\n" + e + Arrays.toString(e.getStackTrace()), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -466,7 +466,7 @@ public class FileLoader {
             totalSkips += entry.getValue();
         }
 
-        this.appModel.getAppView().showDialog(this.appModel.getTranslation("dialog.title.init.dataloading"),
+        this.appModel.getAppView().getDialogHandler().showDialog(this.appModel.getTranslation("dialog.title.init.dataloading"),
                 this.appModel.getTranslation("dialog.body.init.dataloading").replace("#", Integer.toString(totalSkips)) + "\n\n" + skippedStats,
                 JOptionPane.INFORMATION_MESSAGE);
     }

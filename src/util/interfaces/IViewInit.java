@@ -1,6 +1,6 @@
 package util.interfaces;
 
-public interface IViewPanel {
+public interface IViewInit {
     void init();
     void initComponents();
     void initStyles();

@@ -1,33 +1,33 @@
-package mvc.view.panel;
+package mvc.view.tab;
 
 import mvc.AppView;
 import mvc.view.widget.AllReviewsDialog;
-import mvc.view.widget.ImdbRatingViewPanel;
-import mvc.view.widget.MetadataViewPanel;
-import mvc.view.widget.ReviewViewPanel;
+import mvc.view.widget.ImdbRatingPanel;
+import mvc.view.widget.MetadataPanel;
+import mvc.view.widget.ReviewPanel;
 import util.data.AudienceReview;
 import util.data.ImdbRating;
 import util.data.Medium;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Top100ImdbPanel extends JPanel implements IViewPanel {
+public class Top100ImdbTab extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
 
-    private JButton searchMediumButton, showAllReviewsButton;
-    private ImdbRatingViewPanel imdbRatingViewPanel; //Panel for showing the imdb data
-    private MetadataViewPanel metadataViewPanel; //Shows the metadata of the current medium
-    private ReviewViewPanel bestReviewViewPanel, worstReviewViewPanel; //Shows the worst and best audience review
+    private JButton getMediumsButton, allReviewsButton;
+    private ImdbRatingPanel imdbRatingPanel; //Panel for showing the imdb data
+    private MetadataPanel metadataPanel; //Shows the metadata of the current medium
+    private ReviewPanel bestReviewPanel, worstReviewPanel; //Shows the worst and best audience review
     private Medium currentMedium; //Represents the current visible medium
     private ArrayList<ImdbRating> imdbRatings; //List of all top 100 imdb ratings
     private int currentIndex = 0; //Current index of rating list
 
     //Constructor
-    public Top100ImdbPanel(AppView appView){
+    public Top100ImdbTab(AppView appView){
         this.appView = appView;
     }
 
@@ -64,27 +64,27 @@ public class Top100ImdbPanel extends JPanel implements IViewPanel {
         componentPanel.add(widgetContainer, constraints);
 
         //Add search medium button
-        this.searchMediumButton = new JButton();
-        this.searchMediumButton.setHorizontalAlignment(JButton.LEFT); //Positioning button to the left, the following line is needed to actually center it
-        this.searchMediumButton.setAlignmentX(LEFT_ALIGNMENT); //Positioning button to the left
-        widgetContainer.add(this.searchMediumButton);
+        this.getMediumsButton = new JButton();
+        this.getMediumsButton.setHorizontalAlignment(JButton.LEFT); //Positioning button to the left, the following line is needed to actually center it
+        this.getMediumsButton.setAlignmentX(LEFT_ALIGNMENT); //Positioning button to the left
+        widgetContainer.add(this.getMediumsButton);
 
         widgetContainer.add(Box.createRigidArea(new Dimension(0, 10))); //Add space between radio buttons and input text field
 
         //Initialize imdb rating panel and add it
-        this.imdbRatingViewPanel = new ImdbRatingViewPanel(this.appView);
-        this.imdbRatingViewPanel.init();
-        this.imdbRatingViewPanel.setAlignmentX(LEFT_ALIGNMENT); //Positioning button to the left
-        widgetContainer.add(this.imdbRatingViewPanel);
+        this.imdbRatingPanel = new ImdbRatingPanel(this.appView);
+        this.imdbRatingPanel.init();
+        this.imdbRatingPanel.setAlignmentX(LEFT_ALIGNMENT); //Positioning button to the left
+        widgetContainer.add(this.imdbRatingPanel);
 
         //Initialize metadata view panel
-        this.metadataViewPanel = new MetadataViewPanel(this.appView);
-        this.metadataViewPanel.init();
+        this.metadataPanel = new MetadataPanel(this.appView);
+        this.metadataPanel.init();
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.gridwidth = 2; //Set cell width
         constraints.fill = GridBagConstraints.BOTH;
-        componentPanel.add(this.metadataViewPanel, constraints);
+        componentPanel.add(this.metadataPanel, constraints);
 
         //Overwrite widget container to hold the show all reviews button
         widgetContainer = new JPanel();
@@ -96,39 +96,39 @@ public class Top100ImdbPanel extends JPanel implements IViewPanel {
         componentPanel.add(widgetContainer, constraints);
 
         //Initialize show all reviews button
-        this.showAllReviewsButton = new JButton();
-        this.showAllReviewsButton.setVisible(false); //Set visible when review is found
-        widgetContainer.add(this.showAllReviewsButton);
+        this.allReviewsButton = new JButton();
+        this.allReviewsButton.setVisible(false); //Set visible when review is found
+        widgetContainer.add(this.allReviewsButton);
 
         //Initialize best review panel
-        this.bestReviewViewPanel = new ReviewViewPanel(this.appView);
-        this.bestReviewViewPanel.init();
+        this.bestReviewPanel = new ReviewPanel(this.appView);
+        this.bestReviewPanel.init();
         constraints.gridx = 1;
         constraints.gridy = 2;
-        componentPanel.add(this.bestReviewViewPanel, constraints);
+        componentPanel.add(this.bestReviewPanel, constraints);
 
         //Initialize worst review button
-        this.worstReviewViewPanel = new ReviewViewPanel(this.appView);
-        this.worstReviewViewPanel.init();
+        this.worstReviewPanel = new ReviewPanel(this.appView);
+        this.worstReviewPanel.init();
         constraints.gridx = 2;
         constraints.gridy = 2;
-        componentPanel.add(this.worstReviewViewPanel, constraints);
+        componentPanel.add(this.worstReviewPanel, constraints);
     }
 
     @Override
     public void initStyles() {
         //Set margin of the review view panels
-        this.bestReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
-        this.worstReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
+        this.bestReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        this.worstReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
     }
 
     @Override
     public void initListeners(){
         //Init action listener for load medium button to search for a random medium
-        this.searchMediumButton.addActionListener((e) -> this.searchMedium());
+        this.getMediumsButton.addActionListener((e) -> this.searchMedium());
 
         //Init action listener for show all reviews button
-        this.showAllReviewsButton.addActionListener((e) -> {
+        this.allReviewsButton.addActionListener((e) -> {
             UIManager.put("OptionPane.minimumSize", new Dimension(600,400)); //Set size of following JDialog
 
             //Open message JDialog to show all reviews in a new window
@@ -141,13 +141,13 @@ public class Top100ImdbPanel extends JPanel implements IViewPanel {
 
     @Override
     public void setTranslations(){
-        this.searchMediumButton.setText(this.appView.getAppModel().getTranslation("button.load"));
-        this.showAllReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
+        this.getMediumsButton.setText(this.appView.getAppModel().getTranslation("button.load"));
+        this.allReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
 
-        this.imdbRatingViewPanel.setTranslations();
-        this.metadataViewPanel.setTranslations();
-        this.bestReviewViewPanel.setTranslations();
-        this.worstReviewViewPanel.setTranslations();
+        this.imdbRatingPanel.setTranslations();
+        this.metadataPanel.setTranslations();
+        this.bestReviewPanel.setTranslations();
+        this.worstReviewPanel.setTranslations();
     }
 
     public void searchMedium(){
@@ -160,12 +160,12 @@ public class Top100ImdbPanel extends JPanel implements IViewPanel {
 
             //If search has no mediums found then open a new no medium found JDialog
             if(this.imdbRatings.isEmpty()){
-                this.appView.showNoMediumFoundDialog();
+                this.appView.getDialogHandler().showNoMediumFoundDialog();
                 return;
             }
         }
 
-        //If the current medium is not at the end set the current medium to the next one in the search results and increase the index. Otherwise reset the search
+        //If the current medium is not at the end set the current medium to the next one in the search results and increase the index. Otherwise, reset the search
         if(!this.isAtEndOfResults()){
             this.currentMedium = this.imdbRatings.get(this.currentIndex).getMedium();
             this.currentIndex++;
@@ -175,20 +175,20 @@ public class Top100ImdbPanel extends JPanel implements IViewPanel {
             return;
         }
 
-        this.imdbRatingViewPanel.fillDataView(this.imdbRatings.get(this.currentIndex - 1)); //Fill imdb rating view with the current medium data
-        this.metadataViewPanel.fillDataView(this.currentMedium); //Fill metadata view with the current medium data
+        this.imdbRatingPanel.fillDataView(this.imdbRatings.get(this.currentIndex - 1)); //Fill imdb rating view with the current medium data
+        this.metadataPanel.fillDataView(this.currentMedium); //Fill metadata view with the current medium data
 
         //Load reviews
         AudienceReview[] reviews = this.appView.getAppModel().getBestAndWorstReviewByTitle(this.currentMedium.getTitle());
-        this.showAllReviewsButton.setVisible(true);
-        this.showAllReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null); //Enable show all reviews button when best and worst review exists
-        this.worstReviewViewPanel.fillDataView(reviews[0]); //Fill worst review view panel
-        this.bestReviewViewPanel.fillDataView(reviews[1]); //Fill best review view panel
+        this.allReviewsButton.setVisible(true);
+        this.allReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null); //Enable show all reviews button when best and worst review exists
+        this.worstReviewPanel.fillDataView(reviews[0]); //Fill worst review view panel
+        this.bestReviewPanel.fillDataView(reviews[1]); //Fill best review view panel
 
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
 
         //Show the user the accept medium dialog where the user can decide to choose, skip or abort the current medium
-        this.appView.showAcceptRecommendationDialog((e) -> this.appView.showCloseAppDialog(), (e) -> this.searchMedium(),
+        this.appView.getDialogHandler().showAcceptRecommendationDialog((e) -> this.appView.getDialogHandler().showCloseAppDialog(), (e) -> this.searchMedium(),
                 this.currentIndex, this.imdbRatings.size());
     }
 
@@ -198,11 +198,11 @@ public class Top100ImdbPanel extends JPanel implements IViewPanel {
         this.currentIndex = 0;
 
         //Hide all panels
-        this.imdbRatingViewPanel.setVisible(false);
-        this.showAllReviewsButton.setVisible(false);
-        this.metadataViewPanel.setVisible(false);
-        this.bestReviewViewPanel.setVisible(false);
-        this.worstReviewViewPanel.setVisible(false);
+        this.imdbRatingPanel.setVisible(false);
+        this.allReviewsButton.setVisible(false);
+        this.metadataPanel.setVisible(false);
+        this.bestReviewPanel.setVisible(false);
+        this.worstReviewPanel.setVisible(false);
 
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
     }

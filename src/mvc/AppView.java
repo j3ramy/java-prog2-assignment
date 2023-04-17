@@ -1,36 +1,50 @@
 package mvc;
 
-import mvc.view.panel.*;
+import mvc.view.tab.*;
+import mvc.view.util.DialogHandler;
 import util.enums.LoadingState;
 import util.file.FilePaths;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
-public class AppView extends JFrame implements IViewPanel {
+public class AppView extends JFrame implements IViewInit {
     private final AppController appController;
 
-    private JPanel mainPanel, userFeedbackPanel, sidebarPanel, statusBarPanel;
+    private final DialogHandler dialogHandler;
+    private JPanel mainPanel, headerPanel, sidebarPanel, statusBarPanel;
 
-    private RandomMediumPanel randomMediumPanel;
-    private SearchMediumPanel searchMediumPanel;
-    private Top100ImdbPanel top100ImdbPanel;
-    private Top100RatingPanel top100RatingPanel;
-    private SettingsPanel settingsPanel;
+    private RandomMediumTab randomMediumTab;
+    private SearchMediumTab searchMediumTab;
+    private Top100ImdbTab top100ImdbTab;
+    private Top100RatingTab top100RatingTab;
+    private SettingsTab settingsTab;
 
-    private JTabbedPane tabbedPanel;
-    private JButton closeButton;
-    private JLabel menuImage;
+    private JTabbedPane tabbedPane;
+    private JButton exitButton;
+    private JLabel sidebarImage;
 
     public AppController getAppController() {
         return appController;
     }
 
+    public AppModel getAppModel(){
+        return this.appController.getAppModel();
+    }
+
+    public DialogHandler getDialogHandler() {
+        return dialogHandler;
+    }
+
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
     public AppView(AppController appController){
         this.appController = appController;
+        this.dialogHandler = new DialogHandler(this);
     }
 
     @Override
@@ -45,31 +59,31 @@ public class AppView extends JFrame implements IViewPanel {
     public void initComponents(){
         this.add(this.mainPanel);
 
-        this.randomMediumPanel = new RandomMediumPanel(this);
-        this.randomMediumPanel.init();
+        this.randomMediumTab = new RandomMediumTab(this);
+        this.randomMediumTab.init();
 
-        this.searchMediumPanel = new SearchMediumPanel(this);
-        this.searchMediumPanel.init();
+        this.searchMediumTab = new SearchMediumTab(this);
+        this.searchMediumTab.init();
 
-        this.top100ImdbPanel = new Top100ImdbPanel(this);
-        this.top100ImdbPanel.init();
+        this.top100ImdbTab = new Top100ImdbTab(this);
+        this.top100ImdbTab.init();
 
-        this.top100RatingPanel = new Top100RatingPanel(this);
-        this.top100RatingPanel.init();
+        this.top100RatingTab = new Top100RatingTab(this);
+        this.top100RatingTab.init();
 
-        this.settingsPanel = new SettingsPanel(this);
-        this.settingsPanel.init();
+        this.settingsTab = new SettingsTab(this);
+        this.settingsTab.init();
     }
 
     @Override
     public void initStyles(){
         this.mainPanel.setBackground(Color.WHITE);
 
-        this.userFeedbackPanel.setBackground(Color.WHITE);
-        this.userFeedbackPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
+        this.headerPanel.setBackground(Color.WHITE);
+        this.headerPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
 
         this.sidebarPanel.setBackground(Color.WHITE);
-        this.closeButton.setBackground(new Color(245, 245, 245));
+        this.exitButton.setBackground(new Color(245, 245, 245));
 
         this.statusBarPanel.setBackground(Color.WHITE);
         this.statusBarPanel.setBorder(new EmptyBorder(0, 5, 0, 0));
@@ -80,58 +94,54 @@ public class AppView extends JFrame implements IViewPanel {
             ImageIcon imageIcon = new ImageIcon(FilePaths.MENU_IMAGE_PATH);
 
             Image image = imageIcon.getImage().getScaledInstance(200, this.getHeight(),  Image.SCALE_SMOOTH);
-            this.menuImage.setIcon(new ImageIcon(image));
+            this.sidebarImage.setIcon(new ImageIcon(image));
         }
         catch (Exception e){
-            this.showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
+            this.dialogHandler.showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
         }
     }
 
     @Override
     public void initListeners(){
-        this.tabbedPanel.addChangeListener(e -> {
-            if(this.tabbedPanel.getSelectedIndex() == 1)
+        this.tabbedPane.addChangeListener(e -> {
+            if(this.tabbedPane.getSelectedIndex() == 1)
             {
-                this.searchMediumPanel.focusInputTextField();
+                this.searchMediumTab.focusInputTextField();
             }
         });
 
-        this.closeButton.addActionListener(e -> this.showCloseAppDialog());
+        this.exitButton.addActionListener(e -> this.dialogHandler.showCloseAppDialog());
     }
 
     @Override
     public void setTranslations() {
-        this.closeButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
+        this.exitButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
 
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.search_medium"), this.searchMediumPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100_imdb"), this.top100ImdbPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.top_100_rating"), this.top100RatingPanel);
-        this.tabbedPanel.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsPanel);
+        this.tabbedPane.add(this.getAppController().getAppModel().getTranslation("label.main.random_medium"), this.randomMediumTab);
+        this.tabbedPane.add(this.getAppController().getAppModel().getTranslation("label.main.search_medium"), this.searchMediumTab);
+        this.tabbedPane.add(this.getAppController().getAppModel().getTranslation("label.main.top_100_imdb"), this.top100ImdbTab);
+        this.tabbedPane.add(this.getAppController().getAppModel().getTranslation("label.main.top_100_rating"), this.top100RatingTab);
+        this.tabbedPane.add(this.getAppController().getAppModel().getTranslation("label.main.settings"), this.settingsTab);
 
         this.disableTabs();
-        this.tabbedPanel.setSelectedIndex(this.tabbedPanel.getTabCount() - 1);
+        this.tabbedPane.setSelectedIndex(this.tabbedPane.getTabCount() - 1);
 
-        this.setUserFeedbackText("label.user.welcome");
+        this.setHeaderText("label.user.welcome");
         this.setStatusBarText(LoadingState.READY);
     }
 
-    public AppModel getAppModel(){
-        return this.appController.getAppModel();
-    }
-
     public void setSettings(){
-        this.settingsPanel.loadSettings(this.appController.getAppModel().getCustomData());
+        this.settingsTab.fillSettings(this.appController.getAppModel().getCustomData());
     }
 
     public void setAllTranslations(){
         this.setTranslations();
 
-        this.randomMediumPanel.setTranslations();
-        this.searchMediumPanel.setTranslations();
-        this.top100ImdbPanel.setTranslations();
-        this.top100RatingPanel.setTranslations();
-        this.settingsPanel.setTranslations();
+        this.randomMediumTab.setTranslations();
+        this.searchMediumTab.setTranslations();
+        this.top100ImdbTab.setTranslations();
+        this.top100RatingTab.setTranslations();
+        this.settingsTab.setTranslations();
     }
 
     public void setStatusBarText(LoadingState loadingState){
@@ -146,71 +156,23 @@ public class AppView extends JFrame implements IViewPanel {
         }
     }
 
-    public void setUserFeedbackText(String key){
-        JLabel userFeedbackLabel = (JLabel) this.userFeedbackPanel.getComponents()[0];
-        userFeedbackLabel.setText(this.getAppController().getAppModel().getTranslation(key));
+    public void setHeaderText(String translationKey){
+        JLabel userFeedbackLabel = (JLabel) this.headerPanel.getComponents()[0];
+        userFeedbackLabel.setText(this.getAppController().getAppModel().getTranslation(translationKey));
         userFeedbackLabel.setFont(new Font(null, Font.BOLD, 14));
     }
 
     public void enableTabs(){
-        for(int i = 0; i < this.tabbedPanel.getTabCount(); i++){
-            this.tabbedPanel.setEnabledAt(i, true);
+        for(int i = 0; i < this.tabbedPane.getTabCount(); i++){
+            this.tabbedPane.setEnabledAt(i, true);
         }
     }
 
     public void disableTabs(){
-        for(int i = 0; i < this.tabbedPanel.getTabCount(); i++){
+        for(int i = 0; i < this.tabbedPane.getTabCount(); i++){
             //Only disable tabs which have to depend on data sources (which might not be loaded completely)
-            if(i != this.tabbedPanel.getTabCount() - 1) //Disable all tabs except start and settings tab
-                this.tabbedPanel.setEnabledAt(i, false);
-        }
-    }
-
-    public void showDialog(String title, String message, int dialogType) {
-        JOptionPane.showMessageDialog(this.mainPanel, message, title, dialogType);
-    }
-
-    public void showFirstAppStartDialog(){
-        this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.no_settings"),
-                this.getAppController().getAppModel().getTranslation("dialog.body.main.no_settings"), JOptionPane.QUESTION_MESSAGE);
-
-        this.tabbedPanel.setSelectedIndex(this.tabbedPanel.getTabCount() - 1);
-    }
-
-    public void showCloseAppDialog(){
-        this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.close"),
-                this.getAppController().getAppModel().getTranslation("dialog.body.main.close"), JOptionPane.INFORMATION_MESSAGE);
-        this.appController.close();
-    }
-
-    public void showSaveSettingsDialog(){
-        int input = JOptionPane.showConfirmDialog(this, this.getAppController().getAppModel().getTranslation("dialog.body.settings.save"),
-                this.getAppController().getAppModel().getTranslation("dialog.title.settings.save"), JOptionPane.YES_NO_OPTION);
-
-        if(input == 0){
-            this.showCloseAppDialog();
-        }
-    }
-
-    public void showNoMediumFoundDialog(){
-        this.showDialog(this.getAppController().getAppModel().getTranslation("dialog.title.main.no_result"),
-                this.getAppController().getAppModel().getTranslation("dialog.body.main.no_result"), JOptionPane.ERROR_MESSAGE);
-    }
-
-    public void showAcceptRecommendationDialog(ActionListener confirmAction, ActionListener rejectAction, int currentIndex, int mediumCount){
-        this.showAcceptRecommendationDialog(confirmAction, rejectAction, currentIndex, mediumCount, "");
-    }
-
-    public void showAcceptRecommendationDialog(ActionListener confirmAction, ActionListener rejectAction, int currentIndex, int mediumCount, String addable){
-        String title = this.getAppController().getAppModel().getTranslation("dialog.title.recommendation").
-                replace("#", Integer.toString(currentIndex)).replace("+", Integer.toString(mediumCount)) + addable;
-
-        int input = JOptionPane.showConfirmDialog(this, this.getAppController().getAppModel().getTranslation("dialog.body.recommendation"),
-                title, JOptionPane.YES_NO_CANCEL_OPTION);
-
-        switch (input) {
-            case 0 -> confirmAction.actionPerformed(null);
-            case 1 -> rejectAction.actionPerformed(null);
+            if(i != this.tabbedPane.getTabCount() - 1) //Disable all tabs except start and settings tab
+                this.tabbedPane.setEnabledAt(i, false);
         }
     }
 }

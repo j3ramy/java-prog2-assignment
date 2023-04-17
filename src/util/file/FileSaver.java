@@ -29,7 +29,7 @@ public class FileSaver {
             bufferedWriter.close();
         }
         catch(Exception e){
-            this.appModel.getAppView().showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
+            this.appModel.getAppView().getDialogHandler().showDialog("Error", "An error occurred:\n" + e, JOptionPane.ERROR_MESSAGE);
         }
     }
 }

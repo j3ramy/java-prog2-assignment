@@ -1,21 +1,21 @@
 package util.data;
 
-import util.enums.AudienceReviewClassification;
+import util.enums.AudienceReviewType;
 
 public class AudienceReview extends Review {
     private final float rating;
-    private AudienceReviewClassification classification = AudienceReviewClassification.NONE;
+    private AudienceReviewType audienceReviewType = AudienceReviewType.DEFAULT;
 
     public float getRating() {
         return rating;
     }
 
-    public AudienceReviewClassification getClassification() {
-        return classification;
+    public AudienceReviewType getAudienceReviewType() {
+        return audienceReviewType;
     }
 
-    public void setClassification(AudienceReviewClassification classification) {
-        this.classification = classification;
+    public void setAudienceReviewType(AudienceReviewType audienceReviewType) {
+        this.audienceReviewType = audienceReviewType;
     }
 
     public AudienceReview(String mediumTitle, String comment, float rating){

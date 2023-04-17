@@ -1,7 +1,5 @@
 package util.data;
 
-import java.util.Arrays;
-
 public class ImdbRating {
     private final Medium medium;
     private final String posterLink;

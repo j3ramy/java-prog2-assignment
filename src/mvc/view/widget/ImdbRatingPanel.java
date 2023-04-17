@@ -2,7 +2,7 @@ package mvc.view.widget;
 
 import mvc.AppView;
 import util.data.ImdbRating;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,14 +12,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 
-public class ImdbRatingViewPanel extends JPanel implements IViewPanel {
+public class ImdbRatingPanel extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
 
     //Labels for displaying the imdb rating content
     private JLabel imdbRatingLabel, metaScoreLabel, voteAmountLabel, /*grossLabel,*/ star1Label, star2Label, star3Label, star4Label, posterImage;
 
     //Constructor
-    public ImdbRatingViewPanel(AppView appView){
+    public ImdbRatingPanel(AppView appView){
         this.appView = appView;
     }
 

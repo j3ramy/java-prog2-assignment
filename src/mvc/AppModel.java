@@ -3,7 +3,7 @@ package mvc;
 import util.Algorithms;
 import util.Utils;
 import util.data.*;
-import util.enums.AudienceReviewClassification;
+import util.enums.AudienceReviewType;
 import util.enums.Language;
 import util.file.CustomData;
 import util.file.FileLoader;
@@ -95,14 +95,7 @@ public class AppModel {
     public ArrayList<Medium> getMediumsByGenres(String[] genres){
         ArrayList<Medium> mediums = new ArrayList<>();
         for(Medium medium : this.mediums.values()){
-            int genreMatchCounter = 0;
-            for(String genre : genres){
-                String formattedGenre = Utils.removeForbiddenChars(genre.toLowerCase().strip());
-                if(medium.getGenres().toLowerCase().contains(formattedGenre))
-                    genreMatchCounter++;
-            }
-
-            if(genreMatchCounter == genres.length)
+            if(this.getGenreMatchingCount(genres, medium.getGenres()) == genres.length)
                 mediums.add(medium);
         }
 
@@ -113,6 +106,7 @@ public class AppModel {
         return mediums;
     }
 
+    //TODO: Remove nested for loops by separating them in methods
     public ArrayList<Medium> getMediumsByCast(String[] cast){
         ArrayList<Medium> mediums = new ArrayList<>();
         for(Medium medium : this.mediums.values()){
@@ -189,8 +183,8 @@ public class AppModel {
         }
 
         if(reviews[0] != null && reviews[1] != null){
-            reviews[0].setClassification(AudienceReviewClassification.WORST);
-            reviews[1].setClassification(AudienceReviewClassification.BEST);
+            reviews[0].setAudienceReviewType(AudienceReviewType.WORST);
+            reviews[1].setAudienceReviewType(AudienceReviewType.BEST);
         }
 
         return reviews;
@@ -199,7 +193,7 @@ public class AppModel {
     public ArrayList<Review> getAllReviewsByTitle(String title){
         ArrayList<Review> reviews = new ArrayList<>();
 
-        if(isTitleInMediums(title)){
+        if(this.isTitleInMediums(title)){
             for(Review review : this.reviews){
                 if(review.getMediumTitle().equalsIgnoreCase(title)){
                     reviews.add(review);
@@ -222,7 +216,7 @@ public class AppModel {
     public ArrayList<AudienceReview> getAudienceReviewsByTitle(String title){
         ArrayList<AudienceReview> reviews = new ArrayList<>();
 
-        if(isTitleInMediums(title)){
+        if(this.isTitleInMediums(title)){
             for(Review review : this.reviews){
                 if(review.getMediumTitle().equalsIgnoreCase(title) && review instanceof AudienceReview)
                     reviews.add((AudienceReview) review);
@@ -230,6 +224,14 @@ public class AppModel {
         }
 
         return reviews;
+    }
+
+    public boolean hasMediums(){
+        return !this.mediums.isEmpty();
+    }
+
+    public boolean isTitleInMediums(String title) {
+        return this.mediums.containsKey(Utils.stringToKeyFormat(title));
     }
 
     private ArrayList<CriticReview> getCriticsReviewsOnly(ArrayList<Review> reviews){
@@ -254,11 +256,14 @@ public class AppModel {
         return audienceReviews;
     }
 
-    public boolean hasMediums(){
-        return !this.mediums.isEmpty();
-    }
+    private int getGenreMatchingCount(String[] genres, String mediumGenres){
+        int genreMatchCounter = 0;
+        for(String genre : genres){
+            String formattedGenre = Utils.removeForbiddenChars(genre.toLowerCase().strip());
+            if(mediumGenres.toLowerCase().contains(formattedGenre))
+                genreMatchCounter++;
+        }
 
-    public boolean isTitleInMediums(String title) {
-        return this.mediums.containsKey(Utils.stringToKeyFormat(title));
+        return genreMatchCounter;
     }
 }

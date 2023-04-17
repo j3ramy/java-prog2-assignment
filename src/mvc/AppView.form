@@ -20,7 +20,7 @@
           </component>
         </children>
       </grid>
-      <tabbedpane id="8c09a" binding="tabbedPanel">
+      <tabbedpane id="8c09a" binding="tabbedPane">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
@@ -33,13 +33,13 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="4d2b0" class="javax.swing.JButton" binding="closeButton">
+          <component id="4d2b0" class="javax.swing.JButton" binding="exitButton">
             <constraints border-constraint="Last"/>
             <properties>
               <text value="Beenden"/>
             </properties>
           </component>
-          <component id="30717" class="javax.swing.JLabel" binding="menuImage">
+          <component id="30717" class="javax.swing.JLabel" binding="sidebarImage">
             <constraints border-constraint="North"/>
             <properties>
               <horizontalAlignment value="0"/>
@@ -48,7 +48,7 @@
           </component>
         </children>
       </grid>
-      <grid id="b9a26" binding="userFeedbackPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="b9a26" binding="headerPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="North"/>
         <properties/>

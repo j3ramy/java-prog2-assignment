@@ -4,14 +4,14 @@ import mvc.AppView;
 import util.CustomColors;
 import util.Utils;
 import util.data.Medium;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class MetadataViewPanel extends JPanel implements IViewPanel {
+public class MetadataPanel extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
 
     //Labels for displaying the content
@@ -20,7 +20,7 @@ public class MetadataViewPanel extends JPanel implements IViewPanel {
     private JScrollPane descriptionScrollPane, castScrollPane; //Scroll panes to make scrolling in upper text areas possible
 
     //Constructor
-    public MetadataViewPanel(AppView appView){
+    public MetadataPanel(AppView appView){
         this.appView = appView;
     }
 

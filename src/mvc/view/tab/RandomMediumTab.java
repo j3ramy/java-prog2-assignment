@@ -1,27 +1,27 @@
-package mvc.view.panel;
+package mvc.view.tab;
 
 import mvc.AppView;
 import mvc.view.widget.AllReviewsDialog;
-import mvc.view.widget.MetadataViewPanel;
-import mvc.view.widget.ReviewViewPanel;
+import mvc.view.widget.MetadataPanel;
+import mvc.view.widget.ReviewPanel;
 import util.data.AudienceReview;
 import util.data.Medium;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class RandomMediumPanel extends JPanel implements IViewPanel {
+public class RandomMediumTab extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
 
-    private JButton searchMediumButton, showAllReviewsButton;
-    private MetadataViewPanel metadataViewPanel; //Shows the metadata of the current medium
-    private ReviewViewPanel bestReviewViewPanel, worstReviewViewPanel; //Shows the worst and best audience review
+    private JButton getMediumButton, allReviewsButton ;
+    private MetadataPanel metadataPanel; //Shows the metadata of the current medium
+    private ReviewPanel bestReviewPanel, worstReviewPanel; //Shows the worst and best audience review
     private Medium currentMedium; //Represents the current visible medium
 
     //Constructor
-    public RandomMediumPanel(AppView appView){
+    public RandomMediumTab(AppView appView){
         this.appView = appView;
     }
 
@@ -58,19 +58,19 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         componentPanel.add(widgetContainer, constraints);
 
         //Add search medium button
-        this.searchMediumButton = new JButton();
-        this.searchMediumButton.setHorizontalAlignment(JButton.LEFT); //Positioning button to the left, the following line is needed to actually center it
-        this.searchMediumButton.setAlignmentX(LEFT_ALIGNMENT); //Positioning button to the left
-        widgetContainer.add(this.searchMediumButton);
+        this.getMediumButton = new JButton();
+        this.getMediumButton.setHorizontalAlignment(JButton.LEFT); //Positioning button to the left, the following line is needed to actually center it
+        this.getMediumButton.setAlignmentX(LEFT_ALIGNMENT); //Positioning button to the left
+        widgetContainer.add(this.getMediumButton);
 
         //Initialize metadata view panel
-        this.metadataViewPanel = new MetadataViewPanel(this.appView);
-        this.metadataViewPanel.init();
+        this.metadataPanel = new MetadataPanel(this.appView);
+        this.metadataPanel.init();
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.gridwidth = 2;
         constraints.fill = GridBagConstraints.BOTH;
-        componentPanel.add(this.metadataViewPanel, constraints);
+        componentPanel.add(this.metadataPanel, constraints);
 
         //Overwrite widget container to hold the show all reviews button
         widgetContainer = new JPanel();
@@ -82,39 +82,39 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         componentPanel.add(widgetContainer, constraints);
 
         //Initialize show all reviews button
-        this.showAllReviewsButton = new JButton();
-        this.showAllReviewsButton.setVisible(false); //Set visible when review is found
-        widgetContainer.add(this.showAllReviewsButton);
+        this.allReviewsButton = new JButton();
+        this.allReviewsButton.setVisible(false); //Set visible when review is found
+        widgetContainer.add(this.allReviewsButton);
 
         //Initialize best review panel
-        this.bestReviewViewPanel = new ReviewViewPanel(this.appView);
-        this.bestReviewViewPanel.init();
+        this.bestReviewPanel = new ReviewPanel(this.appView);
+        this.bestReviewPanel.init();
         constraints.gridx = 1;
         constraints.gridy = 2;
-        componentPanel.add(this.bestReviewViewPanel, constraints);
+        componentPanel.add(this.bestReviewPanel, constraints);
 
         //Initialize worst review button
-        this.worstReviewViewPanel = new ReviewViewPanel(this.appView);
-        this.worstReviewViewPanel.init();
+        this.worstReviewPanel = new ReviewPanel(this.appView);
+        this.worstReviewPanel.init();
         constraints.gridx = 2;
         constraints.gridy = 2;
-        componentPanel.add(this.worstReviewViewPanel, constraints);
+        componentPanel.add(this.worstReviewPanel, constraints);
     }
 
     @Override
     public void initStyles() {
         //Set margin of the review view panels
-        this.bestReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
-        this.worstReviewViewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
+        this.bestReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        this.worstReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
     }
 
     @Override
     public void initListeners(){
         //Init action listener for load medium button to search for a random medium
-        this.searchMediumButton.addActionListener((e) -> this.searchMedium());
+        this.getMediumButton.addActionListener((e) -> this.searchMedium());
 
         //Init action listener for show all reviews button
-        this.showAllReviewsButton.addActionListener((e) -> {
+        this.allReviewsButton.addActionListener((e) -> {
             UIManager.put("OptionPane.minimumSize", new Dimension(600,400)); //Set size of following JDialog
 
             //Open message JDialog to show all reviews in a new window
@@ -127,12 +127,12 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
 
     @Override
     public void setTranslations(){
-        this.searchMediumButton.setText(this.appView.getAppModel().getTranslation("button.load"));
-        this.showAllReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
+        this.getMediumButton.setText(this.appView.getAppModel().getTranslation("button.load"));
+        this.allReviewsButton.setText(this.appView.getAppModel().getTranslation("button.all_reviews"));
 
-        this.metadataViewPanel.setTranslations();
-        this.bestReviewViewPanel.setTranslations();
-        this.worstReviewViewPanel.setTranslations();
+        this.metadataPanel.setTranslations();
+        this.bestReviewPanel.setTranslations();
+        this.worstReviewPanel.setTranslations();
     }
 
     public void searchMedium(){
@@ -141,18 +141,18 @@ public class RandomMediumPanel extends JPanel implements IViewPanel {
         //Load random medium from AppModel
         this.currentMedium = this.appView.getAppModel().getRandomMedium();
 
-        this.metadataViewPanel.fillDataView(this.currentMedium); //Fill metadata view with the current medium data
+        this.metadataPanel.fillDataView(this.currentMedium); //Fill metadata view with the current medium data
 
         //Load reviews
         AudienceReview[] reviews = this.appView.getAppModel().getBestAndWorstReviewByTitle(this.currentMedium.getTitle());
-        this.showAllReviewsButton.setVisible(true);
-        this.showAllReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null); //Enable show all reviews button when best and worst review exists
-        this.worstReviewViewPanel.fillDataView(reviews[0]); //Fill worst review view panel
-        this.bestReviewViewPanel.fillDataView(reviews[1]); //Fill best review view panel
+        this.allReviewsButton.setVisible(true);
+        this.allReviewsButton.setEnabled(reviews[0] != null && reviews[1] != null); //Enable show all reviews button when best and worst review exists
+        this.worstReviewPanel.fillDataView(reviews[0]); //Fill worst review view panel
+        this.bestReviewPanel.fillDataView(reviews[1]); //Fill best review view panel
 
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
 
         //Show the user the accept medium dialog where the user can decide to choose, skip or abort the current medium
-        this.appView.showAcceptRecommendationDialog((e) -> this.appView.showCloseAppDialog(), (e) -> this.searchMedium(), 1, 1);
+        this.appView.getDialogHandler().showAcceptRecommendationDialog((e) -> this.appView.getDialogHandler().showCloseAppDialog(), (e) -> this.searchMedium(), 1, 1);
     }
 }

@@ -4,18 +4,18 @@ import mvc.AppModel;
 import mvc.AppView;
 import util.CustomColors;
 import util.data.Review;
-import util.interfaces.IViewPanel;
+import util.interfaces.IViewInit;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class AllReviewsDialog extends JPanel implements IViewPanel {
+public class AllReviewsDialog extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
     private final ArrayList<Review> reviews; //Current reviews of passed title
 
-    private ReviewViewPanel reviewViewPanel; //Panel for showing the reviews
+    private ReviewPanel reviewViewPanel; //Panel for showing the reviews
     private JLabel indexFeedbackLabel; //Label for showing the user on which review it is
     private JButton previousButton, nextButton; //Buttons to go through the review list
     private int currentIndex; //Current index of review list
@@ -59,7 +59,7 @@ public class AllReviewsDialog extends JPanel implements IViewPanel {
         constraints.fill = GridBagConstraints.HORIZONTAL; //Stretch content horizontal
 
         //Initialize review panel
-        this.reviewViewPanel = new ReviewViewPanel(this.appView);
+        this.reviewViewPanel = new ReviewPanel(this.appView);
         this.reviewViewPanel.init();
         this.reviewViewPanel.setPreferredSize(new Dimension(0, 250)); //Set preferred display size
         constraints.gridx = 0; //Grid x index
