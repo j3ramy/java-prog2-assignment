@@ -6,6 +6,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Utils {
+    /**
+     * Converts any object array to a csv string
+     *
+     * @param array array of type object that should be converted
+     * @return csv string
+     *
+     * @BigO: O(n)
+     * **/
     public static String convertArrayToCsvString(Object[] array){
         StringBuilder s = new StringBuilder("\"");
 
@@ -21,6 +29,15 @@ public class Utils {
         return s.toString();
     }
 
+    /**
+     * Converts any csv string to an object array
+     *
+     * @param line string line in csv format
+     * @param removeSpaces should spaces between words been removed
+     * @return object array
+     *
+     * @BigO: O(n)
+     * **/
     public static Object[] splitCsvLine(String line, boolean removeSpaces){
         //Remove spaces
         if( removeSpaces)
@@ -35,7 +52,7 @@ public class Utils {
         int startIndex = -1, endIndex = -1; //Start/End of an array marked by "
         for(int i = 0; i < rawData.length; i++){
             //Check if inner array contains only one object => simultaneously start and end of array
-            if(countChars(rawData[i], '\"') == 2){
+            if(countCharsByChar(rawData[i], '\"') == 2){
                 startIndex = i;
                 endIndex = i;
             }
@@ -66,6 +83,13 @@ public class Utils {
         return outerList.toArray();
     }
 
+    /**
+     * Removes quotes from object array
+     *
+     * @param lineAsArray of type object where quotes should be removed
+     *
+     * @BigO: O(n)
+     * **/
     public static void removeQuotes(Object[] lineAsArray){
         for (Object o : lineAsArray) {
             if (o instanceof List<?>) {
@@ -75,7 +99,17 @@ public class Utils {
         }
     }
 
-    public static int countChars(String s, char searchFor){
+    /**
+     * Removes quotes from object array
+     *
+     * @param s string in where chars should be searched
+     * @param searchFor char that will be looked for and counted
+     *
+     * @return number of how much times the passed char is in the passed string
+     *
+     * @BigO: O(n)
+     * **/
+    public static int countCharsByChar(String s, char searchFor){
         int counter = 0;
         for(Character c : s.toCharArray())
             if(c == searchFor) counter++;
@@ -83,6 +117,16 @@ public class Utils {
         return counter;
     }
 
+    /**
+     * Joins an array to a string and separates it by passed separator
+     *
+     * @param array array of type object which should be converted to a string
+     * @param separator string which will separate the objects in between. Pass empty string to not separate the objects
+     *
+     * @return separated string
+     *
+     * @BigO: O(n)
+     * **/
     public static String joinArray(Object[] array, String separator){
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -96,6 +140,16 @@ public class Utils {
         return stringBuilder.toString();
     }
 
+    /**
+     * Joins a list to a string and separates it by passed separator
+     *
+     * @param list list of type unknown which should be converted to a string
+     * @param separator string which will separate the objects in between. Pass empty string to not separate the objects
+     *
+     * @return separated string
+     *
+     * @BigO: O(n)
+     * **/
     public static String joinList(List<?> list, String separator){
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -109,15 +163,42 @@ public class Utils {
         return stringBuilder.toString();
     }
 
-    public static String stringToKeyFormat(String key){
-        return key.toLowerCase().replace(" ", "_");
+    /**
+     * Formats any passed string to hash map key format
+     *
+     * @param s string that should be formatted to key
+     *
+     * @return string formated as hash map key
+     *
+     * @BigO: O(n)
+     * **/
+    public static String stringToKeyFormat(String s){
+        return s.toLowerCase().replace(" ", "_");
     }
 
     private static final Pattern pattern2 = Pattern.compile("[^a-zA-Z0-9 ,_]");
+    /**
+     * Removes all forbidden characters in the passed string and returns it
+     *
+     * @param s string from which characters should be removed
+     *
+     * @return string without the forbidden characters
+     *
+     * @BigO: O(n)
+     * **/
     public static String removeForbiddenChars(String s){
         return s.replaceAll(pattern2.pattern(), "");
     }
 
+    /**
+     * Uppercase all words in a passed string
+     *
+     * @param s string which should be formatted
+     *
+     * @return formatted string
+     *
+     * @BigO: O(n)
+     * **/
     public static String uppercaseAll(String s){
         if(s.isEmpty())
             return "";
@@ -138,6 +219,16 @@ public class Utils {
         return sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1).toLowerCase()).toString().trim();
     }
 
+    /**
+     * Checks if a passed enum type contains a value
+     *
+     * @param value value which should be searched in the enum
+     * @param enumeration enumeration type which should be iterated
+     *
+     * @return true when enum contains value, otherwise false
+     *
+     * @BigO: O(n)
+     * **/
     public static boolean containsEnumValue(String value, Class<?> enumeration){
         boolean contains = false;
 
@@ -150,6 +241,15 @@ public class Utils {
     }
 
     private static final Pattern pattern1 = Pattern.compile("-?\\d+(\\.\\d+)?");
+    /**
+     * Checks if a passed string is numeric only
+     *
+     * @param s string which should be checked
+     *
+     * @return true if s contains out of numeric values only, otherwise false
+     *
+     * @BigO: O(n)
+     * **/
     public static boolean isNumeric(String s){
         return pattern1.matcher(s).matches();
     }

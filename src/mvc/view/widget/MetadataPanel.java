@@ -24,13 +24,22 @@ public class MetadataPanel extends JPanel implements IViewInit {
         this.appView = appView;
     }
 
-    //Initialize all class components inside this panel
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
         this.initStyles();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout of this panel
@@ -121,6 +130,11 @@ public class MetadataPanel extends JPanel implements IViewInit {
         this.add(this.addedAtLabel, constraints);
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles() {
         this.setVisible(false); //Hide by default
@@ -161,6 +175,11 @@ public class MetadataPanel extends JPanel implements IViewInit {
     @Override
     public void initListeners(){}
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations(){
         //Create titled border around all labels and set the text to the correct translation and add margin
@@ -195,6 +214,13 @@ public class MetadataPanel extends JPanel implements IViewInit {
                 BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.metadata.added_at"))));
     }
 
+    /**
+     * Fills the DataViewPanel
+     *
+     * @param medium object of Medium that contains the information which will be loaded into the GUI
+     *
+     * @BigO: O(n)
+     * **/
     public void fillDataView(Medium medium){
         //Set title label with title and release year. If release year is 0 then replace it by N/A because then it cannot be loaded
         this.titleLabel.setText(medium.getTitle() + " (" + (medium.getReleaseYear() == 0 ? "N/A" : medium.getReleaseYear()) + ")");

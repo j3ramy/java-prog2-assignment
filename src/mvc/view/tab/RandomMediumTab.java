@@ -15,7 +15,7 @@ import java.awt.*;
 public class RandomMediumTab extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
 
-    private JButton getMediumButton, allReviewsButton ;
+    private JButton getMediumButton, allReviewsButton;
     private MetadataPanel metadataPanel; //Shows the metadata of the current medium
     private ReviewPanel bestReviewPanel, worstReviewPanel; //Shows the worst and best audience review
     private Medium currentMedium; //Represents the current visible medium
@@ -25,7 +25,12 @@ public class RandomMediumTab extends JPanel implements IViewInit {
         this.appView = appView;
     }
 
-    //Initialize all class components inside this panel
+
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
@@ -33,6 +38,11 @@ public class RandomMediumTab extends JPanel implements IViewInit {
         this.initListeners();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout of this panel
@@ -101,6 +111,11 @@ public class RandomMediumTab extends JPanel implements IViewInit {
         componentPanel.add(this.worstReviewPanel, constraints);
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles() {
         //Set margin of the review view panels
@@ -108,6 +123,11 @@ public class RandomMediumTab extends JPanel implements IViewInit {
         this.worstReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
     }
 
+    /**
+     * Initializes panel event listeners
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initListeners(){
         //Init action listener for load medium button to search for a random medium
@@ -125,6 +145,11 @@ public class RandomMediumTab extends JPanel implements IViewInit {
         });
     }
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations(){
         this.getMediumButton.setText(this.appView.getAppModel().getTranslation("button.load"));
@@ -135,6 +160,11 @@ public class RandomMediumTab extends JPanel implements IViewInit {
         this.worstReviewPanel.setTranslations();
     }
 
+    /**
+     * Loads any random medium and fills the panel components
+     *
+     * @BigO: O(n)
+     * **/
     public void searchMedium(){
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); //Set cursor to loading cursor
 
@@ -152,7 +182,7 @@ public class RandomMediumTab extends JPanel implements IViewInit {
 
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
 
-        //Show the user the accept medium dialog where the user can decide to choose, skip or abort the current medium
+        //Show the user an accept medium dialog where the user can decide to choose, skip or abort the current medium
         this.appView.getDialogHandler().showAcceptRecommendationDialog((e) -> this.appView.getDialogHandler().showCloseAppDialog(), (e) -> this.searchMedium(), 1, 1);
     }
 }

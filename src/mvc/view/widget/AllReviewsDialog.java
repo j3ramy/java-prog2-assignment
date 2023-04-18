@@ -28,7 +28,11 @@ public class AllReviewsDialog extends JPanel implements IViewInit {
         this.init(); //Initialize components depending on the loaded reviews
     }
 
-    //Initialize all class components inside this panel
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
@@ -40,6 +44,11 @@ public class AllReviewsDialog extends JPanel implements IViewInit {
         this.reviewViewPanel.fillDataView(this.reviews.get(this.currentIndex)); //Fill review panel
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout of this panel
@@ -86,12 +95,22 @@ public class AllReviewsDialog extends JPanel implements IViewInit {
         componentPanel.add(this.nextButton, constraints);
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles() {
         //Set margin
         this.indexFeedbackLabel.setBorder(new EmptyBorder(5, 0 ,5, 0));
     }
 
+    /**
+     * Initializes panel event listeners
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initListeners(){
         //Initialize action listener to go back and forth through all the reviews
@@ -114,6 +133,11 @@ public class AllReviewsDialog extends JPanel implements IViewInit {
         });
     }
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations() {
         AppModel appModel = this.appView.getAppController().getAppModel();

@@ -28,7 +28,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         this.appView = appView;
     }
 
-    //Initialize all class components inside this panel
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
@@ -36,6 +40,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         this.initListeners();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout of this panel
@@ -104,6 +113,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         componentPanel.add(this.worstReviewPanel, constraints);
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles() {
         //Set margin of the review view panels
@@ -111,6 +125,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         this.worstReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
     }
 
+    /**
+     * Initializes panel event listeners
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initListeners(){
         //Init action listener for load medium button to search for a random medium
@@ -128,6 +147,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         });
     }
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations(){
         this.getMediumsButton.setText(this.appView.getAppModel().getTranslation("button.load"));
@@ -138,6 +162,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         this.worstReviewPanel.setTranslations();
     }
 
+    /**
+     * Loads the Top 100 mediums by rating and fills the panel components
+     *
+     * @BigO: O(n)
+     * **/
     public void searchMedium(){
         //If current search list is null or the last search does not match the new search then reset and do a new search
         if(this.mediums == null){
@@ -148,6 +177,7 @@ public class Top100RatingTab extends JPanel implements IViewInit {
 
             //If search has no mediums found then open a new no medium found JDialog
             if(this.mediums.isEmpty()){
+                this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
                 this.appView.getDialogHandler().showNoMediumFoundDialog();
                 return;
             }
@@ -180,6 +210,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
                 " " + this.appView.getAppModel().getTranslation("dialog.title.average_rating").replace("#", Float.toString(this.currentMedium.getAverageRating())));
     }
 
+    /**
+     * Resets this panel
+     *
+     * @BigO: O(n)
+     * **/
     private void reset(){
         //Clear top 100 and reset current index
         this.mediums = null;
@@ -194,6 +229,12 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
     }
 
+    /**
+     * Checks if currentIndex is at the end of the list
+     *
+     * @return  true when at the end, otherwise false
+     * @BigO: O(1)
+     * **/
     private boolean isAtEndOfResults(){
         return this.currentIndex == this.mediums.size();
     }

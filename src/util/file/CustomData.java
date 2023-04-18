@@ -3,34 +3,48 @@ package util.file;
 import util.enums.Language;
 import util.enums.Provider;
 
-import java.util.ArrayList;
-
 public class CustomData {
     private Language language;
     private Provider[] providers;
 
+    /**
+     * Sets language
+     * @param language new language
+     *
+     * @BigO: O(1)
+     * **/
     public void setLanguage(Language language) {
         this.language = language;
     }
 
+    /**
+     * Gets language
+     * @return  language
+     *
+     * @BigO: O(1)
+     * **/
     public Language getLanguage() {
         return language;
     }
 
+    /**
+     * Sets providers
+     * @param providers providers
+     *
+     * @BigO: O(1)
+     * **/
     public void setProviders(Provider[] providers) {
         this.providers = providers;
     }
 
+    /**
+     * Gets providers
+     * @return  providers
+     *
+     * @BigO: O(1)
+     * **/
     public Provider[] getProviders() {
         return providers;
-    }
-
-    public String[] getProvidersAsString(){
-        ArrayList<String> providers = new ArrayList<>();
-        for(Provider provider : this.providers)
-            providers.add(provider.name());
-
-        return providers.toArray(String[]::new);
     }
 
     public CustomData(Language language, Provider[] providers){
@@ -38,10 +52,11 @@ public class CustomData {
         this.providers = providers;
     }
 
-    public boolean isSet(){
-        return this.providers != null;
-    }
-
+    /**
+     * @return if custom data contains providers
+     *
+     * @BigO: O(n)
+     * **/
     public boolean hasProvider(Provider provider){
         for(Provider p : this.providers)
             if(p == provider) return true;

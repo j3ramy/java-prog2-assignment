@@ -3,6 +3,12 @@ package util.data;
 public class CriticReview extends Review {
     private final boolean sentiment;
 
+    /**
+     * Gets sentiment
+     * @return  sentiment
+     *
+     * @BigO: O(1)
+     * **/
     public boolean getSentiment(){
         return this.sentiment;
     }

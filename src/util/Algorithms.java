@@ -10,6 +10,14 @@ import java.util.*;
 
 public class Algorithms {
 
+    /**
+     * Sorts medium by rating
+     *
+     * @param mediums mediums that should be sorted
+     * @param appModel AppModel reference to get the reviews
+     *
+     * @BigO: O(n)
+     * **/
     public static void sortMediumsByRating(ArrayList<Medium> mediums, AppModel appModel){
         HashMap<Integer, ArrayList<Medium>> mediumsGroupedByRelease = new HashMap<>();
         for(Medium medium : mediums){
@@ -38,23 +46,29 @@ public class Algorithms {
         }
     }
 
-    //Counting sort
+    /**
+     * Sorts medium by release year with help of counting sort algorithm
+     *
+     * @param mediums mediums that should be sorted
+     *
+     * @BigO: O(n)
+     * **/
     public static void sortMediumsByReleaseYear(ArrayList<Medium> mediums) {
-        // Find the maximum release year in the list
+        //Find the maximum release year
         int maxReleaseYear = Year.now().getValue();
 
-        // Initialize the counting array
+        //Initialize counting array
         int[] count = new int[maxReleaseYear + 1];
         for (Medium medium : mediums) {
             count[medium.getReleaseYear()]++;
         }
 
-        // Calculate the cumulative count array
+        //Calculate count array
         for (int i = 1; i <= maxReleaseYear; i++) {
             count[i] += count[i - 1];
         }
 
-        // Create the sorted array
+        //Create sorted array
         Medium[] sorted = new Medium[mediums.size()];
         for (int i = mediums.size() - 1; i >= 0; i--) {
             Medium medium = mediums.get(i);
@@ -63,49 +77,68 @@ public class Algorithms {
             count[medium.getReleaseYear()]--;
         }
 
-        // Copy the sorted array back into the original list
+        //Copy sorted array into the original list by clear it and add all
         mediums.clear();
         mediums.addAll(Arrays.asList(sorted));
     }
 
-    public static void sortAudienceReviewsByRating(ArrayList<AudienceReview> arr) {
-        int n = arr.size();
-        float maxRating = getMaxRating(arr);
+    /**
+     * Sorts audience reviews by rating with help of counting sort algorithm
+     *
+     * @param audienceReviews audience reviews that should be sorted
+     *
+     * @BigO: O(n)
+     * **/
+    public static void sortAudienceReviewsByRating(ArrayList<AudienceReview> audienceReviews) {
+        int audienceCount = audienceReviews.size();
+        int countingSortScale = 10; //Steps between ratings: [0.0, 0.9]
+        float maxRating = getMaxRating(audienceReviews);
 
-        // Erstellen des Count-Arrays und Zählen der Werte
-        ArrayList<AudienceReview>[] count = new ArrayList[(int) (maxRating * 10) + 1];
+        //Create count list and count values
+        ArrayList<AudienceReview>[] count = new ArrayList[(int) (maxRating * countingSortScale) + 1]; //By multiplying the rating by 10, the decimals are removed and will be used for the counting array
         for (int i = 0; i < count.length; i++) {
             count[i] = new ArrayList<>();
         }
 
-        for (AudienceReview audienceReview : arr) {
-            int index = (int) (audienceReview.getRating() * 10);
+        //Get index by rating and add every review to count array sorted
+        for (AudienceReview audienceReview : audienceReviews) {
+            int index = (int) (audienceReview.getRating() * countingSortScale);
             count[index].add(audienceReview);
         }
 
-        // Erstellen des Output-Arrays und Sortieren der Werte
-        ArrayList<AudienceReview> output = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) {
+        //Create output list and fill it with default null values
+        ArrayList<AudienceReview> output = new ArrayList<>(audienceCount);
+        for (int i = 0; i < audienceCount; i++) {
             output.add(null);
         }
 
-        int k = 0;
+        //Add every sorted review to output list
+        int index = 0;
         for (ArrayList<AudienceReview> reviews : count) {
             for (AudienceReview review : reviews) {
-                output.set(k++, review);
+                output.set(index++, review);
             }
         }
 
-        // Kopieren des Output-Arrays in die ursprüngliche ArrayList
-        for (int i = 0; i < n; i++) {
-            arr.set(i, output.get(i));
+        //Copy output array into original list
+        for (int i = 0; i < audienceCount; i++) {
+            audienceReviews.set(i, output.get(i));
         }
     }
 
-    public static float getMaxRating(ArrayList<AudienceReview> arr){
+    /**
+     * Returns the maximum rating of all audience reviews
+     *
+     * @param audienceReviews audience reviews that should be compared
+     *
+     * @return maximum rating as float
+     *
+     * @BigO: O(n)
+     * **/
+    public static float getMaxRating(ArrayList<AudienceReview> audienceReviews){
         float maxFloat = 0f;
 
-        for(AudienceReview review : arr){
+        for(AudienceReview review : audienceReviews){
             if(review.getRating() > maxFloat)
                 maxFloat = review.getRating();
         }
@@ -113,14 +146,23 @@ public class Algorithms {
         return maxFloat;
     }
 
-    public static float getAverageRating(ArrayList<AudienceReview> arr){
+    /**
+     * Returns the average rating of all audience reviews
+     *
+     * @param audienceReviews audience reviews that should be compared
+     *
+     * @return average rating as float
+     *
+     * @BigO: O(n)
+     * **/
+    public static float getAverageRating(ArrayList<AudienceReview> audienceReviews){
         float sum = 0f;
 
-        for(AudienceReview review : arr){
+        for(AudienceReview review : audienceReviews){
             sum += review.getRating();
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-        return Float.parseFloat(decimalFormat.format(sum / arr.size()).replace(",", "."));
+        return Float.parseFloat(decimalFormat.format(sum / audienceReviews.size()).replace(",", "."));
     }
 }

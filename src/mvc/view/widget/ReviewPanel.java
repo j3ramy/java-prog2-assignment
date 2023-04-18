@@ -25,13 +25,22 @@ public class ReviewPanel extends JPanel implements IViewInit {
         this.appView = appView;
     }
 
-    //Initialize all class components inside this panel
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
         this.initStyles();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout of this panel
@@ -73,6 +82,11 @@ public class ReviewPanel extends JPanel implements IViewInit {
         this.add(this.commentScrollPane, constraints);
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles() {
         this.setVisible(false); //Hide by default
@@ -96,6 +110,11 @@ public class ReviewPanel extends JPanel implements IViewInit {
     @Override
     public void initListeners(){}
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations(){
         //Create titled border around all labels and set the text to the correct translation and add margin
@@ -106,6 +125,13 @@ public class ReviewPanel extends JPanel implements IViewInit {
                 BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.reviewdata.comment"))));
     }
 
+    /**
+     * Fills the DataViewPanel
+     *
+     * @param review object of type Review that contains the information which will be loaded into the GUI
+     *
+     * @BigO: O(n)
+     * **/
     public void fillDataView(Review review){
         AppModel appModel = this.appView.getAppController().getAppModel(); //Get app model as cached variable
 
@@ -155,6 +181,11 @@ public class ReviewPanel extends JPanel implements IViewInit {
         this.setVisible(true);
     }
 
+    /**
+     * Clears this panel
+     *
+     * @BigO: O(n)
+     * **/
     private void clear(){
         //Clear all content
         this.mediumTitleLabel.setText("");

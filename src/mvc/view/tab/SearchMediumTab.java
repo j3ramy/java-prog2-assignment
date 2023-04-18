@@ -36,7 +36,11 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         this.appView = appView;
     }
 
-    //Initialize all class components inside this panel
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
@@ -44,6 +48,11 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         this.initListeners();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout of this panel
@@ -142,6 +151,11 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         componentPanel.add(this.worstReviewPanel, constraints);
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles() {
         //Set margin of the review view panels
@@ -149,6 +163,11 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         this.worstReviewPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
     }
 
+    /**
+     * Initializes panel event listeners
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initListeners(){
         //Add radio button listener which will reset the current search when another radio button is selected
@@ -189,6 +208,11 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         });
     }
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations(){
         //Set text of radio button container title text
@@ -206,10 +230,20 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         this.worstReviewPanel.setTranslations();
     }
 
+    /**
+     * Focuses the input text field when tab get active
+     *
+     * @BigO: O(1)
+     * **/
     public void focusInputTextField(){
         this.inputTextField.requestFocusInWindow(); //Focus input text field
     }
 
+    /**
+     * Loads any medium by title, genre or cast and fills the panel components
+     *
+     * @BigO: O(n)
+     * **/
     public void searchMedium(){
         //If current searched mediums list is null or the last search does not match the new search then reset and do a new search
         if(this.mediums == null || !this.lastSearch.equalsIgnoreCase(this.inputTextField.getText())){
@@ -251,6 +285,12 @@ public class SearchMediumTab extends JPanel implements IViewInit {
                 this.currentIndex, this.mediums.size());
     }
 
+    /**
+     * Loads any medium by title, genres and cast from AppModel
+     *
+     * @return  true when mediums are found, otherwise false
+     * @BigO: O(n)
+     * **/
     private boolean getMediums(){
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); //Set cursor to loading cursor
 
@@ -274,6 +314,11 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         return !this.mediums.isEmpty();
     }
 
+    /**
+     * Resets this panel
+     *
+     * @BigO: O(n)
+     * **/
     private void reset(){
         //Clear search and reset current index
         this.mediums = null;
@@ -288,6 +333,12 @@ public class SearchMediumTab extends JPanel implements IViewInit {
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
     }
 
+    /**
+     * Checks if currentIndex is at the end of the list
+     *
+     * @return  true when at the end, otherwise false
+     * @BigO: O(1)
+     * **/
     private boolean isAtEndOfResults(){
         return this.currentIndex == this.mediums.size();
     }

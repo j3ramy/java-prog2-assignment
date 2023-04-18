@@ -16,6 +16,11 @@ public class FileSaver {
         this.appModel = appModel;
     }
 
+    /**
+     * Saves the custom data to file. Will be called after pressing the save button in the settings tab
+     *
+     * @BigO: O(n)
+     * **/
     public void saveCustomData(){
         try{
             File file = new File(FilePaths.CUSTOM_DATA_PATH);
@@ -25,7 +30,7 @@ public class FileSaver {
 
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
             bufferedWriter.write(this.appModel.getCustomData().getLanguage() + "," +
-                    Utils.convertArrayToCsvString(this.appModel.getCustomData().getProvidersAsString()));
+                    Utils.convertArrayToCsvString(this.appModel.getCustomData().getProviders()));
             bufferedWriter.close();
         }
         catch(Exception e){

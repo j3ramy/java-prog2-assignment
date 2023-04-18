@@ -26,18 +26,42 @@ public class AppView extends JFrame implements IViewInit {
     private JButton exitButton;
     private JLabel sidebarImage;
 
+    /**
+     * Gets app controller
+     * @return  app controller
+     *
+     * @BigO: O(1)
+     * **/
     public AppController getAppController() {
         return appController;
     }
 
+    /**
+     * Gets app model
+     * @return  app model
+     *
+     * @BigO: O(1)
+     * **/
     public AppModel getAppModel(){
         return this.appController.getAppModel();
     }
 
+    /**
+     * Gets dialog handler
+     * @return  dialog handler
+     *
+     * @BigO: O(1)
+     * **/
     public DialogHandler getDialogHandler() {
         return dialogHandler;
     }
 
+    /**
+     * Gets tabbed pane
+     * @return  tabbed pane
+     *
+     * @BigO: O(1)
+     * **/
     public JTabbedPane getTabbedPane() {
         return tabbedPane;
     }
@@ -47,6 +71,11 @@ public class AppView extends JFrame implements IViewInit {
         this.dialogHandler = new DialogHandler(this);
     }
 
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
@@ -55,6 +84,11 @@ public class AppView extends JFrame implements IViewInit {
         this.initListeners();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents(){
         this.add(this.mainPanel);
@@ -75,6 +109,11 @@ public class AppView extends JFrame implements IViewInit {
         this.settingsTab.init();
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles(){
         this.mainPanel.setBackground(Color.WHITE);
@@ -89,6 +128,11 @@ public class AppView extends JFrame implements IViewInit {
         this.statusBarPanel.setBorder(new EmptyBorder(0, 5, 0, 0));
     }
 
+    /**
+     * Initializes panel images
+     *
+     * @BigO: O(n)
+     * **/
     public void initImages(){
         try {
             ImageIcon imageIcon = new ImageIcon(FilePaths.MENU_IMAGE_PATH);
@@ -101,6 +145,11 @@ public class AppView extends JFrame implements IViewInit {
         }
     }
 
+    /**
+     * Initializes panel event listeners
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initListeners(){
         this.tabbedPane.addChangeListener(e -> {
@@ -113,6 +162,11 @@ public class AppView extends JFrame implements IViewInit {
         this.exitButton.addActionListener(e -> this.dialogHandler.showCloseAppDialog());
     }
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations() {
         this.exitButton.setText(this.getAppController().getAppModel().getTranslation("button.main.close"));
@@ -130,10 +184,20 @@ public class AppView extends JFrame implements IViewInit {
         this.setStatusBarText(LoadingState.READY);
     }
 
+    /**
+     * Sets the settings inside the gui depending on data inside the settings tab
+     *
+     * @BigO: O(n)
+     * **/
     public void setSettings(){
-        this.settingsTab.fillSettings(this.appController.getAppModel().getCustomData());
+        this.settingsTab.setSettings(this.appController.getAppModel().getCustomData());
     }
 
+    /**
+     * Sets all translations in all tabs and components
+     *
+     * @BigO: O(n)
+     * **/
     public void setAllTranslations(){
         this.setTranslations();
 
@@ -144,6 +208,13 @@ public class AppView extends JFrame implements IViewInit {
         this.settingsTab.setTranslations();
     }
 
+    /**
+     * Sets the text of the status bar
+     *
+     * @param loadingState passes the loading state that should be shown
+     *
+     * @BigO: O(n)
+     * **/
     public void setStatusBarText(LoadingState loadingState){
         JLabel statusBarLabel = (JLabel) this.statusBarPanel.getComponents()[0];
 
@@ -156,22 +227,39 @@ public class AppView extends JFrame implements IViewInit {
         }
     }
 
+    /**
+     * Sets the text of the status bar
+     *
+     * @param translationKey sets the header text that welcomes the user. Should be passed as translation key
+     *
+     * @BigO: O(n)
+     * **/
     public void setHeaderText(String translationKey){
         JLabel userFeedbackLabel = (JLabel) this.headerPanel.getComponents()[0];
         userFeedbackLabel.setText(this.getAppController().getAppModel().getTranslation(translationKey));
         userFeedbackLabel.setFont(new Font(null, Font.BOLD, 14));
     }
 
+    /**
+     * Enable all tabs that depend on loaded data
+     *
+     * @BigO: O(n)
+     * **/
     public void enableTabs(){
         for(int i = 0; i < this.tabbedPane.getTabCount(); i++){
             this.tabbedPane.setEnabledAt(i, true);
         }
     }
 
+    /**
+     * Disable all tabs that depend on loaded data
+     *
+     * @BigO: O(n)
+     * **/
     public void disableTabs(){
         for(int i = 0; i < this.tabbedPane.getTabCount(); i++){
             //Only disable tabs which have to depend on data sources (which might not be loaded completely)
-            if(i != this.tabbedPane.getTabCount() - 1) //Disable all tabs except start and settings tab
+            if(i != this.tabbedPane.getTabCount() - 1) //Disable all tabs except settings tab
                 this.tabbedPane.setEnabledAt(i, false);
         }
     }

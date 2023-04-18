@@ -25,13 +25,22 @@ public class SettingsTab extends JPanel implements IViewInit {
         this.appView = appView;
     }
 
-    //Initialize all class components inside this panel
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
         this.initListeners();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout
@@ -91,12 +100,22 @@ public class SettingsTab extends JPanel implements IViewInit {
     @Override
     public void initStyles() {}
 
+    /**
+     * Initializes panel event listeners
+     *
+     * @BigO: O(1)
+     * **/
     @Override
     public void initListeners(){
         //Initialize action listener to save the settings when save button is clicked
         this.saveButton.addActionListener(e -> this.saveSettings());
     }
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations(){
         this.languageLabel.setText(this.appView.getAppModel().getTranslation("label.settings.language"));
@@ -106,7 +125,13 @@ public class SettingsTab extends JPanel implements IViewInit {
         this.saveButton.setText(this.appView.getAppModel().getTranslation("button.settings.save"));
     }
 
-    public void fillSettings(CustomData data){
+    /**
+     * Sets the settings inside the gui depending on data
+     *
+     * @param data CustomData object which contains the custom settings like language and providers
+     * @BigO: O(n)
+     * **/
+    public void setSettings(CustomData data){
         //Set the checkboxes selected when provider is saved in custom data
         for(Provider provider : data.getProviders()){
             if(provider == Provider.NETFLIX) this.netflixCheckbox.setSelected(true);
@@ -119,6 +144,11 @@ public class SettingsTab extends JPanel implements IViewInit {
         this.languageComboBox.setSelectedItem(data.getLanguage());
     }
 
+    /**
+     * Get the settings from GUI and saves it into a new CustomData object. This will be sent to FileSaver.java
+     *
+     * @BigO: O(n)
+     * **/
     private void saveSettings(){
         //Get all selected providers from checkboxes
         ArrayList<Provider> providers = new ArrayList<>();

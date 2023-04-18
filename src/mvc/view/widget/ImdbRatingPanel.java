@@ -23,13 +23,22 @@ public class ImdbRatingPanel extends JPanel implements IViewInit {
         this.appView = appView;
     }
 
-    //Initialize all class components inside this panel
+    /**
+     * Initializes this panel
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void init(){
         this.initComponents();
         this.initStyles();
     }
 
+    /**
+     * Initializes panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initComponents() {
         //Set layout of this panel
@@ -89,6 +98,11 @@ public class ImdbRatingPanel extends JPanel implements IViewInit {
         this.add(this.posterImage, constraints);
     }
 
+    /**
+     * Initializes panel styles
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void initStyles() {
         //Hide by default
@@ -108,6 +122,11 @@ public class ImdbRatingPanel extends JPanel implements IViewInit {
     @Override
     public void initListeners(){}
 
+    /**
+     * Sets translation of panel components
+     *
+     * @BigO: O(n)
+     * **/
     @Override
     public void setTranslations(){
         //Create titled border around all labels and set the text to the correct translation and add margin
@@ -136,6 +155,13 @@ public class ImdbRatingPanel extends JPanel implements IViewInit {
                 BorderFactory.createTitledBorder(this.appView.getAppModel().getTranslation("label.imdb.star4"))));
     }
 
+    /**
+     * Fills the DataViewPanel
+     *
+     * @param rating object of ImdbRating that contains the information which will be loaded into the GUI
+     *
+     * @BigO: O(n)
+     * **/
     public void fillDataView(ImdbRating rating){
         //If rating is null the reset this panel otherwise fill it
         if(rating != null){
@@ -160,6 +186,13 @@ public class ImdbRatingPanel extends JPanel implements IViewInit {
         }
     }
 
+    /**
+     * Sets the image of the medium poster
+     *
+     * @param url url to the image
+     *
+     * @BigO: O(n)
+     * **/
     private void setMediumPoster(String url){
         try{
             //Get image from url and set the image/icon of the poster image container
@@ -169,6 +202,11 @@ public class ImdbRatingPanel extends JPanel implements IViewInit {
         catch(Exception ignored){}
     }
 
+    /**
+     * Clears this panel
+     *
+     * @BigO: O(n)
+     * **/
     private void clear(){
         //Clear all labels and remove the poster
         this.imdbRatingLabel.setText("");

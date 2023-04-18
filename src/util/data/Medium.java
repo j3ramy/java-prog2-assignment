@@ -16,62 +16,152 @@ public class Medium {
 
     private float averageRating = 0f;
 
+    /**
+     * Gets id
+     * @return  id
+     *
+     * @BigO: O(1)
+     * **/
     public String getId() {
         return id;
     }
 
+    /**
+     * Gets type
+     * @return  type
+     *
+     * @BigO: O(1)
+     * **/
     public MediumType getType() {
         return type;
     }
 
+    /**
+     * Gets providers
+     * @return  providers
+     *
+     * @BigO: O(1)
+     * **/
     public List<Provider> getProviders() {
         return providers;
     }
 
+    /**
+     * Gets title
+     * @return  title
+     *
+     * @BigO: O(1)
+     * **/
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Gets description
+     * @return  description
+     *
+     * @BigO: O(1)
+     * **/
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Gets genres
+     * @return  genres
+     *
+     * @BigO: O(1)
+     * **/
     public String getGenres() {
         return genres;
     }
 
+    /**
+     * Gets duration
+     * @return  duration
+     *
+     * @BigO: O(1)
+     * **/
     public String getDuration() {
         return duration;
     }
 
+    /**
+     * Gets release year
+     * @return  release year
+     *
+     * @BigO: O(1)
+     * **/
     public int getReleaseYear() {
         return releaseYear;
     }
 
+    /**
+     * Gets cast
+     * @return cast
+     *
+     * @BigO: O(1)
+     * **/
     public Person[] getCast() {
         return cast;
     }
 
+    /**
+     * Gets countries
+     * @return  countries
+     *
+     * @BigO: O(1)
+     * **/
     public String getCountries() {
         return countries;
     }
 
+    /**
+     * Gets age rating
+     * @return  age rating
+     *
+     * @BigO: O(1)
+     * **/
     public String getAgeRating() {
         return ageRating;
     }
 
+    /**
+     * Gets added at
+     * @return  added at
+     *
+     * @BigO: O(1)
+     * **/
     public String getAddedAt() {
         return addedAt;
     }
 
+    /**
+     * Gets seasons
+     * @return  seasons
+     *
+     * @BigO: O(1)
+     * **/
     public String getSeasons() {
         return seasons;
     }
 
+    /**
+     * Gets average rating
+     * @return  average rating
+     *
+     * @BigO: O(1)
+     * **/
     public float getAverageRating() {
         return averageRating;
     }
 
+    /**
+     * Sets average rating for this medium
+     * @param averageRating new language
+     *
+     * @BigO: O(1)
+     * **/
     public void setAverageRating(float averageRating) {
         this.averageRating = averageRating;
     }
@@ -91,6 +181,5 @@ public class Medium {
         this.countries = countries.isEmpty() ? "N/A" : countries;
         this.ageRating = ageRating.isEmpty() ? "N/A" : ageRating;
         this.addedAt = addedAt.isEmpty() ? "N/A" : addedAt;
-
     }
 }

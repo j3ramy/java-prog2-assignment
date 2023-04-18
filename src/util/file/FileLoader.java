@@ -20,6 +20,11 @@ public class FileLoader {
         this.appModel = appModel;
     }
 
+    /**
+     * Loads custom data and mediums. Entry point for all file loadings
+     *
+     * @BigO: O(n)
+     * **/
     public void loadFiles(){
         this.loadCustomData();
 
@@ -52,6 +57,11 @@ public class FileLoader {
         }).start();
     }
 
+    /**
+     * Loads custom data
+     *
+     * @BigO: O(n)
+     * **/
     private void loadCustomData(){
         try{
             //Check if file exists
@@ -98,10 +108,20 @@ public class FileLoader {
         }
     }
 
+    /**
+     * Creates default custom data when no custom data found
+     *
+     * @BigO: O(1)
+     * **/
     private void createDefaultCustomData(){
         this.appModel.setCustomData(new CustomData(Language.EN, Provider.values()));
     }
 
+    /**
+     * Loads translations
+     *
+     * @BigO: O(n)
+     * **/
     private void loadTranslations(){
         try{
             //Check if file exists
@@ -132,6 +152,11 @@ public class FileLoader {
 
     //Total records data source: 20.118
     //Total records loaded: 19.640; difference because Netflix (154), DP (33), Amazon (287), Apple (4) haven't been loaded
+    /**
+     * Loads custom data
+     *
+     * @BigO: O(n)
+     * **/
     private void loadMediums(){
         if(this.appModel.getCustomData().hasProvider(Provider.NETFLIX)) this.loadMediumsFromProvider(FilePaths.NETFLIX_TITLES_PATH, Provider.NETFLIX);
         if(this.appModel.getCustomData().hasProvider(Provider.DISNEY_PLUS)) this.loadMediumsFromProvider(FilePaths.DISNEY_PLUS_TITLES_PATH, Provider.DISNEY_PLUS);
@@ -143,6 +168,14 @@ public class FileLoader {
         }
     }
 
+    /**
+     * Loads all mediums from file by passed provider
+     *
+     * @param path file path for the file that should be read
+     * @param provider important for medium creating
+     *
+     * @BigO: O(n)
+     * **/
     private void loadMediumsFromProvider(String path, Provider provider){
         try{
             //Check if file exists
@@ -196,9 +229,16 @@ public class FileLoader {
         }
     }
 
-    //Netflix: 1 type, 2 title, 3 director, 4 cast, 5 country, 6 date_added, 7 release_year, 8 rating, 9 duration, 10 listed_in, 11 description
-    //Disney: type,title,director,cast,country,date_added,release_year,rating,duration,listed_in,description
-    //Amazon: type,title,director,cast,country,date_added,release_year,rating,duration,listed_in,description
+    /**
+     * Creates an instance of a Netflix, Disney or Amazon medium
+     *
+     * @param data split data from csv file
+     * @param provider important for medium creating
+     *
+     * @return created medium
+     *
+     * @BigO: O(n)
+     * **/
     private Medium createNDAMedium(Object[] data, Provider provider){
         MediumType mediumType = this.convertMediumType((String) data[1]);
         return new Medium(
@@ -218,8 +258,16 @@ public class FileLoader {
         );
     }
 
-    //Apple T: 0 id, 1 title, 2 type, 3 description, 4 release_year, 5 age_certification, 6 runtime, 7 genres, 8 production_countries, 9 seasons
-    //Apple C: id,name,character,role
+    /**
+     * Creates an instance of an Apple Plus medium because the attributes of the file are reordered
+     *
+     * @param data split data from csv file
+     * @param provider important for medium creating
+     *
+     * @return created medium
+     *
+     * @BigO: O(n)
+     * **/
     private Medium createApplePlusMedium(Object[] data, Provider provider){
         MediumType mediumType = this.convertMediumType((String) data[2]);
         return new Medium(
@@ -239,6 +287,15 @@ public class FileLoader {
         );
     }
 
+    /**
+     * Returns apple plus cast by movie id after loading the apple plus credits
+     *
+     * @param movieId movie id which should be searched for
+     *
+     * @return cast
+     *
+     * @BigO: O(n)
+     * **/
     private Person[] getApplePlusCastByMovie(String movieId){
         ArrayList<Person> cast = new ArrayList<>();
         for(Person person : this.loadApplePlusCredits()){
@@ -249,6 +306,13 @@ public class FileLoader {
         return cast.toArray(Person[]::new);
     }
 
+    /**
+     * Loads apple plus cast by movie id from file
+     *
+     * @return person array
+     *
+     * @BigO: O(n)
+     * **/
     private Person[] loadApplePlusCredits(){
         try{
             //Check if file exists
@@ -291,11 +355,24 @@ public class FileLoader {
         return new Person[]{};
     }
 
+    /**
+     * Loads audience and critics reviews
+     *
+     * @BigO: O(n)
+     * **/
     private void loadReviews(){
         this.loadReviewsByType(FilePaths.CRITIC_REVIEWS_PATH, ReviewType.CRITICS);
         this.loadReviewsByType(FilePaths.AUDIENCE_REVIEWS_PATH, ReviewType.AUDIENCE);
     }
 
+    /**
+     * Loads review by type
+     *
+     * @param path file path
+     * @param type review type
+     *
+     * @BigO: O(n)
+     * **/
     private void loadReviewsByType(String path, ReviewType type){
         try{
             //Check if file exists
@@ -345,8 +422,11 @@ public class FileLoader {
         }
     }
 
-    // 0 Poster_Link, 1 Series_Title, 2 Released_Year, 3 Certificate, 4 Runtime, 5 Genre, 6 IMDB_Rating, 7 Overview, 8 Meta_score, 9 Director, 10 Star1,
-    // 11 Star2, 12 Star3, 13 Star4, 14 No_of_Votes, 15 Gross
+    /**
+     * Loads IMDB ratings
+     *
+     * @BigO: O(n)
+     * **/
     private void loadImdbRatings(){
         try{
             //Check if file exists
@@ -405,14 +485,45 @@ public class FileLoader {
         }
     }
 
+    /**
+     * Helper method that converts a passed medium type string to a MediumType type
+     *
+     * @param type string type to convert
+     *
+     * @return MediumType type
+     *
+     * @BigO: O(n)
+     * **/
     private MediumType convertMediumType(String type){
         return type.toLowerCase().contains("show") ? MediumType.SHOW : MediumType.MOVIE;
     }
 
+    /**
+     * Helper method that converts a data object to a string
+     *
+     * @param data data to be converted
+     * @param separator separator that separates the different objects
+     *
+     * @return converted string
+     *
+     * @BigO: O(n)
+     * **/
     private String convertObjectToString(Object data, String separator){
         return this.convertObjectToString(data, separator, true, false);
     }
 
+    /**
+     * Helper method that converts a data object to a string
+     *
+     * @param data data to be converted
+     * @param separator separator that separates the different objects
+     * @param uppercaseAll should every word be uppercase
+     * @param isLink is data any link or url
+     *
+     * @return converted string
+     *
+     * @BigO: O(n)
+     * **/
     private String convertObjectToString(Object data, String separator, boolean uppercaseAll, boolean isLink) {
         String string = "";
         if(data instanceof ArrayList<?>)
@@ -428,6 +539,16 @@ public class FileLoader {
             return string;
     }
 
+    /**
+     * Helper method that joins director data with actor data because the director is part of the cast itself
+     *
+     * @param directorData director data
+     * @param actorData actor data
+     *
+     * @return joined cast
+     *
+     * @BigO: O(n)
+     * **/
     private Person[] getCast(Object directorData, Object actorData){
         ArrayList<Person> cast = new ArrayList<>();
 
@@ -457,6 +578,11 @@ public class FileLoader {
         return cast.toArray(Person[]::new);
     }
 
+    /**
+     * Evaluates how many read-ins have been failed and passes this statistics to the frontend where it will be displayed in a dialog
+     *
+     * @BigO: O(n)
+     * **/
     private void showSkipStats(){
         StringBuilder skippedStats = new StringBuilder();
         int totalSkips = 0;
@@ -471,28 +597,69 @@ public class FileLoader {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
-    //NDA = Netflix, Disney Plus, Amazon Prime
+    /**
+     * Checks if the data length equals the column amount from file. For Netflix, Disney and Amazon only
+     *
+     * @return true when column counts are equal otherwise false
+     *
+     * @BigO: O(1)
+     * **/
     private boolean isNDAFormattingValid(Object[] data){
         return data.length == 12;
     }
 
+    /**
+     * Checks if the data length equals the column amount from file. For Apple Plus only
+     *
+     * @return true when column counts are equal otherwise false
+     *
+     * @BigO: O(1)
+     * **/
     private boolean isApplePlusTitlesFormattingValid(Object[] data){
         return data.length == 15;
     }
 
+    /**
+     * Checks if the data length equals the column amount from file. For Apple Plus Credits only
+     *
+     * @return true when column counts are equal otherwise false
+     *
+     * @BigO: O(1)
+     * **/
     private boolean isApplePlusCreditsFormattingValid(Object[] data){
         return data.length == 5;
     }
 
+    /**
+     * Checks if the data length equals the column amount from file. For Reviews only
+     *
+     * @return true when column counts are equal otherwise false
+     *
+     * @BigO: O(n)
+     * **/
     private boolean isReviewFormattingValid(Object[] data){
         return data.length == 3 && !(data[1] instanceof ArrayList<?>) && Utils.isNumeric((String) data[1]);
     }
 
+    /**
+     * Checks if the data length equals the column amount from file. For Imdb Rating only
+     *
+     * @return true when column counts are equal otherwise false
+     *
+     * @BigO: O(n)
+     * **/
     private boolean isImdbRatingFormattingValid(Object[] data){
         return data.length == 16;
     }
 
     private final String[] blacklist = new String[]{"s7384"};
+    /**
+     * Checks medium id is in blacklist. If yes then don't load it
+     *
+     * @return true when medium id is found in blacklist otherwise false
+     *
+     * @BigO: O(n)
+     * **/
     private boolean isBlacklisted(String id){
         for(String s : blacklist)
             if(s.equalsIgnoreCase(id))
