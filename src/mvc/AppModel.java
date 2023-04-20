@@ -257,13 +257,19 @@ public class AppModel {
         for(Map.Entry<Float, ArrayList<Medium>> entry : map.descendingMap().entrySet()){
             entry.getValue().forEach((medium) -> medium.setAverageRating(entry.getKey()));
 
+            /*
             if(sortedMediums.size() >= 100)
                 return sortedMediums;
 
+
+             */
             sortedMediums.addAll(entry.getValue());
         }
 
-        return sortedMediums;
+        //TODO: List is 102 elements big and not 100 for some reason
+        System.out.println(sortedMediums.size());
+
+        return (ArrayList<Medium>) sortedMediums.subList(0, 100);
     }
 
     /**

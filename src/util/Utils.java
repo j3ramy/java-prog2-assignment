@@ -18,10 +18,12 @@ public class Utils {
         StringBuilder s = new StringBuilder();
 
         for(int i = 0; i < array.length; i++){
-            s.append(array[i]);
+            if(array[i] != null){
+                s.append(array[i]);
 
-            if(i < array.length - 1)
-                s.append(";");
+                if(i < array.length - 1)
+                    s.append(";");
+            }
         }
 
         return s.toString();
@@ -50,7 +52,7 @@ public class Utils {
         int startIndex = -1, endIndex = -1; //Start/End of an array marked by "
         for(int i = 0; i < rawData.length; i++){
             //Check if inner array contains only one object => simultaneously start and end of array
-            if(countCharsByChar(rawData[i], '\"') == 2){
+            if(countChars(rawData[i], '\"') == 2){
                 startIndex = i;
                 endIndex = i;
             }
@@ -88,7 +90,7 @@ public class Utils {
      *
      * @BigO: O(n)
      * **/
-    public static void removeQuotes(Object[] lineAsArray){
+    public static void removeQuotes(String[] lineAsArray){
         for (Object o : lineAsArray) {
             if (o instanceof List<?>) {
                 ArrayList<String> innerArrayAsList = (ArrayList<String>) o;
@@ -107,7 +109,7 @@ public class Utils {
      *
      * @BigO: O(n)
      * **/
-    public static int countCharsByChar(String s, char searchFor){
+    public static int countChars(String s, char searchFor){
         int counter = 0;
         for(Character c : s.toCharArray())
             if(c == searchFor) counter++;
@@ -197,7 +199,7 @@ public class Utils {
      *
      * @BigO: O(n)
      * **/
-    public static String uppercaseAll(String s){
+    public static String uppercase(String s){
         if(s.isEmpty())
             return "";
 

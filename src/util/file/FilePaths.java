@@ -9,8 +9,8 @@ public class FilePaths {
     public static final String APPLE_PLUS_TITLES_PATH = "././resources/data/converted/appleplus_titles.csv";
     public static final String APPLE_PLUS_CREDITS_PATH = "././resources/data/converted/appleplus_credits.csv";
     public static final String IMDB_RANKING_PATH = "././resources/data/converted/imdb_top_1000.csv";
-    public static final String CRITIC_REVIEWS_PATH = "././resources/data/critic_reviews.csv";
-    public static final String AUDIENCE_REVIEWS_PATH = "././resources/data/audience_reviews.csv";
+    public static final String CRITIC_REVIEWS_PATH = "././resources/data/converted/critic_reviews.csv";
+    public static final String AUDIENCE_REVIEWS_PATH = "././resources/data/converted/audience_reviews.csv";
 
     public static final String MENU_IMAGE_PATH = "././resources/images/menu_image.png";
 }

@@ -75,6 +75,6 @@ public class Person {
         if(this.name == null || this.role == null)
             return "N/A";
 
-        return Utils.uppercaseAll(this.role.name()) + ": " + this.name + " (" + this.character + ")";
+        return Utils.uppercase(this.role.name()) + ": " + this.name + " (" + this.character + ")";
     }
 }

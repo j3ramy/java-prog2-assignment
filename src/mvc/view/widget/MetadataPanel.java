@@ -226,10 +226,10 @@ public class MetadataPanel extends JPanel implements IViewInit {
         this.titleLabel.setText(medium.getTitle() + " (" + (medium.getReleaseYear() == 0 ? "N/A" : medium.getReleaseYear()) + ")");
 
         //Set medium type and format it to correct uppercase
-        this.typeLabel.setText(Utils.uppercaseAll(medium.getType().name()));
+        this.typeLabel.setText(Utils.uppercase(medium.getType().name()));
 
         //Format providers text and set the label
-        String formattedKey = Utils.uppercaseAll(Utils.joinArray(Utils.joinList(medium.getProviders(), ", ").split("_"), " "));
+        String formattedKey = Utils.uppercase(Utils.joinArray(Utils.joinList(medium.getProviders(), ", ").split("_"), " "));
         this.providerLabel.setText(formattedKey);
 
         //Set the label texts depending on the passed medium
@@ -238,7 +238,7 @@ public class MetadataPanel extends JPanel implements IViewInit {
         this.seasonLabel.setText(medium.getSeasons() == -1 ? "N/A" : Integer.toString(medium.getSeasons()));
         this.descriptionTextArea.setText(medium.getDescription().trim());
         this.ageRatingLabel.setText(medium.getAgeRating());
-        this.castTextArea.setText(Utils.joinArray(medium.getCast(), ", "));
+        this.castTextArea.setText(Utils.joinArray(medium.getCast(), ",\n"));
         this.countryTextArea.setText(medium.getCountries());
         this.addedAtLabel.setText(medium.getAddedAt());
 

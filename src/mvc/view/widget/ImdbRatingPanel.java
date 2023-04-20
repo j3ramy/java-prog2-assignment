@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.Arrays;
 
 public class ImdbRatingPanel extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference

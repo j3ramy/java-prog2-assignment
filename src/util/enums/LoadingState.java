@@ -5,5 +5,5 @@ public enum LoadingState {
     SEARCH,
     LOAD_MEDIUMS,
     LOAD_REVIEWS,
-    LOAD_IMDB_RATING
+    LOAD_IMDB_RATING,
 }

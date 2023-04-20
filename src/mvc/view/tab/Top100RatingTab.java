@@ -6,6 +6,7 @@ import mvc.view.widget.MetadataPanel;
 import mvc.view.widget.ReviewPanel;
 import util.data.AudienceReview;
 import util.data.Medium;
+import util.enums.LoadingState;
 import util.interfaces.IViewInit;
 
 import javax.swing.*;
@@ -174,9 +175,11 @@ public class Top100RatingTab extends JPanel implements IViewInit {
 
             this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); //Set cursor to loading cursor
             this.mediums = this.appView.getAppModel().getTop100ByReviews(); //Get top 100 mediums by rating by AppModel
+            System.out.println(this.mediums.size());
 
             //If search has no mediums found then open a new no medium found JDialog
             if(this.mediums.isEmpty()){
+                this.appView.setStatusBarText(LoadingState.READY);
                 this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
                 this.appView.getDialogHandler().showNoMediumFoundDialog();
                 return;
@@ -203,6 +206,7 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         this.bestReviewPanel.fillDataView(reviews[1]); //Fill best review view panel
 
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
+        this.appView.setStatusBarText(LoadingState.READY);
 
         //Show the user the accept medium dialog where the user can decide to choose, skip or abort the current medium
         this.appView.getDialogHandler().showAcceptRecommendationDialog((e) -> this.appView.getDialogHandler().showCloseAppDialog(), (e) -> this.searchMedium(),
@@ -226,6 +230,7 @@ public class Top100RatingTab extends JPanel implements IViewInit {
         this.bestReviewPanel.setVisible(false);
         this.worstReviewPanel.setVisible(false);
 
+        this.appView.setStatusBarText(LoadingState.READY);
         this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); //Set cursor to default cursor
     }
 

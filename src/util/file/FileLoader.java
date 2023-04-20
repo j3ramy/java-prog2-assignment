@@ -173,8 +173,6 @@ public class FileLoader {
             this.loadApplePlusCredits();
             this.loadMediumsFromProvider(FilePaths.APPLE_PLUS_TITLES_PATH, Provider.APPLE_PLUS);
         }
-
-        System.out.println(this.appModel.getMediums().size());
     }
 
     /**
@@ -259,16 +257,16 @@ public class FileLoader {
                 data[0],
                 mediumType,
                 provider,
-                this.convertObjectToString(data[2], "/"),
-                this.convertObjectToString(data[data.length - 1], ", ", false, false),
-                this.convertObjectToString(data[10], ", "),
+                this.convertObjectToString(data[2]),
+                this.convertObjectToString(data[data.length - 1], false, false),
+                this.convertObjectToString(data[10]),
                 mediumType == MediumType.MOVIE ? duration : -1, //Duration contains duration in min
                 mediumType == MediumType.SHOW ? duration : -1, //Duration contains duration in seasons
                 data[7],
                 this.getCast(data[3], data[4]),
-                this.convertObjectToString(data[5], ", "),
+                this.convertObjectToString(data[5]),
                 data[8],
-                this.convertObjectToString(data[6], ", ")
+                this.convertObjectToString(data[6])
         );
     }
 
@@ -294,14 +292,14 @@ public class FileLoader {
                 data[0],
                 mediumType,
                 provider,
-                this.convertObjectToString(data[1], "/"),
-                this.convertObjectToString(data[3], ", ", false, false),
-                this.convertObjectToString(data[7], ", "),
+                this.convertObjectToString(data[1]),
+                this.convertObjectToString(data[3], false, false),
+                this.convertObjectToString(data[7]),
                 mediumType == MediumType.MOVIE ? duration : -1,
                 mediumType == MediumType.SHOW ? seasons : -1,
                 data[4],
                 this.getApplePlusCastByMovie(data[0]),
-                this.convertObjectToString(data[8], ", "),
+                this.convertObjectToString(data[8]),
                 data[5],
                 ""
         );
@@ -357,7 +355,7 @@ public class FileLoader {
                 }
 
                 if(Utils.containsEnumValue(data[4], PersonRole.class)){
-                    Person person = new Person(this.convertObjectToString(data[2], " "), this.convertObjectToString(data[3], " "), PersonRole.valueOf(data[4]));
+                    Person person = new Person(this.convertObjectToString(data[2]), this.convertObjectToString(data[3]), PersonRole.valueOf(data[4]));
                     person.setMovieId(data[1]);
 
                     credits.add(person);
@@ -409,7 +407,7 @@ public class FileLoader {
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
                 //TODO: Replace Object by String when formatted reviews are available
-                Object[] data = Utils.splitCsvLine(line, false);
+                String[] data = line.split(";");
                 //Object[] data = line.split(";");
 
                 //Check if data/line is well formatted regarding the default column amount, otherwise skip it
@@ -418,7 +416,7 @@ public class FileLoader {
                     continue;
                 }
 
-                String title = data[0] instanceof ArrayList<?> ? Utils.joinList((List<?>) data[0], ", ") : (String) data[0];
+                String title = data[0];
                 if(!this.appModel.isTitleInMediums(title)){
                     continue;
                 }
@@ -426,12 +424,12 @@ public class FileLoader {
                 Review review;
                 if(type == ReviewType.CRITICS){
                     boolean sentiment = !data[1].equals("0");
-                    review = new CriticReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false, false),
+                    review = new CriticReview(this.convertObjectToString(data[0]), this.convertObjectToString(data[2], false, false),
                             sentiment);
                 }
                 else{
-                    review = new AudienceReview(this.convertObjectToString(data[0], "/"), this.convertObjectToString(data[2], " ", false, false),
-                             Float.parseFloat((String) data[1]));
+                    review = new AudienceReview(this.convertObjectToString(data[0]), this.convertObjectToString(data[2], false, false),
+                             Float.parseFloat(data[1]));
                 }
 
                 this.appModel.getReviews().add(review);
@@ -482,14 +480,14 @@ public class FileLoader {
                 Medium imdbMedium = this.appModel.getMediumByTitle(title);
                 if(imdbMedium != null){
                     ArrayList<String> starsAsString = new ArrayList<>();
-                    starsAsString.add(this.convertObjectToString(data[10], " "));
-                    starsAsString.add(this.convertObjectToString(data[11], " "));
-                    starsAsString.add(this.convertObjectToString(data[12], " "));
-                    starsAsString.add(this.convertObjectToString(data[13], " "));
+                    starsAsString.add(this.convertObjectToString(data[10]));
+                    starsAsString.add(this.convertObjectToString(data[11]));
+                    starsAsString.add(this.convertObjectToString(data[12]));
+                    starsAsString.add(this.convertObjectToString(data[13]));
 
                     ImdbRating rating = new ImdbRating(
                             imdbMedium,
-                            this.convertObjectToString(data[0], ",", false, true),
+                            this.convertObjectToString(data[0], false, true),
                             data[6].isBlank() ? 0f : Float.parseFloat(data[6]),
                             data[8].isBlank() ? 0 : Integer.parseInt(data[8]),
                             data[14].isBlank() ? 0 : Integer.parseInt(data[14]),
@@ -526,21 +524,18 @@ public class FileLoader {
      * Helper method that converts a data object to a string
      *
      * @param data data to be converted
-     * @param separator separator that separates the different objects
-     *
      * @return converted string
      *
      * @BigO: O(n)
      * **/
-    private String convertObjectToString(Object data, String separator){
-        return this.convertObjectToString(data, separator, true, false);
+    private String convertObjectToString(String data){
+        return this.convertObjectToString(data, true, false);
     }
 
     /**
      * Helper method that converts a data object to a string
      *
      * @param data data to be converted
-     * @param separator separator that separates the different objects
      * @param uppercaseAll should every word be uppercase
      * @param isLink is data any link or url
      *
@@ -548,15 +543,13 @@ public class FileLoader {
      *
      * @BigO: O(n)
      * **/
-    private String convertObjectToString(Object data, String separator, boolean uppercaseAll, boolean isLink) {
+    private String convertObjectToString(String data, boolean uppercaseAll, boolean isLink) {
         String string = "";
-        if(data instanceof ArrayList<?>)
-            string = Utils.joinList((List<?>) data, separator);
-        else if(!((String) data).isEmpty())
-            string = (String) data;
+        if(!data.isEmpty())
+            string = data;
 
         if(uppercaseAll)
-            return Utils.uppercaseAll(Utils.removeForbiddenChars(string));
+            return Utils.uppercase(Utils.removeForbiddenChars(string));
         else if(!isLink)
             return Utils.removeForbiddenChars(string);
         else
@@ -579,13 +572,15 @@ public class FileLoader {
         //Add directors
         if(directorData != null){
             if(!directorData.isEmpty())
-                cast.add(new Person(directorData, null, PersonRole.DIRECTOR));
+                for(String director : directorData.split(", "))
+                    cast.add(new Person(Utils.removeForbiddenChars(director), null, PersonRole.DIRECTOR));
         }
 
         //Add actors
         if(actorData != null){
             if(!actorData.isEmpty()){
-                cast.add(new Person(actorData, null, PersonRole.ACTOR));
+                for(String actor : actorData.split(", "))
+                    cast.add(new Person(Utils.removeForbiddenChars(actor), null, PersonRole.ACTOR));
             }
         }
 
@@ -601,7 +596,7 @@ public class FileLoader {
         StringBuilder skippedStats = new StringBuilder();
         int totalSkips = 0;
         for (Map.Entry<String, Integer> entry : this.loadingSkips.entrySet()) {
-            String formattedKey = Utils.uppercaseAll(Utils.joinArray(entry.getKey().split("_"), " "));
+            String formattedKey = Utils.uppercase(Utils.joinArray(entry.getKey().split("_"), " "));
             if(entry.getValue() != 0){
                 skippedStats.append(formattedKey).append(": ").append(entry.getValue()).append('\n');
                 totalSkips += entry.getValue();
