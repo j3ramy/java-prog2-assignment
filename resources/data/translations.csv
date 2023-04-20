@@ -1,71 +1,71 @@
-label.settings.language,Sprache:,Language:
-label.settings.providers,Deine Anbieter:,Your Providers:
-label.main.settings,Einstellungen,Settings
-label.main.random_medium,Zufälliges Medium,Random Medium
-label.main.search_medium,Medium suchen,Search Medium
-label.main.top_100_imdb,Top 100 nach IMDB,Top 100 by IMDB
-label.main.top_100_rating,Top 100 nach Bewertungen,Top 100 by Reviews
-label.user.welcome,Willkommen! Navigiere durch die Tabs um die verschiedenen Funktionen zu nutzen:,Welcome! Navigate through the tabs below to use all different features:
-label.status.ready,Bereit,Ready
-label.status.searching,Suche...,Search...
-label.status.load_mediums,Lade Medium Datenquelle...,Load Medium Data Source...
-label.status.load_reviews,Lade Review Datenquelle...,Load Review Data Source...
-label.status.load_imdb_rating,Lade IMDB Rating Datenquelle...,Load IMDB Rating Data Source...
-label.metadata.type,Mediumart,Medium Type
-label.metadata.provider,Anbieter,Provider(s)
-label.metadata.genre,Genre(s),Genre(s)
-label.metadata.duration,Dauer,Duration
-label.metadata.season,Staffel(n),Season(s)
-label.metadata.description,Beschreibung,Description
-label.metadata.age,Altersfreigabe,Age Rating
-label.metadata.cast,Cast,Cast
-label.metadata.country,Herkunftsland/Herkunftsländer,Country/Countries
-label.metadata.added_at,Hinzugefügt am,Added at
-label.reviewdata.audience,Zuschauerbewertung,Audience Review
-label.reviewdata.critics,Kritikerbewertung,Critics Review
-label.reviewdata.all,Alle,All
-label.reviewdata.best,Beste,Best
-label.reviewdata.worst,Schlechteste,Worst
-label.reviewdata.medium_title,Titel,Medium Title
-label.reviewdata.rating,Bewertung,Rating
-label.reviewdata.sentiment,Empfehlung,Sentiment
-label.reviewdata.comment,Kommentar,Comment
-label.reviewdata.no_comment,Es wurde keine Bewertung gefunden,No review found
-label.imdb.heading,IMDB Bewertung,IMDB Rating
-label.imdb.rating,Bewertung,Rating
-label.imdb.meta_score,Meta Score,Meta Score
-label.imdb.votes,Abstimmungen,Votes
-label.imdb.gross,Abstimmungen (kumul.),Gross
-label.imdb.star1,Star 1,Star 1
-label.imdb.star2,Star 2,Star 2
-label.imdb.star3,Star 3,Star 3
-label.imdb.star4,Star 4,Star 4
-label.reviewdata.no_comment,Es wurde keine Bewertung gefunden,No review found
-label.search.search_by,Suchen nach:,Search by:
-label.yes,Ja,Yes
-label.no,Nein,No
-label.outof,von,out of
-button.settings.save,Speichern,Save
-button.main.close,Beenden,Close
-button.all_reviews,Alle Bewertungen,All Reviews
-button.previous,Zurück,Back
-button.next,Nächste,Next
-button.search,Suchen,Search
-button.load,Laden,Load
-radio.title,Titel,Title
-radio.genre,Genre(s) (Mehrere mit Komma trennen),Genre(s) (Seperate multiple with a comma)
-radio.cast,Cast (Mehrere mit Komma trennen),Cast (Seperate multiple with a comma)
-dialog.title.settings.save,Einstellungen gespeichert,Changes Saved
-dialog.title.main.close,Aufwiedersehen!,Bye Bye!
-dialog.title.main.no_settings,Willkommen!,Welcome!
-dialog.title.init.dataloading,Hinweis,Hint
-dialog.title.main.no_result,Kein Ergebnis,No Result
-dialog.title.all_reviews,Alle Bewertungen von,All Reviews of
-dialog.title.recommendation,Empfehlung # von +,Recommendation # out of +
-dialog.title.average_rating,| Bewertung: #,| Rating: #
-dialog.body.settings.save,Deine Einstellungen wurden gespeichert. Um die geänderten Einstellungen zu laden starte die App neu. App beenden?,Your changes have been saved. To load the new settings restart the App. Close App?
-dialog.body.main.close,Vielen Dank für die Nutzung der App! Bis bald :),Thanks for using this app. See you soon!
-dialog.body.main.no_settings,Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Anbieter fest (Dies kannst du nachträglich anpassen),Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)
-dialog.body.init.dataloading,# Einträge konnten aufgrund von fehlerhaften Formatierungen innerhalb der Datenquellen nicht geladen werden:,# records could not have been loaded due to wrong data formatting:
-dialog.body.main.no_result,Es wurde kein Medium gefunden. Versuche eine andere Eingabe oder überprüfe die Anbieter in den Einstellungen,No medium found. Try another input or check your providers in the app settings
-dialog.body.recommendation,Gefällt dir dieser Vorschlag?,Do you like this medium?
+label.settings.language;Sprache:;Language:
+label.settings.providers;Deine Anbieter:;Your Providers:
+label.main.settings;Einstellungen;Settings
+label.main.random_medium;Zufälliges Medium;Random Medium
+label.main.search_medium;Medium suchen;Search Medium
+label.main.top_100_imdb;Top 100 nach IMDB;Top 100 by IMDB
+label.main.top_100_rating;Top 100 nach Bewertungen;Top 100 by Reviews
+label.user.welcome;Willkommen! Navigiere durch die Tabs um die verschiedenen Funktionen zu nutzen:;Welcome! Navigate through the tabs below to use all different features:
+label.status.ready;Bereit;Ready
+label.status.searching;Suche...;Search...
+label.status.load_mediums;Lade Medium Datenquelle...;Load Medium Data Source...
+label.status.load_reviews;Lade Review Datenquelle...;Load Review Data Source...
+label.status.load_imdb_rating;Lade IMDB Rating Datenquelle...;Load IMDB Rating Data Source...
+label.metadata.type;Mediumart;Medium Type
+label.metadata.provider;Anbieter;Provider(s)
+label.metadata.genre;Genre(s);Genre(s)
+label.metadata.duration;Dauer (in min);Duration (in min)
+label.metadata.season;Staffel(n);Season(s)
+label.metadata.description;Beschreibung;Description
+label.metadata.age;Altersfreigabe;Age Rating
+label.metadata.cast;Cast;Cast
+label.metadata.country;Herkunftsland/Herkunftsländer;Country/Countries
+label.metadata.added_at;Hinzugefügt am;Added at
+label.reviewdata.audience;Zuschauerbewertung;Audience Review
+label.reviewdata.critics;Kritikerbewertung;Critics Review
+label.reviewdata.all;Alle;All
+label.reviewdata.best;Beste;Best
+label.reviewdata.worst;Schlechteste;Worst
+label.reviewdata.medium_title;Titel;Medium Title
+label.reviewdata.rating;Bewertung;Rating
+label.reviewdata.sentiment;Empfehlung;Sentiment
+label.reviewdata.comment;Kommentar;Comment
+label.reviewdata.no_comment;Es wurde keine Bewertung gefunden;No review found
+label.imdb.heading;IMDB Bewertung;IMDB Rating
+label.imdb.rating;Bewertung;Rating
+label.imdb.meta_score;Meta Score;Meta Score
+label.imdb.votes;Abstimmungen;Votes
+label.imdb.gross;Abstimmungen (kumul.);Gross
+label.imdb.star1;Star 1;Star 1
+label.imdb.star2;Star 2;Star 2
+label.imdb.star3;Star 3;Star 3
+label.imdb.star4;Star 4;Star 4
+label.reviewdata.no_comment;Es wurde keine Bewertung gefunden;No review found
+label.search.search_by;Suchen nach:;Search by:
+label.yes;Ja;Yes
+label.no;Nein;No
+label.outof;von;out of
+button.settings.save;Speichern;Save
+button.main.close;Beenden;Close
+button.all_reviews;Alle Bewertungen;All Reviews
+button.previous;Zurück;Back
+button.next;Nächste;Next
+button.search;Suchen;Search
+button.load;Laden;Load
+radio.title;Titel;Title
+radio.genre;Genre(s) (Mehrere mit Komma trennen);Genre(s) (Seperate multiple with a comma)
+radio.cast;Cast (Mehrere mit Komma trennen);Cast (Seperate multiple with a comma)
+dialog.title.settings.save;Einstellungen gespeichert;Changes Saved
+dialog.title.main.close;Aufwiedersehen!;Bye Bye!
+dialog.title.main.no_settings;Willkommen!;Welcome!
+dialog.title.init.dataloading;Hinweis;Hint
+dialog.title.main.no_result;Kein Ergebnis;No Result
+dialog.title.all_reviews;Alle Bewertungen von;All Reviews of
+dialog.title.recommendation;Empfehlung # von +;Recommendation # out of +
+dialog.title.average_rating;| Bewertung: #;| Rating: #
+dialog.body.settings.save;Deine Einstellungen wurden gespeichert. Um die geänderten Einstellungen zu laden starte die App neu. App beenden?;Your changes have been saved. To load the new settings restart the App. Close App?
+dialog.body.main.close;Vielen Dank für die Nutzung der App! Bis bald :);Thanks for using this app. See you soon!
+dialog.body.main.no_settings;Hey! Wir haben festgestellt dass du diese App das erste Mal nutzt. Lege deine Sprache und deine Anbieter fest (Dies kannst du nachträglich anpassen);Hey! We noticed that you are using this app the first time. Please set your provider and your language (You can change it later)
+dialog.body.init.dataloading;# Einträge konnten aufgrund von fehlerhaften Formatierungen innerhalb der Datenquellen nicht geladen werden:;# records could not have been loaded due to wrong data formatting:
+dialog.body.main.no_result;Es wurde kein Medium gefunden. Versuche eine andere Eingabe oder überprüfe die Anbieter in den Einstellungen;No medium found. Try another input or check your providers in the app settings
+dialog.body.recommendation;Gefällt dir dieser Vorschlag?;Do you like this medium?

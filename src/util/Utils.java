@@ -15,16 +15,14 @@ public class Utils {
      * @BigO: O(n)
      * **/
     public static String convertArrayToCsvString(Object[] array){
-        StringBuilder s = new StringBuilder("\"");
+        StringBuilder s = new StringBuilder();
 
         for(int i = 0; i < array.length; i++){
             s.append(array[i]);
 
             if(i < array.length - 1)
-                s.append(",");
+                s.append(";");
         }
-
-        s.append("\"");
 
         return s.toString();
     }
@@ -33,7 +31,7 @@ public class Utils {
      * Converts any csv string to an object array
      *
      * @param line string line in csv format
-     * @param removeSpaces should spaces between words been removed
+     * @param removeSpaces should blank between words been removed
      * @return object array
      *
      * @BigO: O(n)

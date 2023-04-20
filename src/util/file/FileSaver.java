@@ -29,7 +29,7 @@ public class FileSaver {
             }
 
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
-            bufferedWriter.write(this.appModel.getCustomData().getLanguage() + "," +
+            bufferedWriter.write(this.appModel.getCustomData().getLanguage() + ";" +
                     Utils.convertArrayToCsvString(this.appModel.getCustomData().getProviders()));
             bufferedWriter.close();
         }

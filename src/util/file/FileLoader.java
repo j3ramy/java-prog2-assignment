@@ -6,10 +6,7 @@ import util.data.*;
 import util.enums.*;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 public class FileLoader {
@@ -81,9 +78,11 @@ public class FileLoader {
             }
             else{
                 //Split line and normalize it
-                Object[] data = Utils.splitCsvLine(bufferedReader.readLine(), true);
+                //Object[] data = Utils.splitCsvLine(bufferedReader.readLine(), true);
+                String[] data = bufferedReader.readLine().split(";");
                 Utils.removeQuotes(data);
 
+                /*
                 //Convert string providers into Provider list when providers are chosen (exist)
                 ArrayList<String> providersAsStringList = (ArrayList<String>) data[1];
                 ArrayList<Provider> providersList = new ArrayList<>();
@@ -92,9 +91,16 @@ public class FileLoader {
                         if(Utils.containsEnumValue(s, Provider.class))
                             providersList.add(Provider.valueOf(s));
                 }
+                 */
+
+                Provider[] providers = new Provider[Provider.values().length];
+                String[] stringProviders = Arrays.copyOfRange(data, 1, data.length);
+                for(int i = 0; i < stringProviders.length; i++)
+                    providers[i] = Provider.valueOf(stringProviders[i]);
 
                 //Set custom data and pass language and providers
-                this.appModel.setCustomData(new CustomData(Language.valueOf(data[0].toString()), providersList.toArray(Provider[]::new)));
+                //this.appModel.setCustomData(new CustomData(Language.valueOf(data[0].toString()), providersList.toArray(Provider[]::new)));
+                this.appModel.setCustomData(new CustomData(Language.valueOf(data[0]), providers));
                 this.loadTranslations();
             }
 
@@ -135,7 +141,8 @@ public class FileLoader {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Utils.splitCsvLine(line, false);
+                //Object[] data = Utils.splitCsvLine(line, false);
+                Object[] data = line.split(";");
                 //Add it to the translation hash map
                 this.appModel.getTranslations().put(data[0].toString(), new Translation(data[1].toString(), data[2].toString()));
             }
@@ -166,6 +173,8 @@ public class FileLoader {
             this.loadApplePlusCredits();
             this.loadMediumsFromProvider(FilePaths.APPLE_PLUS_TITLES_PATH, Provider.APPLE_PLUS);
         }
+
+        System.out.println(this.appModel.getMediums().size());
     }
 
     /**
@@ -185,18 +194,20 @@ public class FileLoader {
             }
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            bufferedReader.readLine(); //Skips first line in while loop
 
             String line;
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Utils.splitCsvLine(line, false);
+                //Object[] data = Utils.splitCsvLine(line, false);
+                String[] data = line.split(";");
                 Utils.removeQuotes(data);
 
                 Medium medium;
                 if(provider != Provider.APPLE_PLUS){
                     //Check if data/line is well formatted regarding the default column amount, otherwise skip it
-                    if(!this.isNDAFormattingValid(data) || this.isBlacklisted((String) data[0])){
+                    if(!this.isNDAFormattingValid(data)){
                         skipCounter++;
                         continue;
                     }
@@ -205,7 +216,7 @@ public class FileLoader {
                 }
                 else{
                     //Check if data/line is well formatted regarding the default column amount, otherwise skip it
-                    if(!this.isApplePlusTitlesFormattingValid(data) || this.isBlacklisted((String) data[0])){
+                    if(!this.isApplePlusTitlesFormattingValid(data)){
                         skipCounter++;
                         continue;
                     }
@@ -239,21 +250,24 @@ public class FileLoader {
      *
      * @BigO: O(n)
      * **/
-    private Medium createNDAMedium(Object[] data, Provider provider){
-        MediumType mediumType = this.convertMediumType((String) data[1]);
+    private Medium createNDAMedium(String[] data, Provider provider){
+        MediumType mediumType = this.convertMediumType(data[1]);
+        int duration = -1;
+        if(!data[9].isEmpty()) duration = Integer.parseInt(data[9].split(" ")[0]);
+
         return new Medium(
-                (String) data[0],
+                data[0],
                 mediumType,
                 provider,
                 this.convertObjectToString(data[2], "/"),
                 this.convertObjectToString(data[data.length - 1], ", ", false, false),
                 this.convertObjectToString(data[10], ", "),
-                mediumType == MediumType.MOVIE ? (String) data[9] : "",
-                mediumType == MediumType.SHOW ? (String) data[9] : "",
-                (String) data[7],
+                mediumType == MediumType.MOVIE ? duration : -1, //Duration contains duration in min
+                mediumType == MediumType.SHOW ? duration : -1, //Duration contains duration in seasons
+                data[7],
                 this.getCast(data[3], data[4]),
                 this.convertObjectToString(data[5], ", "),
-                (String) data[8],
+                data[8],
                 this.convertObjectToString(data[6], ", ")
         );
     }
@@ -268,21 +282,27 @@ public class FileLoader {
      *
      * @BigO: O(n)
      * **/
-    private Medium createApplePlusMedium(Object[] data, Provider provider){
-        MediumType mediumType = this.convertMediumType((String) data[2]);
+    private Medium createApplePlusMedium(String[] data, Provider provider){
+        MediumType mediumType = this.convertMediumType(data[2]);
+        int duration = -1;
+        if(!data[6].isEmpty()) duration = Integer.parseInt(data[6]);
+
+        int seasons = -1;
+        if(!data[9].isEmpty()) seasons = Integer.parseInt(data[9].split("\\.")[0]);
+
         return new Medium(
-                (String) data[0],
+                data[0],
                 mediumType,
                 provider,
                 this.convertObjectToString(data[1], "/"),
                 this.convertObjectToString(data[3], ", ", false, false),
                 this.convertObjectToString(data[7], ", "),
-                (String) data[6],
-                mediumType == MediumType.SHOW ? (String) data[9] : "",
-                (String) data[4],
-                this.getApplePlusCastByMovie((String) data[0]),
+                mediumType == MediumType.MOVIE ? duration : -1,
+                mediumType == MediumType.SHOW ? seasons : -1,
+                data[4],
+                this.getApplePlusCastByMovie(data[0]),
                 this.convertObjectToString(data[8], ", "),
-                (String) data[5],
+                data[5],
                 ""
         );
     }
@@ -328,16 +348,17 @@ public class FileLoader {
             ArrayList<Person> credits = new ArrayList<>();
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Utils.splitCsvLine(line, false);
+                //Object[] data = Utils.splitCsvLine(line, false);
+                String[] data = line.split(";");
 
                 if(!this.isApplePlusCreditsFormattingValid(data)){
                     skipCounter++;
                     continue;
                 }
 
-                if(Utils.containsEnumValue((String) data[4], PersonRole.class)){
-                    Person person = new Person(this.convertObjectToString(data[2], " "), this.convertObjectToString(data[3], " "), PersonRole.valueOf((String) data[4]));
-                    person.setMovieId((String) data[1]);
+                if(Utils.containsEnumValue(data[4], PersonRole.class)){
+                    Person person = new Person(this.convertObjectToString(data[2], " "), this.convertObjectToString(data[3], " "), PersonRole.valueOf(data[4]));
+                    person.setMovieId(data[1]);
 
                     credits.add(person);
                 }
@@ -387,7 +408,9 @@ public class FileLoader {
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
+                //TODO: Replace Object by String when formatted reviews are available
                 Object[] data = Utils.splitCsvLine(line, false);
+                //Object[] data = line.split(";");
 
                 //Check if data/line is well formatted regarding the default column amount, otherwise skip it
                 if(!this.isReviewFormattingValid(data)){
@@ -441,7 +464,8 @@ public class FileLoader {
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                Object[] data = Utils.splitCsvLine(line, false);
+                //Object[] data = Utils.splitCsvLine(line, false);
+                String[] data = line.split(";");
                 Utils.removeQuotes(data);
 
                 //Check if data/line is well formatted regarding the default column amount, otherwise skip it
@@ -450,7 +474,7 @@ public class FileLoader {
                     continue;
                 }
 
-                String title = data[1] instanceof ArrayList<?> ? Utils.joinList((List<?>) data[1], ", ") : (String) data[1];
+                String title = data[1];
                 if(!this.appModel.isTitleInMediums(title)){
                     continue;
                 }
@@ -466,11 +490,11 @@ public class FileLoader {
                     ImdbRating rating = new ImdbRating(
                             imdbMedium,
                             this.convertObjectToString(data[0], ",", false, true),
-                            ((String) data[6]).isBlank() ? 0f : Float.parseFloat((String) data[6]),
-                            ((String) data[8]).isBlank() ? 0 : Integer.parseInt((String) data[8]),
-                            ((String) data[14]).isBlank() ? 0 : Integer.parseInt((String) data[14]),
-                            Integer.parseInt(this.convertObjectToString(data[15], "")),
-                            this.getCast(null, starsAsString)
+                            data[6].isBlank() ? 0f : Float.parseFloat(data[6]),
+                            data[8].isBlank() ? 0 : Integer.parseInt(data[8]),
+                            data[14].isBlank() ? 0 : Integer.parseInt(data[14]),
+                            Integer.parseInt( data[15].replace(",", "")),
+                            this.getCast(null, String.valueOf(starsAsString))
                             );
 
                     this.appModel.getImdbRatings().add(rating);
@@ -549,29 +573,19 @@ public class FileLoader {
      *
      * @BigO: O(n)
      * **/
-    private Person[] getCast(Object directorData, Object actorData){
+    private Person[] getCast(String directorData, String actorData){
         ArrayList<Person> cast = new ArrayList<>();
 
         //Add directors
         if(directorData != null){
-            if(directorData instanceof ArrayList<?>){
-                for(String s : (ArrayList<String>)directorData){
-                    cast.add(new Person(s, null, PersonRole.DIRECTOR));
-                }
-            }
-            else if(!((String) directorData).isEmpty())
-                cast.add(new Person((String) directorData, null, PersonRole.DIRECTOR));
+            if(!directorData.isEmpty())
+                cast.add(new Person(directorData, null, PersonRole.DIRECTOR));
         }
 
         //Add actors
         if(actorData != null){
-            if(actorData instanceof ArrayList<?>){
-                for(String s : (ArrayList<String>)actorData){
-                    cast.add(new Person(s, null, PersonRole.ACTOR));
-                }
-            }
-            else if(!((String) actorData).isEmpty()){
-                cast.add(new Person((String) actorData, null, PersonRole.ACTOR));
+            if(!actorData.isEmpty()){
+                cast.add(new Person(actorData, null, PersonRole.ACTOR));
             }
         }
 
@@ -588,8 +602,10 @@ public class FileLoader {
         int totalSkips = 0;
         for (Map.Entry<String, Integer> entry : this.loadingSkips.entrySet()) {
             String formattedKey = Utils.uppercaseAll(Utils.joinArray(entry.getKey().split("_"), " "));
-            skippedStats.append(formattedKey).append(": ").append(entry.getValue()).append('\n');
-            totalSkips += entry.getValue();
+            if(entry.getValue() != 0){
+                skippedStats.append(formattedKey).append(": ").append(entry.getValue()).append('\n');
+                totalSkips += entry.getValue();
+            }
         }
 
         this.appModel.getAppView().getDialogHandler().showDialog(this.appModel.getTranslation("dialog.title.init.dataloading"),
@@ -604,7 +620,7 @@ public class FileLoader {
      *
      * @BigO: O(1)
      * **/
-    private boolean isNDAFormattingValid(Object[] data){
+    private boolean isNDAFormattingValid(String[] data){
         return data.length == 12;
     }
 
@@ -615,7 +631,7 @@ public class FileLoader {
      *
      * @BigO: O(1)
      * **/
-    private boolean isApplePlusTitlesFormattingValid(Object[] data){
+    private boolean isApplePlusTitlesFormattingValid(String[] data){
         return data.length == 15;
     }
 
@@ -626,7 +642,7 @@ public class FileLoader {
      *
      * @BigO: O(1)
      * **/
-    private boolean isApplePlusCreditsFormattingValid(Object[] data){
+    private boolean isApplePlusCreditsFormattingValid(String[] data){
         return data.length == 5;
     }
 
@@ -648,11 +664,11 @@ public class FileLoader {
      *
      * @BigO: O(n)
      * **/
-    private boolean isImdbRatingFormattingValid(Object[] data){
+    private boolean isImdbRatingFormattingValid(String[] data){
         return data.length == 16;
     }
 
-    private final String[] blacklist = new String[]{"s7384"};
+    //private final String[] blacklist = new String[]{"s7384"};
     /**
      * Checks medium id is in blacklist. If yes then don't load it
      *
@@ -660,6 +676,7 @@ public class FileLoader {
      *
      * @BigO: O(n)
      * **/
+    /*
     private boolean isBlacklisted(String id){
         for(String s : blacklist)
             if(s.equalsIgnoreCase(id))
@@ -667,4 +684,5 @@ public class FileLoader {
 
         return false;
     }
+    */
 }

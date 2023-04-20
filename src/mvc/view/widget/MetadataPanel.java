@@ -234,8 +234,8 @@ public class MetadataPanel extends JPanel implements IViewInit {
 
         //Set the label texts depending on the passed medium
         this.genreTextArea.setText(medium.getGenres());
-        this.durationLabel.setText(medium.getDuration());
-        this.seasonLabel.setText(medium.getSeasons());
+        this.durationLabel.setText(medium.getDuration() == -1 ? "N/A" : Integer.toString(medium.getDuration()));
+        this.seasonLabel.setText(medium.getSeasons() == -1 ? "N/A" : Integer.toString(medium.getSeasons()));
         this.descriptionTextArea.setText(medium.getDescription().trim());
         this.ageRatingLabel.setText(medium.getAgeRating());
         this.castTextArea.setText(Utils.joinArray(medium.getCast(), ", "));

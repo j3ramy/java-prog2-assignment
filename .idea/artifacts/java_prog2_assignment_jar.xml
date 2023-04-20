@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="java-prog2-assignment:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/java_prog2_assignment_jar</output-path>
+    <root id="archive" name="java-prog2-assignment.jar">
+      <element id="module-output" name="java-prog2-assignment" />
+    </root>
+  </artifact>
+</component>

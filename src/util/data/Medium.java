@@ -10,8 +10,8 @@ import java.util.List;
 public class Medium {
     private final MediumType type;
     private final List<Provider> providers = new ArrayList<>();
-    private final String id, title, description, ageRating, duration, addedAt, genres, countries, seasons;
-    private final int releaseYear;
+    private final String id, title, description, ageRating, addedAt, genres, countries;
+    private final int releaseYear, seasons, duration;
     private final Person[] cast;
 
     private float averageRating = 0f;
@@ -82,7 +82,7 @@ public class Medium {
      *
      * @BigO: O(1)
      * **/
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
@@ -142,7 +142,7 @@ public class Medium {
      *
      * @BigO: O(1)
      * **/
-    public String getSeasons() {
+    public int getSeasons() {
         return seasons;
     }
 
@@ -166,7 +166,7 @@ public class Medium {
         this.averageRating = averageRating;
     }
 
-    public Medium(String id, MediumType type, Provider provider, String title, String description, String genres, String duration, String seasons,
+    public Medium(String id, MediumType type, Provider provider, String title, String description, String genres, int duration, int seasons,
                   String releaseYear, Person[] cast, String countries, String ageRating, String addedAt){
         this.id = id;
         this.type = type;
@@ -174,8 +174,8 @@ public class Medium {
         this.title = title.isEmpty() ? "N/A" : title;
         this.description = description.isEmpty() ? "N/A" : description;
         this.genres = genres.isEmpty() ? "N/A" : genres;
-        this.duration = duration.isEmpty() ? "N/A" : duration;
-        this.seasons = seasons.isEmpty() ? "N/A" : seasons;
+        this.duration = duration;
+        this.seasons = seasons;
         this.releaseYear = !Utils.isNumeric(releaseYear) ? 0 : Integer.parseInt(releaseYear);
         this.cast = cast == null || cast.length == 0 ? new Person[]{new Person("N/A", null, null)} : cast;
         this.countries = countries.isEmpty() ? "N/A" : countries;
