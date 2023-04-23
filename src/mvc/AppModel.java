@@ -237,7 +237,7 @@ public class AppModel {
      *
      * @BigO: O(n)
      * **/
-    public ArrayList<Medium> getTop100ByReviews(){
+    public List<Medium> getTop100ByReviews(){
         HashMap<Float, ArrayList<Medium>> mediums = new HashMap<>();
         for(Medium medium : this.mediums.values()){
             ArrayList<AudienceReview> reviews = this.getAudienceReviewsByTitle(medium.getTitle());
@@ -256,20 +256,10 @@ public class AppModel {
         ArrayList<Medium> sortedMediums = new ArrayList<>();
         for(Map.Entry<Float, ArrayList<Medium>> entry : map.descendingMap().entrySet()){
             entry.getValue().forEach((medium) -> medium.setAverageRating(entry.getKey()));
-
-            /*
-            if(sortedMediums.size() >= 100)
-                return sortedMediums;
-
-
-             */
             sortedMediums.addAll(entry.getValue());
         }
 
-        //TODO: List is 102 elements big and not 100 for some reason
-        System.out.println(sortedMediums.size());
-
-        return (ArrayList<Medium>) sortedMediums.subList(0, 100);
+        return sortedMediums.subList(0, 100);
     }
 
     /**

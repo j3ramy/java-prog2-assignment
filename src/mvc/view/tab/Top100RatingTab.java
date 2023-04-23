@@ -12,7 +12,7 @@ import util.interfaces.IViewInit;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Top100RatingTab extends JPanel implements IViewInit {
     private final AppView appView; //AppView reference
@@ -21,7 +21,7 @@ public class Top100RatingTab extends JPanel implements IViewInit {
     private MetadataPanel metadataPanel; //Shows the metadata of the current medium
     private ReviewPanel bestReviewPanel, worstReviewPanel; //Shows the worst and best audience review
     private Medium currentMedium; //Represents the current visible medium
-    private ArrayList<Medium> mediums; //List of current search
+    private List<Medium> mediums; //List of current search
     private int currentIndex; //Current index of rating list
 
     //Constructor
@@ -175,7 +175,6 @@ public class Top100RatingTab extends JPanel implements IViewInit {
 
             this.appView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); //Set cursor to loading cursor
             this.mediums = this.appView.getAppModel().getTop100ByReviews(); //Get top 100 mediums by rating by AppModel
-            System.out.println(this.mediums.size());
 
             //If search has no mediums found then open a new no medium found JDialog
             if(this.mediums.isEmpty()){
