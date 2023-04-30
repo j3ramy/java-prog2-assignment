@@ -240,14 +240,16 @@ public class AppModel {
     public List<Medium> getTop100ByReviews(){
         HashMap<Float, ArrayList<Medium>> mediums = new HashMap<>();
         for(Medium medium : this.mediums.values()){
-            ArrayList<AudienceReview> reviews = this.getAudienceReviewsByTitle(medium.getTitle());
-            if(!reviews.isEmpty()){
-                float average = Algorithms.getAverageRating(reviews);
-                if(mediums.containsKey(average)){
-                    mediums.get(average).add(medium);
-                }
-                else{
-                    mediums.put(average, new ArrayList<>(List.of(medium)));
+            if(this.fileLoader.getReviewTitles().containsKey(medium.getTitle())){
+                ArrayList<AudienceReview> reviews = this.getAudienceReviewsByTitle(medium.getTitle());
+                if(!reviews.isEmpty()){
+                    float average = Algorithms.getAverageRating(reviews);
+                    if(mediums.containsKey(average)){
+                        mediums.get(average).add(medium);
+                    }
+                    else{
+                        mediums.put(average, new ArrayList<>(List.of(medium)));
+                    }
                 }
             }
         }

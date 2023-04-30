@@ -12,6 +12,11 @@ import java.util.*;
 public class FileLoader {
     private final AppModel appModel;
     private final LinkedHashMap<String, Integer> loadingSkips = new LinkedHashMap<>();
+    private final HashMap<String, String> reviewTitles = new HashMap<>();
+
+    public HashMap<String, String> getReviewTitles() {
+        return reviewTitles;
+    }
 
     public FileLoader(AppModel appModel){
         this.appModel = appModel;
@@ -406,9 +411,7 @@ public class FileLoader {
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                //TODO: Replace Object by String when formatted reviews are available
                 String[] data = line.split(";");
-                //Object[] data = line.split(";");
 
                 //Check if data/line is well formatted regarding the default column amount, otherwise skip it
                 if(!this.isReviewFormattingValid(data)){
@@ -432,6 +435,7 @@ public class FileLoader {
                              Float.parseFloat(data[1]));
                 }
 
+                this.reviewTitles.put(review.getMediumTitle(), "");
                 this.appModel.getReviews().add(review);
             }
 
@@ -662,22 +666,4 @@ public class FileLoader {
     private boolean isImdbRatingFormattingValid(String[] data){
         return data.length == 16;
     }
-
-    //private final String[] blacklist = new String[]{"s7384"};
-    /**
-     * Checks medium id is in blacklist. If yes then don't load it
-     *
-     * @return true when medium id is found in blacklist otherwise false
-     *
-     * @BigO: O(n)
-     * **/
-    /*
-    private boolean isBlacklisted(String id){
-        for(String s : blacklist)
-            if(s.equalsIgnoreCase(id))
-                return true;
-
-        return false;
-    }
-    */
 }
