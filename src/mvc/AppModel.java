@@ -162,7 +162,7 @@ public class AppModel {
 
         Algorithms.sortMediumsByRating(mediums, this);
         Algorithms.sortMediumsByReleaseYear(mediums);
-        Collections.reverse(mediums);
+        Collections.reverse(mediums); //Make list descending
 
         return mediums;
     }
@@ -238,6 +238,7 @@ public class AppModel {
      * @BigO: O(n)
      * **/
     public List<Medium> getTop100ByReviews(){
+        //Get mediums by accessing all regarding audience reviews and calculate the average. Save it in a HashMap
         HashMap<Float, ArrayList<Medium>> mediums = new HashMap<>();
         for(Medium medium : this.mediums.values()){
             if(this.fileLoader.getReviewTitles().containsKey(medium.getTitle())){
@@ -254,6 +255,7 @@ public class AppModel {
             }
         }
 
+        //Convert HashMap in TreeMap to sort it by average by default without using a custom algorithm
         TreeMap<Float, ArrayList<Medium>> map = new TreeMap<>(mediums);
         ArrayList<Medium> sortedMediums = new ArrayList<>();
         for(Map.Entry<Float, ArrayList<Medium>> entry : map.descendingMap().entrySet()){
@@ -261,6 +263,7 @@ public class AppModel {
             sortedMediums.addAll(entry.getValue());
         }
 
+        //Return top 100
         return sortedMediums.subList(0, 100);
     }
 

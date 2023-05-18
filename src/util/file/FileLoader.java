@@ -66,7 +66,7 @@ public class FileLoader {
      * **/
     private void loadCustomData(){
         try{
-            //Check if file exists
+            //Check if file exists, otherwise create default custom data file
             File file = new File(FilePaths.CUSTOM_DATA_PATH);
             if(!file.exists()){
                 if(!new File(FilePaths.CUSTOM_DATA_PATH).createNewFile())
@@ -83,28 +83,16 @@ public class FileLoader {
             }
             else{
                 //Split line and normalize it
-                //Object[] data = Utils.splitCsvLine(bufferedReader.readLine(), true);
                 String[] data = bufferedReader.readLine().split(";");
                 Utils.removeQuotes(data);
 
-                /*
-                //Convert string providers into Provider list when providers are chosen (exist)
-                ArrayList<String> providersAsStringList = (ArrayList<String>) data[1];
-                ArrayList<Provider> providersList = new ArrayList<>();
-                if(!providersAsStringList.isEmpty()){
-                    for (String s : providersAsStringList)
-                        if(Utils.containsEnumValue(s, Provider.class))
-                            providersList.add(Provider.valueOf(s));
-                }
-                 */
-
+                //Convert provider strings in Provider enum values
                 Provider[] providers = new Provider[Provider.values().length];
                 String[] stringProviders = Arrays.copyOfRange(data, 1, data.length);
                 for(int i = 0; i < stringProviders.length; i++)
                     providers[i] = Provider.valueOf(stringProviders[i]);
 
                 //Set custom data and pass language and providers
-                //this.appModel.setCustomData(new CustomData(Language.valueOf(data[0].toString()), providersList.toArray(Provider[]::new)));
                 this.appModel.setCustomData(new CustomData(Language.valueOf(data[0]), providers));
                 this.loadTranslations();
             }
@@ -145,8 +133,7 @@ public class FileLoader {
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                //Split line and normalize it
-                //Object[] data = Utils.splitCsvLine(line, false);
+                //Split line
                 Object[] data = line.split(";");
                 //Add it to the translation hash map
                 this.appModel.getTranslations().put(data[0].toString(), new Translation(data[1].toString(), data[2].toString()));
@@ -162,8 +149,6 @@ public class FileLoader {
         }
     }
 
-    //Total records data source: 20.118
-    //Total records loaded: 19.640; difference because Netflix (154), DP (33), Amazon (287), Apple (4) haven't been loaded
     /**
      * Loads custom data
      *
@@ -203,7 +188,6 @@ public class FileLoader {
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                //Object[] data = Utils.splitCsvLine(line, false);
                 String[] data = line.split(";");
                 Utils.removeQuotes(data);
 
@@ -350,8 +334,7 @@ public class FileLoader {
             int skipCounter = 0;
             ArrayList<Person> credits = new ArrayList<>();
             while ((line = bufferedReader.readLine()) != null) {
-                //Split line and normalize it
-                //Object[] data = Utils.splitCsvLine(line, false);
+                //Split line
                 String[] data = line.split(";");
 
                 if(!this.isApplePlusCreditsFormattingValid(data)){
@@ -410,7 +393,7 @@ public class FileLoader {
             String line;
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
-                //Split line and normalize it
+                //Split line
                 String[] data = line.split(";");
 
                 //Check if data/line is well formatted regarding the default column amount, otherwise skip it
@@ -466,7 +449,6 @@ public class FileLoader {
             int skipCounter = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 //Split line and normalize it
-                //Object[] data = Utils.splitCsvLine(line, false);
                 String[] data = line.split(";");
                 Utils.removeQuotes(data);
 
